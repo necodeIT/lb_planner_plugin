@@ -19,11 +19,12 @@ namespace local_lbplanner_services;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
+use external_value;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
 
 /**
- * Returns all slots the user can theoretically reserve.
+ * Returns all slots a supervisor can theoretically reserve for a user.
  * This does not include times the user has already reserved a slot for.
  *
  * @package local_lbplanner
@@ -31,26 +32,32 @@ use local_lbplanner\model\slot;
  * @copyright 2024 necodeIT
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_my_slots extends external_api {
+class get_student_slots extends external_api {
     /**
-     * Parameters for get_my_slots.
+     * Parameters for get_student_slots.
      * @return external_function_parameters
      */
     public static function get_my_slots_parameters(): external_function_parameters {
-        return new external_function_parameters([]);
+        return new external_function_parameters([
+            'userid' => new external_value(PARAM_INT, 'ID of the user to query for', VALUE_REQUIRED, null, NULL_NOT_ALLOWED),
+        ]);
     }
 
     /**
-     * Returns slots the current user is supposed to see
+     * Returns slots of a user the supervisor can see.
      */
-    public static function get_my_slots(): array {
+    public static function get_student_slots(int $userid): array {
         global $USER;
+        self::validate_parameters(
+            self::get_my_slots_parameters(),
+            ['userid' => $userid]
+        );
 
-        $allslots = slot_helper::get_all_slots();
+        $superslots = slot_helper::get_supervisor_slots($USER->id);
 
-        $myslots = slot_helper::filter_slots_for_user($allslots, $USER);
+        $myslots = slot_helper::filter_slots_for_user($superslots, $userid);
 
-        $returnslots = slot_helper::filter_slots_for_time($myslots, slot_helper::RESERVATION_RANGE_USER);
+        $returnslots = slot_helper::filter_slots_for_time($myslots, slot_helper::RESERVATION_RANGE_SUPERVISOR);
 
         return $returnslots;
     }
@@ -59,7 +66,7 @@ class get_my_slots extends external_api {
      * Returns the structure of the slot array
      * @return external_multiple_structure
      */
-    public static function get_my_slots_returns(): external_multiple_structure {
+    public static function get_student_slots_returns(): external_multiple_structure {
         return new external_multiple_structure(
             slot::api_structure()
         );
