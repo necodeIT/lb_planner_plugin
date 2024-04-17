@@ -16,15 +16,13 @@
 
 namespace local_lbplanner_services;
 
-use DateInterval;
-use DateTime;
 use DateTimeImmutable;
+
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
-use local_lbplanner\enums\WEEKDAY;
 
 /**
  * Returns all slots the user can theoretically reserve.
@@ -49,55 +47,14 @@ class get_my_slots extends external_api {
      */
     public static function get_my_slots() {
         global $USER;
-        // NOTE: could be better solved by applying filters within one complex SQL query.
-        // Oh well.
 
         $allslots = slot_helper::get_all_slots();
 
-        $mycourses = self::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $USER->id]);
-        $mycourseids = [];
-        foreach ($mycourses as $course) {
-            array_push($mycourseids, $course->courseid);
-        }
-
-        $myslots = [];
-        foreach ($allslots as $slot) {
-            $filters = slot_helper::get_filters_for_slot($slot->id);
-            foreach ($filters as $filter) {
-                // Checking for course ID.
-                if (!is_null($filter->courseid) && !in_array($filter->courseid, $mycourseids)) {
-                    continue;
-                }
-                // TODO: replace address with cohorts.
-                // Checking for vintage.
-                if (!is_null($filter->vintage) && $USER->address !== $filter->vintage) {
-                    continue;
-                }
-                // If all filters passed, add slot to my slots and break.
-                array_push($myslots, $slot);
-                break;
-            }
-        }
+        $myslots = slot_helper::filter_slots_for_user($allslots, $USER);
 
         $now = new DateTimeImmutable();
-        $returnslots = [];
-        // Calculate date and time each slot happens next, and add it to the return list if within reach from today.
-        foreach ($myslots as $slot) {
-            $slotdaytime = slot_helper::SCHOOL_UNITS[$slot->startunit];
-            $slotdatetime = DateTime::createFromFormat('Y-m-d H:i', $now->format('Y-m-d ').$slotdaytime);
-            // Move to next day this weekday occurs (doesn't move if it's the same as today).
-            $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
-
-            // Check if slot is before now (because time of day and such) and move it a week into the future if so.
-            if ($now->diff($slotdatetime)->invert === 1) {
-                $slotdatetime->add(new DateInterval('P1W'));
-            }
-
-            // TODO: make setting of "3 days in advance" changeable.
-            if ($now->diff($slotdatetime)->days <= 3) {
-                array_push($returnslots, $slot->prepare_for_api());
-            }
-        }
+        // TODO: make setting of "3 days in advance" changeable.
+        $returnslots = slot_helper::filter_slots_for_time($myslots, $now, 3);
 
         return $returnslots;
     }
