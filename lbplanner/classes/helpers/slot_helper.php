@@ -37,6 +37,14 @@ use local_lbplanner\model\{slot, reservation, slot_filter};
  */
 class slot_helper {
     /**
+     * how far into the future a user can reserve a slot
+     */
+    const RESERVATION_RANGE_USER = 3;
+    /**
+     * how far into the future a supervisor can reserve a slot for a user
+     */
+    const RESERVATION_RANGE_SUPERVISOR = 7;
+    /**
      * school units according to untis, in H:i format
      */
     const SCHOOL_UNITS = [
@@ -83,6 +91,30 @@ class slot_helper {
     public static function get_all_slots(): array {
         global $DB;
         $slots = $DB->get_records(self::TABLE_SLOTS, []);
+
+        $slotsobj = [];
+        foreach ($slots as $slot) {
+            array_push($slotsobj, new slot(...$slot));
+        }
+
+        return $slotsobj;
+    }
+
+    /**
+     * Returns a list of all slots belonging to a supervisor.
+     * @param int $supervisorid userid of the supervisor in question
+     *
+     * @return slot[] An array of the slots.
+     */
+    public static function get_supervisor_slots(int $supervisorid): array {
+        global $DB;
+
+        $slots = $DB->get_records_sql(
+            'SELECT slot.* FROM {'.self::TABLE_SLOTS.'} as slot'.
+            'INNER JOIN '.self::TABLE_SUPERVISORS.' as supervisor ON supervisor.slotid=slot.id'.
+            'WHERE supervisor.userid=?',
+            [$supervisorid]
+        );
 
         $slotsobj = [];
         foreach ($slots as $slot) {
@@ -179,11 +211,11 @@ class slot_helper {
     /**
      * Filters an array of slots for a timerange around now.
      * @param slot[] $allslots the slots to filter
-     * @param DateTimeImmutable $now a point in time representing the point in time to start filtering at
      * @param int $range how many days in the future the slot is allowed to be
      * @return slot[] the filtered slot array
      */
-    public static function filter_slots_for_time(array $allslots, DateTimeImmutable $now, int $range): array {
+    public static function filter_slots_for_time(array $allslots, int $range): array {
+        $now = new DateTimeImmutable();
         $slots = [];
         // Calculate date and time each slot happens next, and add it to the return list if within reach from today.
         foreach ($allslots as $slot) {
