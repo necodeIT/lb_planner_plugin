@@ -35,15 +35,34 @@ class Enum {
     /**
      * tries to match the passed value to one of the enum values
      * @param mixed $value the value to be matched
-     * @return mixed either the matching enum value or null if not found
+     * @param bool $try whether to return null (true) or throw an error (false) if not found
+     * @return ?EnumCase the matching enum case or null if not found and $try==true
+     * @throws ValueError if not found and $try==false
      */
-    public static function try_from(mixed $value): mixed {
+    private static function _find(mixed $value, bool $try): ?EnumCase {
         foreach (static::cases() as $case) {
             if ($case->value === $value) {
-                return $value;
+                return $case;
             }
         }
-        return null;
+
+        if($try)
+            return null;
+        else
+            throw new ValueError("value {$value} cannot be represented as a value in enum ".static::class);
+    }
+    /**
+     * tries to match the passed value to one of the enum values
+     * @param mixed $value the value to be matched
+     * @return mixed either the matching enum value or null if not found
+     */
+    public static function try_from(mixed $value): ?mixed {
+        // TODO: replace with nullsafe operator in php8.
+        $case = static::_find($value, true);
+        if(is_null($case))
+            return null;
+        else
+            return $case->value;
     }
     /**
      * tries to match the passed value to one of the enum values
@@ -52,13 +71,30 @@ class Enum {
      * @throws ValueError if not found
      */
     public static function from(mixed $value): mixed {
-        foreach (static::cases() as $case) {
-            if ($case->value === $value) {
-                return $value;
-            }
-        }
-
-        throw new ValueError("value {$value} cannot be represented as a value in enum ".static::class);
+        return static::_find($value, false)->value;
+    }
+    /**
+     * tries to match the passed value to one of the enum values
+     * @param mixed $value the value to be matched
+     * @return string the matching enum case name
+     * @throws mixed either the matching enum case name or null if not found
+     */
+    public static function try_name_from(mixed $value): ?string {
+        // TODO: replace with nullsafe operator in php8.
+        $case = static::_find($value, true);
+        if(is_null($case))
+            return null;
+        else
+            return $case->name;
+    }
+    /**
+     * tries to match the passed value to one of the enum values
+     * @param mixed $value the value to be matched
+     * @return string the matching enum case name
+     * @throws ValueError if not found
+     */
+    public static function name_from(mixed $value): string {
+        return static::_find($value, false)->name;
     }
     /**
      * Returns an array of all the cases that exist in this enum
