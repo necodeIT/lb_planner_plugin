@@ -37,7 +37,7 @@ class slots_get_student_slots extends external_api {
      * Parameters for get_student_slots.
      * @return external_function_parameters
      */
-    public static function get_my_slots_parameters(): external_function_parameters {
+    public static function get_student_slots_parameters(): external_function_parameters {
         return new external_function_parameters([
             'userid' => new external_value(PARAM_INT, 'ID of the user to query for', VALUE_REQUIRED, null, NULL_NOT_ALLOWED),
         ]);
@@ -50,7 +50,7 @@ class slots_get_student_slots extends external_api {
     public static function get_student_slots(int $userid): array {
         global $USER;
         self::validate_parameters(
-            self::get_my_slots_parameters(),
+            self::get_student_slots_parameters(),
             ['userid' => $userid]
         );
 
