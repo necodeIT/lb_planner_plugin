@@ -78,12 +78,12 @@ class slot_helper {
         global $DB;
         $slots = $DB->get_records(self::TABLE_SLOTS, []);
 
-        $slots_obj = [];
-        foreach($slots as $slot){
-            array_push($slots_obj, new slot(...$slot));
+        $slotsObj = [];
+        foreach ($slots as $slot) {
+            array_push($slotsObj, new slot(...$slot));
         }
 
-        return $slots_obj;
+        return $slotsObj;
     }
 
     /**
@@ -94,7 +94,7 @@ class slot_helper {
      */
     public static function get_slot(int $slotid): slot {
         global $DB;
-        $slot = $DB->get_record(self::TABLE_SLOTS, ['id'=>$slotid]);
+        $slot = $DB->get_record(self::TABLE_SLOTS, ['id' => $slotid]);
 
         return new slot(...$slot);
     }
@@ -107,15 +107,15 @@ class slot_helper {
      */
     public static function get_reservations_for_slot(int $slotid): array {
         global $DB;
-        $reservations = $DB->get_records(self::TABLE_RESERVATIONS, ['slotid'=>$slotid]);
+        $reservations = $DB->get_records(self::TABLE_RESERVATIONS, ['slotid' => $slotid]);
 
-        $reservations_obj = [];
-        foreach($reservations as $reservation){
+        $reservationsObj = [];
+        foreach ($reservations as $reservation) {
             $reservation['date'] = new \DateTime($reservation['date']);
-            array_push($reservations_obj, new reservation(...$reservation));
+            array_push($reservationsObj, new reservation(...$reservation));
         }
 
-        return $reservations_obj;
+        return $reservationsObj;
     }
 
     /**
@@ -126,13 +126,13 @@ class slot_helper {
      */
     public static function get_filters_for_slot(int $slotid): array {
         global $DB;
-        $filters = $DB->get_records(self::TABLE_SLOT_FILTERS, ['slotid'=>$slotid]);
+        $filters = $DB->get_records(self::TABLE_SLOT_FILTERS, ['slotid' => $slotid]);
 
-        $filters_obj = [];
+        $filtersObj = [];
         foreach($filters as $filter){
-            array_push($filters_obj, new slot_filter(...$filter));
+            array_push($filtersObj, new slot_filter(...$filter));
         }
 
-        return $filters_obj;
+        return $filtersObj;
     }
 }
