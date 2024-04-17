@@ -31,7 +31,7 @@ use local_lbplanner\model\slot;
  * @copyright 2024 necodeIT
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_my_slots extends external_api {
+class slots_get_my_slots extends external_api {
     /**
      * Parameters for get_my_slots.
      * @return external_function_parameters
