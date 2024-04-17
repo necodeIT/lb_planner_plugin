@@ -88,6 +88,7 @@ class slot_helper {
 
     /**
      * Returns a singular slot.
+     * @param int $slotid ID of the slot
      *
      * @return slot the requested slot
      */
@@ -100,6 +101,7 @@ class slot_helper {
 
     /**
      * Returns reservations for a slot.
+     * @param int $slotid ID of the slot
      *
      * @return reservation[] the requested reservations
      */
@@ -118,6 +120,7 @@ class slot_helper {
 
     /**
      * Returns filters for a slot.
+     * @param int $slotid ID of the slot
      *
      * @return slot_filter[] the requested filters
      */
