@@ -34,15 +34,53 @@ use external_value;
  * Model class for slot
  */
 class slot {
+    /**
+     * @var int $id ID of slot
+     */
     public int $id;
+    /**
+     * @var int $startunit Unit this slot starts in
+     * @link slot_helper::SCHOOL_UNITS
+     */
     public int $startunit;
+    /**
+     * @var int $duration duration of slot in units
+     * @link slot_helper::SCHOOL_UNITS
+     */
     public int $duration;
+    /**
+     * @var int $weekday weekday this slot occurs in
+     * @link WEEKDAY
+     */
     public int $weekday;
+    /**
+     * @var string $room room this slot is for
+     */
     public string $room;
+    /**
+     * @var int $size how many pupils fit in this slot
+     */
     public int $size;
+    /**
+     * @var ?int $fullness how many pupils have already reserved this slot (gets filled in by helper functions)
+     */
     private ?int $fullness;
-    private ?bool $for_curuser;
+    /**
+     * @var ?bool $forcuruser whether the current user has reserved this slot (gets filled in by helper functions)
+     */
+    private ?bool $forcuruser;
 
+    /**
+     * Constructs a new Slot
+     * @param int $id ID of slot
+     * @param int $startunit Unit this slot starts in
+     * @param int $duration duration of slot in units
+     * @param int $weekday weekday this slot occurs in
+     * @param string $room room this slot is for
+     * @param int $size how many pupils fit in this slot
+     * @link slot_helper::SCHOOL_UNITS
+     * @link WEEKDAY
+     */
     public function __construct(int $id, int $startunit, int $duration, int $weekday, string $room, int $size) {
         $this->id = $id;
         assert($startunit > 0);
@@ -55,7 +93,7 @@ class slot {
         assert($size >= 0);  // Make it technically possible to not allow any students in a room to temporarily disable the slot.
         $this->size = $size;
         $this->fullness = null;
-        $this->for_curuser = null;
+        $this->forcuruser = null;
     }
 
     /**
@@ -64,8 +102,8 @@ class slot {
      * @return int fullness
      */
     public function get_fullness(): int {
-        if(is_null($this->fullness)){
-            $this->_check_reservations();
+        if (is_null($this->fullness)) {
+            $this->check_reservations();
         }
 
         return $this->fullness;
@@ -74,14 +112,14 @@ class slot {
     /**
      * Returns whether the current user has a reservation for this slot.
      *
-     * @return bool for_curuser
+     * @return bool forcuruser
      */
-    public function get_for_curuser(): bool {
-        if(is_null($this->for_curuser)){
-            $this->_check_reservations();
+    public function get_forcuruser(): bool {
+        if (is_null($this->forcuruser)) {
+            $this->check_reservations();
         }
 
-        return $this->for_curuser;
+        return $this->forcuruser;
     }
 
     /**
@@ -98,7 +136,7 @@ class slot {
             'room' => $this->room,
             'size' => $this->size,
             'fullness' => $this->get_fullness(),
-            'for_curuser' => $this->get_for_curuser(),
+            'forcuruser' => $this->get_forcuruser(),
         ];
     }
 
@@ -117,7 +155,7 @@ class slot {
                 'room' => new external_value(PARAM_TEXT, 'The room this slot is for'),
                 'size' => new external_value(PARAM_INT, 'total capacity of the slot'),
                 'fullness' => new external_value(PARAM_INT, 'how many people have already reserved this slot'),
-                'for_curuser' => new external_value(PARAM_BOOL, 'whether the current user has reserved this slot'),
+                'forcuruser' => new external_value(PARAM_BOOL, 'whether the current user has reserved this slot'),
             ]
         );
     }
@@ -125,18 +163,18 @@ class slot {
     /**
      * Queries reservations for this slot and fills in internal data with that info.
      */
-    private function _check_reservations(): void {
+    private function check_reservations(): void {
         global $USER;
         $reservations = slot_helper::get_reservations_for_slot($this->id);
 
-        $this->fullness = sizeof($reservations);
+        $this->fullness = count($reservations);
 
-        foreach($reservations as $reservation){
-            if($reservation->userid == $USER['id']){
-                $this->for_curuser = true;
+        foreach ($reservations as $reservation) {
+            if ($reservation->userid === $USER['id']) {
+                $this->forcuruser = true;
                 return;
             }
         }
-        $this->for_curuser = false;
+        $this->forcuruser = false;
     }
 }

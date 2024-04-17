@@ -28,17 +28,37 @@ namespace local_lbplanner\model;
  * Model class for a filter for slots
  */
 class slot_filter {
+    /**
+     * @var int $id ID of filter
+     */
     public int $id;
+    /**
+     * @var int $id ID of linked slot
+     */
     public int $slotid;
+    /**
+     * @var ?int $id ID of linked course or null if any
+     */
     public ?int $courseid;
+    /**
+     * @var ?string $vintage linked class or null if any
+     */
     public ?string $vintage;
 
+    /**
+     * Constructs new slot_filter
+     * @param int $id ID of filter
+     * @param int $slotid ID of linked slot
+     * @param ?int $courseid ID of linked course or null if any
+     * @param ?string $vintage linked class or null if any
+     */
     public function __construct(int $id, int $slotid, ?int $courseid, ?string $vintage) {
         $this->id = $id;
         $this->slotid = $slotid;
         $this->courseid = $courseid;
-        if(!is_null($vintage))
+        if (!is_null($vintage)) {
             assert(strlen($vintage) <= 7);
+        }
         $this->vintage = $vintage;
     }
 }
