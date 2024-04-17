@@ -39,27 +39,27 @@ class WEEKDAY extends Enum {
      * monday
      */
     const MONDAY = 1;
-	/**
+    /**
      * tuesday
      */
     const TUESDAY = 2;
-	/**
+    /**
      * wednesday
      */
     const WEDNESDAY = 3;
-	/**
+    /**
      * thursday
      */
     const THURSDAY = 4;
-	/**
+    /**
      * friday
      */
     const FRIDAY = 5;
-	/**
+    /**
      * saturday
      */
     const SATURDAY = 6;
-	/**
+    /**
      * sunday
      */
     const SUNDAY = 7;

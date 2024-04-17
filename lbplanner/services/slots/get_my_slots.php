@@ -52,20 +52,20 @@ class get_slots extends external_api {
         // NOTE: could be better solved by applying filters within one complex SQL query.
         // Oh well.
 
-        $allSlots = slot_helper::get_all_slots();
+        $allslots = slot_helper::get_all_slots();
 
-        $myCourses = self::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $USER->id]);
-        $myCourseids = [];
-        foreach ($myCourses as $course) {
-            array_push($myCourseids, $course->courseid);
+        $mycourses = self::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $USER->id]);
+        $mycourseids = [];
+        foreach ($mycourses as $course) {
+            array_push($mycourseids, $course->courseid);
         }
 
         $mySlots = [];
-        foreach ($allSlots as $slot) {
+        foreach ($allslots as $slot) {
             $filters = slot_helper::get_filters_for_slot($slot->id);
-            foreach($filters as $filter) {
+            foreach ($filters as $filter) {
                 // Checking for course ID.
-                if (!is_null($filter->courseid) && !in_array($filter->courseid, $myCourseids)) {
+                if (!is_null($filter->courseid) && !in_array($filter->courseid, $mycourseids)) {
                     continue;
                 }
                 // TODO: replace address with cohorts.
@@ -74,7 +74,7 @@ class get_slots extends external_api {
                     continue;
                 }
                 // If all filters passed, add slot to my slots and break.
-                array_push($mySlots, $slot);
+                array_push($myslots, $slot);
                 break;
             }
         }

@@ -78,12 +78,12 @@ class slot_helper {
         global $DB;
         $slots = $DB->get_records(self::TABLE_SLOTS, []);
 
-        $slotsObj = [];
+        $slotsobj = [];
         foreach ($slots as $slot) {
-            array_push($slotsObj, new slot(...$slot));
+            array_push($slotsobj, new slot(...$slot));
         }
 
-        return $slotsObj;
+        return $slotsobj;
     }
 
     /**
@@ -109,13 +109,13 @@ class slot_helper {
         global $DB;
         $reservations = $DB->get_records(self::TABLE_RESERVATIONS, ['slotid' => $slotid]);
 
-        $reservationsObj = [];
+        $reservationsobj = [];
         foreach ($reservations as $reservation) {
             $reservation['date'] = new \DateTime($reservation['date']);
             array_push($reservationsObj, new reservation(...$reservation));
         }
 
-        return $reservationsObj;
+        return $reservationsobj;
     }
 
     /**
@@ -128,11 +128,11 @@ class slot_helper {
         global $DB;
         $filters = $DB->get_records(self::TABLE_SLOT_FILTERS, ['slotid' => $slotid]);
 
-        $filtersObj = [];
-        foreach($filters as $filter){
-            array_push($filtersObj, new slot_filter(...$filter));
+        $filtersobj = [];
+        foreach ($filters as $filter) {
+            array_push($filtersobj, new slot_filter(...$filter));
         }
 
-        return $filtersObj;
+        return $filtersobj;
     }
 }

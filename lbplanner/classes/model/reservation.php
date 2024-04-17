@@ -24,6 +24,7 @@
 
 namespace local_lbplanner\model;
 
+use DateTimeImmutable;
 use local_lbplanner\model\slot;
 use local_lbplanner\helpers\slot_helper;
 
@@ -31,14 +32,43 @@ use local_lbplanner\helpers\slot_helper;
  * Model class for reservation
  */
 class reservation {
+    /**
+     * @var int $id ID of reservation
+     */
     public int $id;
+    /**
+     * @var int $slotid ID of the linked slot
+     * @link slot
+     */
     public int $slotid;
-    public \DateTimeImmutable $date;
+    /**
+     * @var DateTimeImmutable $date date this reservation is on (time will be ignored)
+     */
+    public DateTimeImmutable $date;
+    /**
+     * @var int $userid ID of the user this reservation is for
+     */
     public int $userid;
+    /**
+     * @var int $reserverid ID of the user who submitted this reservation (either pupil or supervisor)
+     */
     public int $reserverid;
+    /**
+     * @var ?slot $slot the linked slot (gets filled in by helper functions)
+     * @link slot
+     */
     private ?slot $slot;
 
-    public function __construct(int $id, int $slotid, \DateTimeImmutable $date, int $userid, int $reserverid) {
+    /**
+     * Constructs a reservation
+     * @param int $id ID of reservation
+     * @param int $slotid ID of the linked slot
+     * @param DateTimeImmutable $date date this reservation is on (time will be ignored)
+     * @param int $userid ID of the user this reservation is for
+     * @param int $reserverid ID of the user who submitted this reservation (either pupil or supervisor)
+     * @link slot
+     */
+    public function __construct(int $id, int $slotid, DateTimeImmutable $date, int $userid, int $reserverid) {
         $this->id = $id;
         $this->slotid = $slotid;
         $this->date = $date;
@@ -50,10 +80,10 @@ class reservation {
     /**
      * Returns the associated slot.
      *
-     * @returns slot the associated slot
+     * @return slot the associated slot
      */
     public function get_slot(): slot {
-        if(is_null($this->slot)){
+        if (is_null($this->slot)) {
             $this->slot = slot_helper::get_slot($this->slotid);
         }
 
