@@ -52,55 +52,51 @@ class get_slots extends external_api {
         // NOTE: could be better solved by applying filters within one complex SQL query.
         // Oh well.
 
-        $all_slots = slot_helper::get_all_slots();
+        $allSlots = slot_helper::get_all_slots();
 
-        $my_courses = self::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $USER->id]);
-        $my_courseids = [];
-        foreach($my_courses as $course){
-            array_push($my_courseids, $course->courseid);
+        $myCourses = self::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $USER->id]);
+        $myCourseids = [];
+        foreach ($myCourses as $course) {
+            array_push($myCourseids, $course->courseid);
         }
 
-        /**
-         * @var slot[] $my_slots
-         */
-        $my_slots = [];
-        foreach($all_slots as $slot){
+        $mySlots = [];
+        foreach ($allSlots as $slot) {
             $filters = slot_helper::get_filters_for_slot($slot->id);
             foreach($filters as $filter) {
                 // Checking for course ID.
-                if(!is_null($filter->courseid) and !in_array($filter->courseid, $my_courseids)) {
+                if (!is_null($filter->courseid) && !in_array($filter->courseid, $myCourseids)) {
                     continue;
                 }
                 // TODO: replace address with cohorts.
                 // Checking for vintage.
-                if(!is_null($filter->vintage) and $USER->address !== $filter->vintage) {
+                if (!is_null($filter->vintage) && $USER->address !== $filter->vintage) {
                     continue;
                 }
                 // If all filters passed, add slot to my slots and break.
-                array_push($my_slots, $slot);
+                array_push($mySlots, $slot);
                 break;
             }
         }
 
         $now = new DateTimeImmutable();
-        /**
-         * @var slot[] $returnslots
-         */
         $returnslots = [];
         // Calculate date and time each slot happens next, and add it to the return list if within reach from today.
-        foreach($my_slots as $slot){
+        foreach ($mySlots as $slot) {
             $slotdaytime = slot_helper::SCHOOL_UNITS[$slot->startunit];
-            $slotdatetime = DateTime::createFromFormat('Y-m-d H:i',$now->format('Y-m-d ').$slotdaytime);
+            $slotdatetime = DateTime::createFromFormat('Y-m-d H:i', $now->format('Y-m-d ').$slotdaytime);
             // Move to next day this weekday occurs (doesn't move if it's the same as today).
             $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
 
             // Check if slot is before now (because time of day and such) and move it a week into the future if so.
-            if($now->diff($slotdatetime)->invert === 1)
+            if ($now->diff($slotdatetime)->invert === 1) {
                 $slotdatetime->add(new DateInterval('P1W'));
+            }
 
             // TODO: make setting of "3 days in advance" changeable.
-            if($now->diff($slotdatetime)->days <= 3)
+            if ($now->diff($slotdatetime)->days <= 3) {
                 array_push($returnslots, $slot->prepare_for_api());
+            }
         }
 
         return $returnslots;
