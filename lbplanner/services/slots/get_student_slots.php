@@ -32,7 +32,7 @@ use local_lbplanner\model\slot;
  * @copyright 2024 necodeIT
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_student_slots extends external_api {
+class slots_get_student_slots extends external_api {
     /**
      * Parameters for get_student_slots.
      * @return external_function_parameters
@@ -45,6 +45,7 @@ class get_student_slots extends external_api {
 
     /**
      * Returns slots of a user the supervisor can see.
+     * @param int $userid ID of the user in question (NOT the supervisor)
      */
     public static function get_student_slots(int $userid): array {
         global $USER;

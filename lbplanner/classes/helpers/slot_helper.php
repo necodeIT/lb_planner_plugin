@@ -189,7 +189,7 @@ class slot_helper {
 
         $slots = [];
         foreach ($allslots as $slot) {
-            $filters = slot_helper::get_filters_for_slot($slot->id);
+            $filters = self::get_filters_for_slot($slot->id);
             foreach ($filters as $filter) {
                 // Checking for course ID.
                 if (!is_null($filter->courseid) && !in_array($filter->courseid, $mycourseids)) {
@@ -219,7 +219,7 @@ class slot_helper {
         $slots = [];
         // Calculate date and time each slot happens next, and add it to the return list if within reach from today.
         foreach ($allslots as $slot) {
-            $slotdaytime = slot_helper::SCHOOL_UNITS[$slot->startunit];
+            $slotdaytime = self::SCHOOL_UNITS[$slot->startunit];
             $slotdatetime = DateTime::createFromFormat('Y-m-d H:i', $now->format('Y-m-d ').$slotdaytime);
             // Move to next day this weekday occurs (doesn't move if it's the same as today).
             $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
