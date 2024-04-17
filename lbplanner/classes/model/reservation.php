@@ -38,7 +38,6 @@ class reservation {
     public int $id;
     /**
      * @var int $slotid ID of the linked slot
-     * @link slot
      */
     public int $slotid;
     /**
@@ -55,7 +54,6 @@ class reservation {
     public int $reserverid;
     /**
      * @var ?slot $slot the linked slot (gets filled in by helper functions)
-     * @link slot
      */
     private ?slot $slot;
 
