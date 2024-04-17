@@ -21,7 +21,7 @@ use DateTime;
 use DateTimeImmutable;
 use external_api;
 use external_function_parameters;
-use external_single_structure;
+use external_multiple_structure;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
 use local_lbplanner\enums\WEEKDAY;
@@ -35,7 +35,7 @@ use local_lbplanner\enums\WEEKDAY;
  * @copyright 2024 necodeIT
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_slots extends external_api {
+class get_my_slots extends external_api {
     /**
      * Parameters for get_my_slots.
      * @return external_function_parameters
@@ -104,9 +104,11 @@ class get_slots extends external_api {
 
     /**
      * Returns the structure of the slot array
-     * @return external_single_structure
+     * @return external_multiple_structure
      */
-    public static function get_my_slots_returns(): external_single_structure {
-        return slot::api_structure();
+    public static function get_my_slots_returns(): external_multiple_structure {
+        return new external_multiple_structure(
+            slot::api_structure()
+        );
     }
 }
