@@ -31,6 +31,28 @@ use local_lbplanner\model\{slot, reservation, slot_filter};
  */
 class slot_helper {
     /**
+     * school units according to untis, in H:i format
+     */
+    const SCHOOL_UNITS = [
+        null,
+        '08:00',
+        '08:50',
+        '09:50',
+        '10:40',
+        '11:30',
+        '12:30',
+        '13:20',
+        '14:10',
+        '15:10',
+        '16:00',
+        '17:00',  // All units after this point are 45min long instead of the usual 50.
+        '17:45',  // We will assume 50min anyway because it's easier that way.
+        '18:45',
+        '19:30',
+        '20:15',
+        '21:00',
+    ];
+    /**
      * local_lbplanner_slots table.
      */
     const TABLE_SLOTS = 'local_lbplanner_slots';
