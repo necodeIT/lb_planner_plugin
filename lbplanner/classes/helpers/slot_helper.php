@@ -24,6 +24,12 @@
 
 namespace local_lbplanner\helpers;
 
+use DateInterval;
+use DateTime;
+use DateTimeImmutable;
+
+use external_api;
+use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\model\{slot, reservation, slot_filter};
 
 /**
@@ -134,5 +140,67 @@ class slot_helper {
         }
 
         return $filtersobj;
+    }
+
+    /**
+     * Filters an array of slots for the slots that the user can reserve.
+     * @param slot[] $allslots the slots to filter
+     * @param mixed $user a user object - e.g. $USER or a user object from the database
+     * @return slot[] the filtered slot array
+     */
+    public static function filter_slots_for_user(array $allslots, mixed $user): array {
+        $mycourses = external_api::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $user->id]);
+        $mycourseids = [];
+        foreach ($mycourses as $course) {
+            array_push($mycourseids, $course->courseid);
+        }
+
+        $slots = [];
+        foreach ($allslots as $slot) {
+            $filters = slot_helper::get_filters_for_slot($slot->id);
+            foreach ($filters as $filter) {
+                // Checking for course ID.
+                if (!is_null($filter->courseid) && !in_array($filter->courseid, $mycourseids)) {
+                    continue;
+                }
+                // TODO: replace address with cohorts.
+                // Checking for vintage.
+                if (!is_null($filter->vintage) && $user->address !== $filter->vintage) {
+                    continue;
+                }
+                // If all filters passed, add slot to my slots and break.
+                array_push($slots, $slot);
+                break;
+            }
+        }
+        return $slots;
+    }
+
+    /**
+     * Filters an array of slots for a timerange around now.
+     * @param slot[] $allslots the slots to filter
+     * @param DateTimeImmutable $now a point in time representing the point in time to start filtering at
+     * @param int $range how many days in the future the slot is allowed to be
+     * @return slot[] the filtered slot array
+     */
+    public static function filter_slots_for_time(array $allslots, DateTimeImmutable $now, int $range): array {
+        $slots = [];
+        // Calculate date and time each slot happens next, and add it to the return list if within reach from today.
+        foreach ($allslots as $slot) {
+            $slotdaytime = slot_helper::SCHOOL_UNITS[$slot->startunit];
+            $slotdatetime = DateTime::createFromFormat('Y-m-d H:i', $now->format('Y-m-d ').$slotdaytime);
+            // Move to next day this weekday occurs (doesn't move if it's the same as today).
+            $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
+
+            // Check if slot is before now (because time of day and such) and move it a week into the future if so.
+            if ($now->diff($slotdatetime)->invert === 1) {
+                $slotdatetime->add(new DateInterval('P1W'));
+            }
+
+            if ($now->diff($slotdatetime)->days <= $range) {
+                array_push($slots, $slot->prepare_for_api());
+            }
+        }
+        return $slots;
     }
 }
