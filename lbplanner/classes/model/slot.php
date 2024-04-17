@@ -40,17 +40,14 @@ class slot {
     public int $id;
     /**
      * @var int $startunit Unit this slot starts in
-     * @link slot_helper::SCHOOL_UNITS
      */
     public int $startunit;
     /**
      * @var int $duration duration of slot in units
-     * @link slot_helper::SCHOOL_UNITS
      */
     public int $duration;
     /**
      * @var int $weekday weekday this slot occurs in
-     * @link WEEKDAY
      */
     public int $weekday;
     /**

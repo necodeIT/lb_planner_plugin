@@ -112,7 +112,7 @@ class slot_helper {
         $reservationsobj = [];
         foreach ($reservations as $reservation) {
             $reservation['date'] = new \DateTime($reservation['date']);
-            array_push($reservationsObj, new reservation(...$reservation));
+            array_push($reservationsobj, new reservation(...$reservation));
         }
 
         return $reservationsobj;

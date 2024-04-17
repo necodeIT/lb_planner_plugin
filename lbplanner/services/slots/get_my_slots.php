@@ -60,7 +60,7 @@ class get_slots extends external_api {
             array_push($mycourseids, $course->courseid);
         }
 
-        $mySlots = [];
+        $myslots = [];
         foreach ($allslots as $slot) {
             $filters = slot_helper::get_filters_for_slot($slot->id);
             foreach ($filters as $filter) {
@@ -82,7 +82,7 @@ class get_slots extends external_api {
         $now = new DateTimeImmutable();
         $returnslots = [];
         // Calculate date and time each slot happens next, and add it to the return list if within reach from today.
-        foreach ($mySlots as $slot) {
+        foreach ($myslots as $slot) {
             $slotdaytime = slot_helper::SCHOOL_UNITS[$slot->startunit];
             $slotdatetime = DateTime::createFromFormat('Y-m-d H:i', $now->format('Y-m-d ').$slotdaytime);
             // Move to next day this weekday occurs (doesn't move if it's the same as today).
