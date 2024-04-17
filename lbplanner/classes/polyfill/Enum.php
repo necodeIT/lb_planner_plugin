@@ -76,7 +76,7 @@ class Enum {
     /**
      * Formats all possible enum values into a string
      * Example:
-     * (31=>RED,32=>GREEN,33=>YELLOW)
+     * [31=>RED,32=>GREEN,33=>YELLOW]
      * @return string the resulting string
      */
     public static function format(): string {
