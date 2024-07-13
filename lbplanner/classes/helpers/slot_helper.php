@@ -27,7 +27,7 @@ namespace local_lbplanner\helpers;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
-
+use DateTimeInterface;
 use external_api;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\model\{slot, reservation, slot_filter};
@@ -149,7 +149,7 @@ class slot_helper {
 
         $reservationsobj = [];
         foreach ($reservations as $reservation) {
-            $reservation['date'] = new \DateTime($reservation['date']);
+            $reservation['date'] = new DateTimeImmutable($reservation['date']);
             array_push($reservationsobj, new reservation(...$reservation));
         }
 
@@ -175,7 +175,8 @@ class slot_helper {
     }
 
     /**
-     * Filters an array of slots for the slots that the user can reserve.
+     * Filters an array of slots for the slots that the user can theoretically reserve
+     * NOTE: not taking into account time or fullness, only filters i.e. users' class and courses
      * @param slot[] $allslots the slots to filter
      * @param mixed $user a user object - e.g. $USER or a user object from the database
      * @return slot[] the filtered slot array
@@ -219,20 +220,51 @@ class slot_helper {
         $slots = [];
         // Calculate date and time each slot happens next, and add it to the return list if within reach from today.
         foreach ($allslots as $slot) {
-            $slotdaytime = self::SCHOOL_UNITS[$slot->startunit];
-            $slotdatetime = DateTime::createFromFormat('Y-m-d H:i', $now->format('Y-m-d ').$slotdaytime);
-            // Move to next day this weekday occurs (doesn't move if it's the same as today).
-            $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
-
-            // Check if slot is before now (because time of day and such) and move it a week into the future if so.
-            if ($now->diff($slotdatetime)->invert === 1) {
-                $slotdatetime->add(new DateInterval('P1W'));
-            }
+            $slotdatetime = self::calculate_slot_datetime($slot, $now);
 
             if ($now->diff($slotdatetime)->days <= $range) {
                 array_push($slots, $slot->prepare_for_api());
             }
         }
         return $slots;
+    }
+
+    /**
+     * calculates when a slot is to happen next
+     * @param slot $slot the slot
+     * @param DateTimeInterface $now the point in time representing now
+     * @return DateTimeImmutable the next time this slot will occur
+     */
+    public static function calculate_slot_datetime(slot $slot, DateTimeInterface $now): DateTimeImmutable {
+        $slotdaytime = self::SCHOOL_UNITS[$slot->startunit];
+        // NOTE: format and fromFormat use different date formatting conventions
+        $slotdatetime = DateTime::createFromFormat('YY-MM-DD tHH:MM', $now->format('Y-m-d ').$slotdaytime);
+        // Move to next day this weekday occurs (doesn't move if it's the same as today).
+        $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
+
+        // Check if slot is before now (because time of day and such) and move it a week into the future if so.
+        if ($now->diff($slotdatetime)->invert === 1) {
+            $slotdatetime->add(new DateInterval('P1W'));
+        }
+
+        return new DateTimeImmutable($slotdatetime);
+    }
+
+    /**
+     * Returns a list of all slots belonging to a supervisor.
+     * @param int $supervisorid userid of the supervisor in question
+     *
+     * @return slot[] An array of the slots.
+     */
+    public static function check_slot_supervisor(int $supervisorid, int $slotid): bool {
+        global $DB;
+
+        $result = $DB->get_record_sql(
+            'SELECT supervisor.userid FROM '.self::TABLE_SUPERVISORS.' as supervisor'.
+            'WHERE supervisor.userid=? AND supervisor.slotid=?',
+            [$supervisorid, $slotid]
+        );
+
+        return $result !== false;
     }
 }
