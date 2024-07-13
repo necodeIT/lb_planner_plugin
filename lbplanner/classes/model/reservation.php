@@ -25,6 +25,10 @@
 namespace local_lbplanner\model;
 
 use DateTimeImmutable;
+
+use external_single_structure;
+use external_value;
+
 use local_lbplanner\model\slot;
 use local_lbplanner\helpers\slot_helper;
 
@@ -56,6 +60,10 @@ class reservation {
      * @var ?slot $slot the linked slot (gets filled in by helper functions)
      */
     private ?slot $slot;
+    /**
+     * @var ?DateTimeImmutable $datetime the date this reservation is for, with time filled in
+     */
+    private ?DateTimeImmutable $datetime;
 
     /**
      * Constructs a reservation
@@ -86,5 +94,53 @@ class reservation {
         }
 
         return $this->slot;
+    }
+
+    /**
+     * Prepares data for the DB endpoint.
+     *
+     * @return object a representation of this reservation and its data
+     */
+    public function prepare_for_db(): object {
+        $obj = new \stdClass();
+
+        $obj->slotid = $this->slotid;
+        $obj->date = $this->date;
+        $obj->userid = $this->userid;
+        $obj->reserverid = $this->reserverid;
+
+        return $obj;
+    }
+
+    /**
+     * Prepares data for the API endpoint.
+     *
+     * @return array a representation of this reservation and its data
+     */
+    public function prepare_for_api(): array {
+        return [
+            'id' => $this->id,
+            'slotid' => $this->slotid,
+            'datetime' => $this->date->format('Y-m-d'),
+            'userid' => $this->userid,
+            'reserverid' => $this->reserverid,
+        ];
+    }
+
+    /**
+     * Returns the data structure of a reservation for the API.
+     *
+     * @return external_single_structure The data structure of a reservation for the API.
+     */
+    public static function api_structure(): external_single_structure {
+        return new external_single_structure(
+            [
+                'id' => new external_value(PARAM_INT, 'reservation ID'),
+                'slotid' => new external_value(PARAM_INT, 'ID of associated slot'),
+                'date' => new external_value(PARAM_TEXT, 'date of the reservation in YYYY-MM-DD (as per ISO-8601)'),
+                'userid' => new external_value(PARAM_INT, 'ID of the user this reservation is for'),
+                'reserverid' => new external_value(PARAM_INT, 'ID of the user who submitted this reservation'),
+            ]
+        );
     }
 }
