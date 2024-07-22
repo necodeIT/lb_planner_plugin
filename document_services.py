@@ -2,21 +2,17 @@ import json
 import re
 import sys
 from os import path
+import traceback as tb
 
 from typing import Any
 
+# https://regex101.com/r/kgCV7K
+MOODLESTRUCT_REGEX = r"(?:['\"](\w+)['\"]\s*=>|return)\s*new\s*" \
+    r"external_value\s*\(\s*(PARAM_\w+)\s*,\s*((?:(['\"]).+?\4)(?:\s*\.\s*(?:\w+::format\(\))|'.*?')*)" \
+    r"(?:,\s*(\w+)(?:,\s*([^,]+?)(?:,\s*(\w+),?)?)?)?\s*\)"
+
 HAS_WARNED = False
-
-MOODLESTRUCT_REGEX = r"(?:['\"](\w+)['\"]\s*=>|return)\s*new\s*external_value\s*\(\s*(PARAM_\w+)\s*,\s*((?:(['\"]).+?\4)(?:\s*\.\s*(?:\w+::format\(\))|'.*?')*)(?:,\s*(\w+)(?:,\s*([^,]+?)(?:,\s*(\w+),?)?)?)?\s*\)"
-
-
-SPECIAL_VARS = {
-    "$USER->id": "derived from token",
-}
-"""
-A map of special variables and the value to replace them with to make them more readable.
-"""
-
+CURRENT_SERVICE: str | None = None
 
 def warn(msg: str, *context: Any):
     """Prints a warning message to the console and sets the global HAS_WARNED variable to True.
@@ -25,11 +21,77 @@ def warn(msg: str, *context: Any):
     """
     global HAS_WARNED
     WARN = "\033[43m\033[30mWARN:\033[0m "
-    WARN_TAB = "    \033[43m \033[0m "
+    WARN_TAB = "    \033[43m\033[33m|\033[0m "
 
     HAS_WARNED = True
 
-    print(WARN, msg, f"\n{WARN_TAB}", *[str(c).replace('\n', '\n' + WARN_TAB) for c in context])
+    stack = tb.extract_stack()
+    stack_str = " -> ".join([f"\033[34m{frame.name}\033[0m" for frame in stack if frame != stack[-1]])
+
+    service_msg: str
+    if CURRENT_SERVICE is None:
+        service_msg = "outside any service"
+    else:
+        service_msg = f"in service \033[36m{CURRENT_SERVICE}\033[0m"
+
+    print(
+        f"{WARN}\033[31m{msg}\033[0m {service_msg} ({stack_str})",
+        f"\n{WARN_TAB}  " if len(context) > 0 else "",
+        *[f"\033[2m{c}\033[0m".replace('\n', '\n\033[0m' + WARN_TAB + "  \033[2m") for c in context],
+        file=sys.stderr,
+        sep=""
+    )
+
+def convert_php_type_to_normal_type(param_type: str) -> str:
+    CONVERSIONS = {
+        "PARAM_INT": "int",
+        "PARAM_TEXT": "String",
+        "PARAM_URL": "String",
+        "PARAM_BOOL": "bool",
+    }
+
+    return CONVERSIONS.get(param_type, param_type)
+
+def explain_php_value(val: str) -> tuple[None | str | int | bool, str]:
+    SPECIAL_VALUES = {
+        "$USER->id": ("derived from token", "int"), # this exact phrase is checked for in the web UI
+        "null": (None, "")
+    }
+
+    if val in SPECIAL_VALUES.keys():
+        return SPECIAL_VALUES[val]
+    elif val.isnumeric():
+        return (int(val), "int")
+    elif val.lower() in ("true", "false"):
+        return (val.lower() == "true", "bool")
+    elif val[0] + val[-1] in ("''", '""'):
+
+        # see if the same kind of quote is within string
+        if val[1:-1].count(val[0]) > 0:
+            warn("found potentially non-literal string", val)
+
+        return (val[1:-1], "String")
+    else:
+        warn("found unknown value", val)
+        return (f"unknown: {val}", "unknown")
+
+def parse_isrequired(inpot: str) -> bool | None:
+    if inpot in ('VALUE_REQUIRED', ''):
+        return True
+    elif inpot == 'VALUE_DEFAULT':
+        return False
+    else:
+        warn("found unparseable value for isrequired", inpot)
+        return None
+
+def parse_nullable(inpot: str) -> bool | None:
+    if inpot in ('', 'NULL_NOT_ALLOWED'):
+        return False
+    elif inpot == 'NULL_ALLOWED':
+        return True
+    else:
+        warn(f"found weird value for nullable: {inpot}")
+        return None
 
 class SlotsDict:
     @property
@@ -44,10 +106,10 @@ class SlotsDict:
 class ReturnInfo(SlotsDict):
     __slots__ = ('type', 'description', 'nullable')
 
-    def __init__(self, type: str, description: str, nullable: bool):
-        self.type = type
+    def __init__(self, type: str, description: str, nullable: str):
+        self.type = convert_php_type_to_normal_type(type)
         self.description = description
-        self.nullable = nullable
+        self.nullable = parse_nullable(nullable)
 
 class ParamInfo(SlotsDict):
     __slots__ = ('type', 'description', 'required', 'default_value', 'nullable')
@@ -55,14 +117,20 @@ class ParamInfo(SlotsDict):
     def __init__(self,
                  type: str,
                  description: str,
-                 required: bool,
-                 default_value: str | None,
-                 nullable: bool):
-        self.type = type
+                 required: str,
+                 default_value: str,
+                 nullable: str):
+
+        self.type = convert_php_type_to_normal_type(type)
+
+        defval, deftype = explain_php_value(default_value)
+        if defval is not None and deftype != self.type:
+            warn(f"Type of default value does not match parameter type - {deftype} != {self.type}", description)
+
         self.description = description
-        self.required = required
-        self.default_value = default_value
-        self.nullable = nullable
+        self.required = parse_isrequired(required)
+        self.default_value = defval
+        self.nullable = parse_nullable(nullable)
 
 class FunctionInfo(SlotsDict):
     __slots__ = ('name', 'group', 'capabilities', 'description', 'path')
@@ -106,7 +174,7 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
         func_dict["group"] = function[1]
 
         # Extracting and adjusting capabilities
-        capabilities = re.search(r"'capabilities' => '.*:(.*?)'", function[3])
+        capabilities = re.search(r"'capabilities' => '(.*?:.*?)'", function[3])
         if capabilities is None:
             # check if call needs no capabilities
             capabilities = re.search(r"'capabilities' => ''", function[3])
@@ -126,7 +194,7 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
         if all(value is not None for value in func_dict.values()):
             function_info.append(FunctionInfo(**func_dict))
         else:
-            warn(f"Could not gather all info for {func_dict["function_name"]}", func_dict)
+            warn(f"Could not gather all info for {func_dict["name"]}", func_dict)
 
     if len(function_info) == 0:
         warn("Couldn't find any functions!")
@@ -161,27 +229,27 @@ def extract_php_functions(php_code: str, name: str) -> tuple[str | None, str | N
 
     return parameters_function, returns_function
 
-def parse_imports(input_str: str, symbol: str) -> str:
+def parse_imports(input_str: str, symbol: str) -> str | None:
     use_pattern = fr"use ((?:\w+\\)+){symbol};"
     uses: list[str] = re.findall(use_pattern, input_str)
 
-    namespaces = {
-        "local_lbplanner": "classes"# not entirely true, but good enough for now
+    namespaces = { # it's technically possible to import from outside /classes/
+        "local_lbplanner\\helpers": "classes/helpers",
+        "local_lbplanner\\enums": "classes/enums",
+        "local_lbplanner\\polyfill": "classes/polyfill"
     }
     fp_l: list[str] = []
     for use in uses:
-        p = use.split('\\')[:-1]
-
-        namespace = namespaces.get(p[0])
-        if namespace is not None:
-            p[0] = namespace
-
-        fp_l.append(path.join("lbplanner", *p, f"{symbol}.php"))
+        for namespace, p in namespaces.items():
+            if use.startswith(namespace):
+                fp_l.append(path.join(path.dirname(__file__), "lbplanner", p, f"{symbol}.php"))
 
     if len(fp_l) > 1:
-        raise Exception("found import collision?")
+        warn(f"found potential import collision for {symbol}", input_str)
+        return None
     elif len(fp_l) == 0:
-        raise Exception(f"Couldn't find symbol: {symbol}")
+        warn(f"Couldn't find symbol: {symbol}", input_str)
+        return None
     else:
         return fp_l[0]
 
@@ -193,8 +261,12 @@ def parse_phpstuff(inpot: str) -> str:
         enum_name = inpot[:-10]
         fullbody_pattern = f"class {enum_name} extends Enum {{.*?}}"
 
-        with open(f"lbplanner/classes/enums/{enum_name}.php", "r") as f:
-            matches = re.findall(fullbody_pattern, f.read(), re.DOTALL)
+        fp = f"lbplanner/classes/enums/{enum_name}.php"
+        if not path.exists(fp):
+            warn(f"Couldn't find enum file {fp}")
+            return ""
+        with open(fp, "r") as f:
+            matches: list[str] = re.findall(fullbody_pattern, f.read(), re.DOTALL)
             if len(matches) == 1:
                 body = matches[0]
             else:
@@ -256,26 +328,30 @@ def parse_returns(input_str: str, file_content: str, name: str) -> tuple[dict[st
     # Check for the presence of 'external_multiple_structure'
     is_multiple_structure = "external_multiple_structure" in input_str
 
-    matches = re.findall(redir_pattern, input_str)
-    if len(matches) > 1:
+    redir_matches: list[list[str]] = re.findall(redir_pattern, input_str)
+    if len(redir_matches) > 1:
         warn(f"Couldn't parse return values in {name}", input_str)
         return ({}, False)
 
-    if len(matches) == 1:
-        match = matches[0]
+    if len(redir_matches) == 1:
+        match = redir_matches[0]
         meth_pattern = rf"public static function {match[1]}\(\)(?: ?: ?\w+)? ?{{(?P<body>.*?)}}"
 
         fp = parse_imports(file_content, match[0])
+        if fp is None:
+            # already warned in parse_imports, we don't need to warn again
+            return {}, is_multiple_structure
+
         with open(fp, "r") as f:
             new_file_content = f.read()
-            matches = re.findall(meth_pattern, new_file_content, re.DOTALL)
-            if len(matches) == 0:
+            meth_matches: list[str] = re.findall(meth_pattern, new_file_content, re.DOTALL)
+            if len(meth_matches) == 0:
                 warn(f"Couldn't find {match[0]}::{match[1]}() inside {fp} for {name}")
                 return ({}, False)
-            elif len(matches) > 1:
+            elif len(meth_matches) > 1:
                 raise Exception(f"Found multiple definitions for {match[0]}::{match[1]}() inside {fp}")
             else:
-                result = parse_returns(matches[0], new_file_content, fp)
+                result = parse_returns(meth_matches[0], new_file_content, fp)
 
                 # if multiple_structure is detected here, add it
                 if is_multiple_structure:
@@ -283,7 +359,7 @@ def parse_returns(input_str: str, file_content: str, name: str) -> tuple[dict[st
                 else:
                     return result
 
-    matches = re.findall(MOODLESTRUCT_REGEX, input_str)
+    matches: list[list[str]] = re.findall(MOODLESTRUCT_REGEX, input_str)
 
     output_dict = {}
     for match in matches:
@@ -293,24 +369,15 @@ def parse_returns(input_str: str, file_content: str, name: str) -> tuple[dict[st
                 warn("got empty return key name in a structure larger than 1", matches)
             else:
                 key = ''
-        value_type = match[1]
-        description = parse_phpstring(match[2])
-        required_str = match[4]
-        default_str = match[5]
-        nullable_str = match[6]
 
-        if required_str not in ('VALUE_REQUIRED', ''):
+        if not parse_isrequired(match[4]):
             warn(f"found optional value in returns structure for {name}", input_str)
+
+        default_str = match[5]
         if default_str not in ('null', ''):
             warn(f"found non-null 'default value' in returns structure for {name}: {default_str}", input_str)
-        if nullable_str in ('', 'NULL_NOT_ALLOWED'):
-            nullable = False
-        elif nullable_str == 'NULL_ALLOWED':
-            nullable = True # weird, but I'll allow it
-        else:
-            warn(f"found weird value for nullable in {name}: {nullable_str}", input_str)
 
-        output_dict[key] = ReturnInfo(convert_param_type_to_normal_type(value_type), description, nullable)
+        output_dict[key] = ReturnInfo(match[1], parse_phpstring(match[2]), match[6])
 
     if len(output_dict) == 0:
         if re.match(nullensure_pattern, input_str) is None:
@@ -318,23 +385,11 @@ def parse_returns(input_str: str, file_content: str, name: str) -> tuple[dict[st
 
     return output_dict, is_multiple_structure
 
-
-def convert_param_type_to_normal_type(param_type: str) -> str:
-    CONVERSIONS = {
-        "PARAM_INT": "int",
-        "PARAM_TEXT": "String",
-        "PARAM_URL": "String",
-        "PARAM_BOOL": "bool",
-    }
-
-    return CONVERSIONS.get(param_type, param_type)
-
-
 def parse_params(input_text: str) -> dict[str, ParamInfo]:
     # Regular expression to match the parameters inside the 'new external_value()' function
 
     # Find all matches of the pattern in the input text
-    matches = re.findall(MOODLESTRUCT_REGEX, input_text)
+    matches: list[list[str]] = re.findall(MOODLESTRUCT_REGEX, input_text)
 
     if len(matches) == 0:
         nullensure_pattern = r".*return new external_function_parameters(\s*\[\]\s*);.*"
@@ -346,11 +401,11 @@ def parse_params(input_text: str) -> dict[str, ParamInfo]:
     for match in matches:
         param_name = match[0]
         result[param_name] = ParamInfo(
-            convert_param_type_to_normal_type(match[1]),
+            match[1],
             parse_phpstring(match[2]),
-            True if match[4] == "VALUE_REQUIRED" else False,
-            SPECIAL_VARS.get(match[5], match[5]) if match[5] != "null" else None,
-            False if match[6] == "NULL_NOT_ALLOWED" else True,
+            match[4],
+            match[5],
+            match[6],
         )
 
     return result
@@ -364,6 +419,9 @@ if __name__ == "__main__":
         complete_info = []
 
         for i, info in enumerate(infos):
+
+            CURRENT_SERVICE = info.name
+
             with open(info.path, "r") as func_file:
                 func_content = func_file.read()
                 params_func, returns_func = extract_php_functions(func_content, info.path)
@@ -377,20 +435,26 @@ if __name__ == "__main__":
 
                 complete_info.append(FunctionInfoEx(info, params, returns, returns_multiple))
 
+        CURRENT_SERVICE = None
+
         data = json.dumps(complete_info, default=lambda x: x.__dict__)
-        declaration = f"const funcs = {data}"
 
-        script: str
-        with open(f"{sys.argv[1]}/script.js", "r") as f:
-            script = f.read()
-            lines = script.splitlines()
-            for i in range(len(lines)):
-                if lines[i].startswith('const funcs = '):
-                    lines[i] = declaration
-            script = "\n".join(lines)
+        if sys.argv[1] == "-":
+            print(data)
+        else:
+            declaration = f"const funcs = {data}"
 
-        with open(f"{sys.argv[1]}/script.js", "w") as f:
-            f.write(script)
+            script: str
+            with open(f"{sys.argv[1]}/script.js", "r") as f:
+                script = f.read()
+                lines = script.splitlines()
+                for i in range(len(lines)):
+                    if lines[i].startswith('const funcs = '):
+                        lines[i] = declaration
+                script = "\n".join(lines)
+
+            with open(f"{sys.argv[1]}/script.js", "w") as f:
+                f.write(script)
 
     if HAS_WARNED:
         sys.exit(1)
