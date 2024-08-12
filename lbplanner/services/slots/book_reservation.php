@@ -119,8 +119,10 @@ class slots_book_reservation extends external_api {
             }
         }
 
+        // TODO: check if user is already in a different slot at the same time
+
         // check if slot is full
-        if ($slot->get_fullness() > $slot->size){
+        if ($slot->get_fullness() >= $slot->size){
             throw new \moodle_exception('Slot is already full');
         }
 
@@ -128,6 +130,8 @@ class slots_book_reservation extends external_api {
 
         $id = $DB->insert_record(slot_helper::TABLE_RESERVATIONS, $reservation->prepare_for_db());
         $reservation->id = $id;
+
+        // TODO: if userid!=USER->id → send notif to the user that the supervisor booked a reservation for them
 
         return $reservation->prepare_for_api();
     }
