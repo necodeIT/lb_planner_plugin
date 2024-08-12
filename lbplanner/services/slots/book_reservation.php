@@ -69,7 +69,7 @@ class slots_book_reservation extends external_api {
     }
 
     /**
-     * Returns slots the current user is supposed to see
+     * Books a reservation
      */
     public static function book_reservation(int $slotid, string $date, int $userid): array {
         global $USER, $DB;
@@ -133,8 +133,8 @@ class slots_book_reservation extends external_api {
     }
 
     /**
-     * Returns the structure of the slot array
-     * @return external_multiple_structure
+     * Returns the structure of the reservation
+     * @return external_single_structure
      */
     public static function book_reservation_returns(): external_single_structure {
         return reservation::api_structure();

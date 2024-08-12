@@ -138,6 +138,25 @@ class slot_helper {
     }
 
     /**
+     * Returns a singular reservation.
+     * @param int $reservationid ID of the reservation
+     *
+     * @return reservation the requested reservation
+     */
+    public static function get_reservation(int $reservationid): reservation {
+        global $DB;
+        $reservation = $DB->get_record(self::TABLE_RESERVATIONS, ['id' => $reservationid]);
+
+        if ($reservation === false) {
+            throw new \moodle_exception('requested reservation does not exist');
+        }
+
+        $reservation['date'] = new DateTimeImmutable($reservation['date']);
+
+        return new reservation(...$reservation);
+    }
+
+    /**
      * Returns reservations for a slot.
      * @param int $slotid ID of the slot
      *
@@ -248,6 +267,12 @@ class slot_helper {
         }
 
         return new DateTimeImmutable($slotdatetime);
+    }
+
+    public static function amend_date_with_unit_time(int $unit, DateTimeInterface $date): DateTimeImmutable {
+        $daytime = slot_helper::SCHOOL_UNITS[$unit];
+
+        return DateTimeImmutable::createFromFormat('YY-MM-DD tHH:MM', $date->format('Y-m-d ').$daytime);
     }
 
     /**
