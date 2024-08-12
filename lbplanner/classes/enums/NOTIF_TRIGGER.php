@@ -56,4 +56,12 @@ class NOTIF_TRIGGER extends Enum {
      * User registered
      */
     const USER_REGISTERED = 5;
+    /**
+     * Unbook requested by supervisor
+     */
+    const UNBOOK_REQUESTED = 6;
+    /**
+     * Unbook forced by supervisor
+     */
+    const UNBOOK_FORCED = 7;
 }

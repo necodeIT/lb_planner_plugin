@@ -61,7 +61,11 @@ class reservation {
      */
     private ?slot $slot;
     /**
-     * @var ?DateTimeImmutable $datetime the date this reservation is for, with time filled in
+     * @var ?DateTimeImmutable $datetime the date this reservation starts at, with time filled in
+     */
+    private ?DateTimeImmutable $datetime;
+    /**
+     * @var ?DateTimeImmutable $datetime the date this reservation ends at, with time filled in
      */
     private ?DateTimeImmutable $datetime;
 
@@ -113,6 +117,34 @@ class reservation {
     }
 
     /**
+     * Calculates the exact time and date this reservation is supposed to start
+     * 
+     * @return DateTimeImmutable
+     */
+    public function get_datetime(): DateTimeImmutable {
+        if (is_null($this->datetime)) {
+            $slot = $this->get_slot();
+            $this->datetime = slot_helper::amend_date_with_unit_time($this->date, $slot->startunit);
+        }
+
+        return $this->datetime;
+    }
+
+    /**
+     * Calculates the exact time and date this reservation is supposed to start
+     * 
+     * @return DateTimeImmutable
+     */
+    public function get_datetime_end(): DateTimeImmutable {
+        if (is_null($this->datetime)) {
+            $slot = $this->get_slot();
+            $this->datetime_end = slot_helper::amend_date_with_unit_time($this->date, $slot->startunit + $slot->duration)
+        }
+
+        return $this->datetime_end;
+    }
+
+    /**
      * Prepares data for the API endpoint.
      *
      * @return array a representation of this reservation and its data
@@ -121,7 +153,7 @@ class reservation {
         return [
             'id' => $this->id,
             'slotid' => $this->slotid,
-            'datetime' => $this->date->format('Y-m-d'),
+            'date' => $this->date->format('Y-m-d'),
             'userid' => $this->userid,
             'reserverid' => $this->reserverid,
         ];
