@@ -286,10 +286,10 @@ $functions = [
         'capabilities' => '',
         'ajax' => true,
     ],
-    'local_lbplanner_slots_get_my_slot' => [
-        'classname' => 'local_lbplanner_services\slots_get_my_slot',
-        'methodname' => 'get_my_slot',
-        'classpath' => 'local/lbplanner/services/slots/get_my_slot.php',
+    'local_lbplanner_slots_get_my_slots' => [
+        'classname' => 'local_lbplanner_services\slots_get_my_slots',
+        'methodname' => 'get_my_slots',
+        'classpath' => 'local/lbplanner/services/slots/get_my_slots.php',
         'description' => 'Get all slots the user can theoretically reserve.',
         'type' => 'read',
         'capabilities' => 'local/lb_planner:student',
