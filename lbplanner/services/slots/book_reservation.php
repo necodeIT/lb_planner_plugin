@@ -61,7 +61,7 @@ class slots_book_reservation extends external_api {
             'userid' => new external_value(
                 PARAM_INT,
                 'the user to reserve this slot for',
-                VALUE_OPTIONAL,
+                VALUE_DEFAULT,
                 $USER->id,
                 NULL_NOT_ALLOWED
             ),

@@ -236,7 +236,8 @@ def parse_imports(input_str: str, symbol: str) -> str | None:
     namespaces = { # it's technically possible to import from outside /classes/
         "local_lbplanner\\helpers": "classes/helpers",
         "local_lbplanner\\enums": "classes/enums",
-        "local_lbplanner\\polyfill": "classes/polyfill"
+        "local_lbplanner\\polyfill": "classes/polyfill",
+        "local_lbplanner\\model": "classes/model",
     }
     fp_l: list[str] = []
     for use in uses:
