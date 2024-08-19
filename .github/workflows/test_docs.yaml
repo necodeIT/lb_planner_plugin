@@ -6,7 +6,7 @@ on:
       - opened
       - synchronize
     branches:
-      - LP-55-Backend-Refactor # Temporary. Will be changed to `moodle` when refactor is complete
+      - LP-55-Backend-Refactor # Temporary. Will be changed to `main` when refactor is complete
 
 jobs:
   generate-api-docs:

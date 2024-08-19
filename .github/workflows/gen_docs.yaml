@@ -3,7 +3,7 @@ name: Generate API Docs
 on:
   push:
     branches:
-      - LP-55-Backend-Refactor # This is temporary and will be replaced by `moodle` once the refactor is complete
+      - LP-55-Backend-Refactor # This is temporary and will be replaced by `main` once the refactor is complete
   workflow_dispatch: # For manual triggering
 
 jobs:
@@ -14,15 +14,18 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
         with:
-          ref: LP-55-Backend-Refactor # This is temporary and will be replaced by `moodle` once the refactor is complete
+          ref: LP-55-Backend-Refactor # This is temporary and will be replaced by `main` once the refactor is complete
           path: moodle
 
-      - name: Checkout docs branch
+      - name: Checkout docs repo
         uses: actions/checkout@v3
         with:
-          ref: docs
+          repository: 'necodeIT/lb_planner_docs'
+          ref: main
           clean: false
           path: docs
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v4.7.1
@@ -33,11 +36,11 @@ jobs:
         working-directory: moodle
         run: python document_services.py ../docs/moodle
 
-      - name: Push new documentation to docs branch
+      - name: Push new documentation to docs repo
         working-directory: docs
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "github-actions-bot@users.noreply.github.com"
-          git add -A
-          git commit -m "GitHub Actions - Update Web Service Documentation to ${{ github.sha }}"
-          git push
+        uses: Andro999b/push@v1.3
+        with:
+          github_token: ${{ secrets.REPO_DOCS_TOKEN }}
+          repository: 'necodeIT/lb_planner_docs'
+          branch: main
+          message: "GitHub Actions - Update Web Service Documentation to ${{ github.sha }}"
