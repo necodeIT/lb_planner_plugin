@@ -40,7 +40,7 @@ class slots_create_slot extends external_api {
      * @return external_function_parameters
      */
     public static function create_slot_parameters(): external_function_parameters {
-        // TODO: set hardcoded doc values with constants instead of hardcoded values
+        // TODO: set hardcoded doc values with constants instead of hardcoded values.
         return new external_function_parameters([
             'startunit' => new external_value(
                 PARAM_INT,
@@ -86,33 +86,33 @@ class slots_create_slot extends external_api {
     public static function create_slot(int $startunit, int $duration, int $weekday, string $room, int $size): array {
         global $USER, $DB;
 
-        // validating startunit
-        $max_unit = sizeof(slot_helper::SCHOOL_UNITS) - 1;
+        // Validating startunit.
+        $maxUnit = count(slot_helper::SCHOOL_UNITS) - 1;
         if ($startunit < 1) {
             throw new moodle_exception('can\'t have a start unit smaller than 1');
-        } else if ($startunit > $max_unit) {
-            throw new moodle_exception("can't have a start unit larger than {$max_unit}");
+        } else if ($startunit > $maxUnit) {
+            throw new moodle_exception("can't have a start unit larger than {$maxUnit}");
         }
-        // validating duration
+        // Validating duration.
         if ($duration < 1) {
             throw new moodle_exception('duration must be at least 1');
-        } else if ($startunit + $duration > $max_unit) {
-            throw new moodle_exception("slot goes past the max unit {$max_unit}");
+        } else if ($startunit + $duration > $maxUnit) {
+            throw new moodle_exception("slot goes past the max unit {$maxUnit}");
         }
-        // validating weekday
+        // Validating weekday.
         WEEKDAY::from($weekday);
-        // validating room
+        // Validating room.
         if (strlen($room) <= 1) {
             throw new moodle_exception('room name has to be at least 2 characters long');
         } else if (strlen($room) > slot_helper::ROOM_MAXLENGTH) {
             throw new moodle_exception('room name has a maximum of '.slot_helper::ROOM_MAXLENGTH.' characters');
         }
-        // validating size
+        // Validating size.
         if ($size < 0) {
             throw new moodle_exception('can\'t have a negative size for a slot');
         }
 
-
+        // Actually inserting the slot.
         $slot = new slot(0, $startunit, $duration, $weekday, $room, $size);
         $id = $DB->insert_record(slot_helper::TABLE_SLOTS, $slot->prepare_for_db());
         $slot->set_fresh($id);
