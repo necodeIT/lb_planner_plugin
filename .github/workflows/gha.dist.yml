@@ -64,6 +64,14 @@ jobs:
           sudo locale-gen en_AU.UTF-8
           echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
 
+      - name: Install NVM and Node # TODO: remove this step after https://github.com/moodlehq/moodle-plugin-ci/issues/309 is fixed
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install 20
+          nvm use 20
+
       - name: Install moodle-plugin-ci
         run: |
           moodle-plugin-ci install --plugin ./plugin/lbplanner --db-host=127.0.0.1

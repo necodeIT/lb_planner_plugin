@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * contains all service endpoints
  *
@@ -286,6 +287,60 @@ $functions = [
         'capabilities' => '',
         'ajax' => true,
     ],
+    'local_lbplanner_slots_get_my_slots' => [
+        'classname' => 'local_lbplanner_services\slots_get_my_slots',
+        'methodname' => 'get_my_slots',
+        'classpath' => 'local/lbplanner/services/slots/get_my_slots.php',
+        'description' => 'Get all slots the user can theoretically reserve.',
+        'type' => 'read',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
+    'local_lbplanner_slots_get_student_slots' => [
+        'classname' => 'local_lbplanner_services\slots_get_student_slots',
+        'methodname' => 'get_student_slots',
+        'classpath' => 'local/lbplanner/services/slots/get_student_slots.php',
+        'description' => 'Get all slots a supervisor can theoretically reserve for a student.',
+        'type' => 'read',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
+    'local_lbplanner_slots_get_supervisor_slots' => [
+        'classname' => 'local_lbplanner_services\slots_get_supervisor_slots',
+        'methodname' => 'get_supervisor_slots',
+        'classpath' => 'local/lbplanner/services/slots/get_supervisor_slots.php',
+        'description' => 'Get all slots belonging to the supervisor.',
+        'type' => 'read',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
+    'local_lbplanner_slots_book_reservation' => [
+        'classname' => 'local_lbplanner_services\slots_book_reservation',
+        'methodname' => 'book_reservation',
+        'classpath' => 'local/lbplanner/services/slots/book_reservation.php',
+        'description' => 'Book a reservation',
+        'type' => 'write',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
+    'local_lbplanner_slots_unbook_reservation' => [
+        'classname' => 'local_lbplanner_services\slots_unbook_reservation',
+        'methodname' => 'unbook_reservation',
+        'classpath' => 'local/lbplanner/services/slots/unbook_reservation.php',
+        'description' => 'Unbook a reservation',
+        'type' => 'write',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
+    'local_lbplanner_slots_create_slot' => [
+        'classname' => 'local_lbplanner_services\slots_create_slot',
+        'methodname' => 'create_slot',
+        'classpath' => 'local/lbplanner/services/slots/create_slot.php',
+        'description' => 'Create a slot',
+        'type' => 'write',
+        'capabilities' => 'local/lb_planner:teacher',
+        'ajax' => true,
+    ],
 ];
 
 $services = [
@@ -321,6 +376,11 @@ $services = [
             'local_lbplanner_plan_accept_invite',
             'local_lbplanner_plan_decline_invite',
             'local_lbplanner_config_get_version',
+            'local_lbplanner_slots_book_reservation',
+            'local_lbplanner_slots_create_slot',
+            'local_lbplanner_slots_get_my_slots',
+            'local_lbplanner_slots_get_student_slots',
+            'local_lbplanner_slots_get_supervisor_slots',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,

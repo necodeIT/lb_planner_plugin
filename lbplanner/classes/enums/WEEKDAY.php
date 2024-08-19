@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * enum for module grade
+ * enum for weekdays
+ * (cringe, ik, but we need these defined concretely)
  *
  * @package local_lbplanner
  * @subpackage enums
@@ -30,27 +31,37 @@ namespace local_lbplanner\enums;
 use local_lbplanner\polyfill\Enum;
 
 /**
- * Grades a module can receive
+ * All the days of the week.
+ * All seven of them.
+ * Yup.
  */
-class MODULE_GRADE extends Enum {
+class WEEKDAY extends Enum {
     /**
-     * Erweiterte Kompetenz vollständig.
+     * monday
      */
-    const EKV = 0;
+    const MONDAY = 1;
     /**
-     * Erweiterte Kompetenz überwiegend.
+     * tuesday
      */
-    const EK  = 1;
+    const TUESDAY = 2;
     /**
-     * Grundlegende Kompetenz vollständig.
+     * wednesday
      */
-    const GKV = 2;
+    const WEDNESDAY = 3;
     /**
-     * Grundlegende Kompetenz überwiegend.
+     * thursday
      */
-    const GK  = 3;
+    const THURSDAY = 4;
     /**
-     * Negative grade.
+     * friday
      */
-    const RIP = 4;
+    const FRIDAY = 5;
+    /**
+     * saturday
+     */
+    const SATURDAY = 6;
+    /**
+     * sunday
+     */
+    const SUNDAY = 7;
 }
