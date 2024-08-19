@@ -26,8 +26,7 @@ use local_lbplanner\model\slot;
 use moodle_exception;
 
 /**
- * Returns all slots the user can theoretically reserve.
- * This does not include times the user has already reserved a slot for.
+ * Create a slot
  *
  * @package local_lbplanner
  * @subpackage services_slots

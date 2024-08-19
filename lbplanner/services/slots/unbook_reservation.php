@@ -51,7 +51,7 @@ class slots_unbook_reservation extends external_api {
             'nice' => new external_value(
                 PARAM_BOOL,
                 'whether to ask the student nicely to unbook themself via a notification',
-                VALUE_OPTIONAL,
+                VALUE_DEFAULT,
                 true,
                 NULL_NOT_ALLOWED
             ),
