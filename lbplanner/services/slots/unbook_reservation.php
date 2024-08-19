@@ -101,7 +101,7 @@ class slots_unbook_reservation extends external_api {
      * Returns nothing at all
      * @return null
      */
-    public static function unbook_reservation_returns(): null {
+    public static function unbook_reservation_returns() {
         return null;
     }
 }
