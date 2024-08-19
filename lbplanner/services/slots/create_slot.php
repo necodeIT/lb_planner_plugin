@@ -101,17 +101,17 @@ class slots_create_slot extends external_api {
         );
 
         // Validating startunit.
-        $maxUnit = count(slot_helper::SCHOOL_UNITS) - 1;
+        $maxunit = count(slot_helper::SCHOOL_UNITS) - 1;
         if ($startunit < 1) {
             throw new moodle_exception('can\'t have a start unit smaller than 1');
-        } else if ($startunit > $maxUnit) {
-            throw new moodle_exception("can't have a start unit larger than {$maxUnit}");
+        } else if ($startunit > $maxunit) {
+            throw new moodle_exception("can't have a start unit larger than {$maxunit}");
         }
         // Validating duration.
         if ($duration < 1) {
             throw new moodle_exception('duration must be at least 1');
-        } else if ($startunit + $duration > $maxUnit) {
-            throw new moodle_exception("slot goes past the max unit {$maxUnit}");
+        } else if ($startunit + $duration > $maxunit) {
+            throw new moodle_exception("slot goes past the max unit {$maxunit}");
         }
         // Validating weekday.
         WEEKDAY::from($weekday);
