@@ -275,8 +275,16 @@ class slot_helper {
         return new DateTimeImmutable($slotdatetime);
     }
 
+    /**
+     * Amends a date with time of day using the units system
+     * @param int $unit the unit to use
+     * @param DateTimeInterface $date the date (time of day will be ignored)
+     *
+     * @return DateTimeImmutable the new date with time of day filled in
+     * @link slot_helper::SCHOOL_UNITS
+     */
     public static function amend_date_with_unit_time(int $unit, DateTimeInterface $date): DateTimeImmutable {
-        $daytime = slot_helper::SCHOOL_UNITS[$unit];
+        $daytime = self::SCHOOL_UNITS[$unit];
 
         return DateTimeImmutable::createFromFormat('YY-MM-DD tHH:MM', $date->format('Y-m-d ').$daytime);
     }
