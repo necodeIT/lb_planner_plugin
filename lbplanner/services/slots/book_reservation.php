@@ -123,15 +123,15 @@ class slots_book_reservation extends external_api {
         }
 
         // Check if user is already in slot.
-        foreach (slot_helper::get_reservations_for_slot($slotid) as $tmpReservation) {
-            if ($tmpReservation->userid === $userid) {
+        foreach (slot_helper::get_reservations_for_slot($slotid) as $tmpreservation) {
+            if ($tmpreservation->userid === $userid) {
                 throw new \moodle_exception('Student is already in slot');
             }
         }
 
         // TODO: check if user is already in a different slot at the same time.
 
-        // check if slot is full
+        // Check if slot is full.
         if ($slot->get_fullness() >= $slot->size) {
             throw new \moodle_exception('Slot is already full');
         }
