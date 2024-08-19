@@ -128,7 +128,7 @@ class slots_book_reservation extends external_api {
         $reservation = new reservation(0, $slotid, $dateobj, $userid, $USER->id);
 
         $id = $DB->insert_record(slot_helper::TABLE_RESERVATIONS, $reservation->prepare_for_db());
-        $reservation->id = $id;
+        $reservation->set_fresh($id, $slot);
 
         // TODO: if userid!=USER->id → send notif to the user that the supervisor booked a reservation for them
 

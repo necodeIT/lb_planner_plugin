@@ -88,6 +88,29 @@ class reservation {
     }
 
     /**
+     * Mark the object as freshly created and sets the new ID
+     * @param int $id the new ID after insertint into the DB
+     * @param slot $slot the cached slot object
+     */
+    public function set_fresh(int $id, ?slot $slot) {
+        assert($this->id === 0);
+        assert($id !== 0);
+        $this->id = $id;
+        if (!is_null($slot)) {
+            $this->set_slot($slot);
+        }
+    }
+
+    /**
+     * sets the cached slot object (mainly for deduplicating DB requests)
+     * @param slot $slot the cached slot object
+     */
+    public function set_slot(slot $slot) {
+        assert($this->slotid === $slot->id);
+        $this->slot = $slot;
+    }
+
+    /**
      * Returns the associated slot.
      *
      * @return slot the associated slot
@@ -98,22 +121,6 @@ class reservation {
         }
 
         return $this->slot;
-    }
-
-    /**
-     * Prepares data for the DB endpoint.
-     *
-     * @return object a representation of this reservation and its data
-     */
-    public function prepare_for_db(): object {
-        $obj = new \stdClass();
-
-        $obj->slotid = $this->slotid;
-        $obj->date = $this->date;
-        $obj->userid = $this->userid;
-        $obj->reserverid = $this->reserverid;
-
-        return $obj;
     }
 
     /**
@@ -142,6 +149,27 @@ class reservation {
         }
 
         return $this->datetime_end;
+    }
+
+    /**
+     * Prepares data for the DB endpoint.
+     * doesn't set ID if it's 0
+     *
+     * @return object a representation of this reservation and its data
+     */
+    public function prepare_for_db(): object {
+        $obj = new \stdClass();
+
+        $obj->slotid = $this->slotid;
+        $obj->date = $this->date;
+        $obj->userid = $this->userid;
+        $obj->reserverid = $this->reserverid;
+
+        if ($this->id !== 0) {
+            $obj->id = $this->id;
+        }
+
+        return $obj;
     }
 
     /**
