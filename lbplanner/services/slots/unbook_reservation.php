@@ -68,19 +68,22 @@ class slots_unbook_reservation extends external_api {
         $now = new DateTimeImmutable();
 
         $endpast = $now->diff($reservation->get_datetime_end())->invert === 1;
-        $startpast = $endpast or ($now->diff($reservation->get_datetime())->invert === 1);
+        $startpast = $endpast || ($now->diff($reservation->get_datetime())->invert === 1);
 
-        if ($USER->id === $reservation->userid){
+        if ($USER->id === $reservation->userid) {
             if ($startpast) {
                 throw new \moodle_exception('You can\'t unbook this reservation because it has already started');
             }
-        } else if(slot_helper::check_slot_supervisor($USER->id, $reservation->slotid)) {
+        } else if (slot_helper::check_slot_supervisor($USER->id, $reservation->slotid)) {
             if ($endpast) {
                 throw new \moodle_exception('You can\'t unbook this reservation because it has already ended');
             }
             if ($nice) {
                 if ($startpast) {
-                    throw new \moodle_exception('Students can\'t unbook reservations that have already started. If you want to unbook this reservation regardless, force it.');
+                    throw new \moodle_exception(
+                        'Students can\'t unbook reservations that have already started.'
+                        .' If you want to unbook this reservation regardless, force it.'
+                    );
                 }
                 notifications_helper::notify_user($reservation->userid, $reservation->id, NOTIF_TRIGGER::UNBOOK_REQUESTED);
                 return;
