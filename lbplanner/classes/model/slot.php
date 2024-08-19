@@ -84,7 +84,7 @@ class slot {
         assert($startunit > 0);
         $this->startunit = $startunit;
         assert($duration > 0);
-        assert($duration + $startunit < sizeof(slot_helper::SCHOOL_UNITS));
+        assert($duration + $startunit < count(slot_helper::SCHOOL_UNITS));
         $this->duration = $duration;
         $this->weekday = WEEKDAY::from($weekday);
         assert(strlen($room) > 0 && strlen($room) <= slot_helper::ROOM_MAXLENGTH);
