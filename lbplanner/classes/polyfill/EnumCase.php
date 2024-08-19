@@ -23,7 +23,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace lb_planner_local\polyfill;
+namespace local_lbplanner\polyfill;
 
 defined('MOODLE_INTERNAL') || die();
 
