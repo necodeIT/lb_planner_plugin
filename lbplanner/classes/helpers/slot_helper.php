@@ -45,6 +45,11 @@ class slot_helper {
      */
     const RESERVATION_RANGE_SUPERVISOR = 7;
     /**
+     * how long the room names can be in characters
+     * unicode characters might count as multiple characters
+     */
+    const ROOM_MAXLENGTH = 7; // TODO: increase to 255 or sumn
+    /**
      * school units according to untis, in H:i format
      */
     const SCHOOL_UNITS = [
