@@ -83,14 +83,27 @@ class slot {
         assert($startunit > 0);
         $this->startunit = $startunit;
         assert($duration > 0);
+        assert($duration + $startunit < sizeof(slot_helper::SCHOOL_UNITS));
         $this->duration = $duration;
         $this->weekday = WEEKDAY::from($weekday);
-        assert(strlen($room) > 0 && strlen($room) <= 7);
+        assert(strlen($room) > 0 && strlen($room) <= slot_helper::ROOM_MAXLENGTH);
         $this->room = $room;
         assert($size >= 0);  // Make it technically possible to not allow any students in a room to temporarily disable the slot.
         $this->size = $size;
         $this->fullness = null;
         $this->forcuruser = null;
+    }
+
+    /**
+     * Mark the object as freshly created and sets the new ID
+     * @param int $id the new ID after insertint into the DB
+     */
+    public function set_fresh(int $id) {
+        assert($this->id === 0);
+        assert($id !== 0);
+        $this->id = $id;
+        $this->fullness = 0;
+        $this->forcuruser = false;
     }
 
     /**
@@ -117,6 +130,27 @@ class slot {
         }
 
         return $this->forcuruser;
+    }
+
+    /**
+     * Prepares data for the DB endpoint.
+     * doesn't set ID if it's 0
+     *
+     * @return object a representation of this slot and its data
+     */
+    public function prepare_for_db(): object {
+        $obj = new \stdClass();
+
+        $obj->startunit = $this->startunit;
+        $obj->duration = $this->duration;
+        $obj->weekday = $this->weekday;
+        $obj->room = $this->room;
+        $obj->size = $this->size;
+
+        if ($this->id !== 0){
+            $obj->id = $this->id;
+        }
+        return $obj;
     }
 
     /**
