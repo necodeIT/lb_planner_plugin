@@ -27,7 +27,7 @@ use local_lbplanner\model\slot;
  * This does not include times the user has already reserved a slot for.
  *
  * @package local_lbplanner
- * @subpackage services_plan
+ * @subpackage services_slots
  * @copyright 2024 necodeIT
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

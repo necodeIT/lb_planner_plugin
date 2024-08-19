@@ -26,7 +26,7 @@ use local_lbplanner\model\slot;
  * Returns all slots a supervisor can see.
  *
  * @package local_lbplanner
- * @subpackage services_plan
+ * @subpackage services_slots
  * @copyright 2024 necodeIT
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
