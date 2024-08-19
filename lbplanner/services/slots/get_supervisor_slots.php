@@ -41,14 +41,9 @@ class slots_get_supervisor_slots extends external_api {
 
     /**
      * Returns all slots a supervisor controls.
-     * @param int $userid ID of the user in question (NOT the supervisor)
      */
-    public static function get_supervisor_slots(int $userid): array {
+    public static function get_supervisor_slots(): array {
         global $USER;
-        self::validate_parameters(
-            self::get_supervisor_slots_parameters(),
-            ['userid' => $userid]
-        );
 
         return slot_helper::get_supervisor_slots($USER->id);
     }
