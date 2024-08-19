@@ -75,6 +75,14 @@ class slots_book_reservation extends external_api {
      */
     public static function book_reservation(int $slotid, string $date, int $userid): array {
         global $USER, $DB;
+        self::validate_parameters(
+            self::book_reservation_parameters(),
+            [
+                'slotid' => $slotid,
+                'date' => $date,
+                'userid' => $userid,
+            ]
+        );
 
         $now = new DateTimeImmutable();
         $dateobj = DateTimeImmutable::createFromFormat("YY-MM-DD", $date);

@@ -89,7 +89,17 @@ class slots_create_slot extends external_api {
      * @param int $size how many pupils this slot can fit
      */
     public static function create_slot(int $startunit, int $duration, int $weekday, string $room, int $size): array {
-        global $USER, $DB;
+        global $DB;
+        self::validate_parameters(
+            self::create_slot_parameters(),
+            [
+                'startunit' => $startunit,
+                'duration' => $duration,
+                'weekday' => $weekday,
+                'room' => $room,
+                'size' => $size,
+            ]
+        );
 
         // Validating startunit.
         $maxUnit = count(slot_helper::SCHOOL_UNITS) - 1;
