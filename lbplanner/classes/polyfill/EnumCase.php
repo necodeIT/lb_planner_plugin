@@ -36,14 +36,14 @@ class EnumCase {
     /** @var string the name of the case */
     public string $name;
     /** @var string the value of the case */
-    public mixed $value;
+    public $value;
     /**
      * Constructs an EnumCase
      *
      * @param string $name the name of the case
      * @param mixed $value the value of the case
      */
-    public function __construct(string $name, mixed $value) {
+    public function __construct(string $name, $value) {
         $this->name = $name;
         $this->value = $value;
     }
