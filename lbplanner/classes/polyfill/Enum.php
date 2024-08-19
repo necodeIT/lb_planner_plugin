@@ -27,7 +27,7 @@ namespace local_lbplanner\polyfill;
 
 use ReflectionClass;
 use ValueError;
-use lb_planner_local\polyfill\EnumCase;
+use local_lbplanner\polyfill\EnumCase;
 
 /**
  * Class which is meant to serve as a substitute for native enums.
