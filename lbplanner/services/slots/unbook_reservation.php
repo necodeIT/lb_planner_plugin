@@ -65,6 +65,13 @@ class slots_unbook_reservation extends external_api {
      */
     public static function unbook_reservation(int $reservationid, bool $nice): void {
         global $USER, $DB;
+        self::validate_parameters(
+            self::unbook_reservation_parameters(),
+            [
+                'reservationid' => $reservationid,
+                'nice' => $nice,
+            ]
+        );
 
         $reservation = slot_helper::get_reservation($reservationid);
         $now = new DateTimeImmutable();
