@@ -60,6 +60,8 @@ class slots_unbook_reservation extends external_api {
 
     /**
      * Tries to request unbooking
+     * @param int $reservationid which reservation to unbook
+     * @param bool $nice whether to ask the student to unbook themself, or force-unbook
      */
     public static function unbook_reservation(int $reservationid, bool $nice): void {
         global $USER, $DB;

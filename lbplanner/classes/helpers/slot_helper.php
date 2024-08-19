@@ -290,8 +290,9 @@ class slot_helper {
     }
 
     /**
-     * Returns a list of all slots belonging to a supervisor.
+     * Checks whether a user is supervisor for a specific slot.
      * @param int $supervisorid userid of the supervisor in question
+     * @param int $slotid the slot to check
      *
      * @return slot[] An array of the slots.
      */

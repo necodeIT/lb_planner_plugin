@@ -91,7 +91,7 @@ class reservation {
     /**
      * Mark the object as freshly created and sets the new ID
      * @param int $id the new ID after insertint into the DB
-     * @param slot $slot the cached slot object
+     * @param ?slot $slot the cached slot object
      */
     public function set_fresh(int $id, ?slot $slot) {
         assert($this->id === 0);
