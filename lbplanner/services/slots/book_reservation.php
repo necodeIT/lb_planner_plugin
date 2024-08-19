@@ -41,7 +41,7 @@ class slots_book_reservation extends external_api {
      * @return external_function_parameters
      */
     public static function book_reservation_parameters(): external_function_parameters {
-		global $USER;
+        global $USER;
         return new external_function_parameters([
             'slotid' => new external_value(
                 PARAM_INT,
@@ -77,7 +77,7 @@ class slots_book_reservation extends external_api {
         $dateobj = DateTimeImmutable::createFromFormat("YY-MM-DD", $date);
         $td = $dateobj->diff($now);
 
-        if($td->invert){
+        if ($td->invert) {
             throw new \moodle_exception('Can\'t reserve date in the past');
         }
 
@@ -85,12 +85,12 @@ class slots_book_reservation extends external_api {
         $student = null;
 
         if ($userid === $USER->id) {
-            // student reserving slot for themself
+            // Student reserving slot for themself.
 
             $maxdays = slot_helper::RESERVATION_RANGE_USER;
             $student = $USER;
         } else {
-            // supervisor reserving slot for student
+            // Supervisor reserving slot for student.
 
             if (!slot_helper::check_slot_supervisor($USER->id, $slotid)) {
                 throw new \moodle_exception('Forbidden: you\'re not a supervisor of this slot');
@@ -106,22 +106,22 @@ class slots_book_reservation extends external_api {
 
         $slot = slot_helper::get_slot($slotid);
 
-        // check if user has access to slot
-        if (sizeof(slot_helper::filter_slots_for_user([$slot], $student)) === 0) {
+        // Check if user has access to slot.
+        if (count(slot_helper::filter_slots_for_user([$slot], $student)) === 0) {
             throw new \moodle_exception('Student does not have access to this slot');
         }
 
-        // check if user is already in slot
-        foreach (slot_helper::get_reservations_for_slot($slotid) as $_reservation) {
-            if ($_reservation->userid === $userid){
+        // Check if user is already in slot.
+        foreach (slot_helper::get_reservations_for_slot($slotid) as $tmpReservation) {
+            if ($tmpReservation->userid === $userid) {
                 throw new \moodle_exception('Student is already in slot');
             }
         }
 
-        // TODO: check if user is already in a different slot at the same time
+        // TODO: check if user is already in a different slot at the same time.
 
         // check if slot is full
-        if ($slot->get_fullness() >= $slot->size){
+        if ($slot->get_fullness() >= $slot->size) {
             throw new \moodle_exception('Slot is already full');
         }
 
@@ -130,7 +130,7 @@ class slots_book_reservation extends external_api {
         $id = $DB->insert_record(slot_helper::TABLE_RESERVATIONS, $reservation->prepare_for_db());
         $reservation->set_fresh($id, $slot);
 
-        // TODO: if userid!=USER->id → send notif to the user that the supervisor booked a reservation for them
+        // TODO: if userid!=USER->id → send notif to the user that the supervisor booked a reservation for them.
 
         return $reservation->prepare_for_api();
     }
