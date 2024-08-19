@@ -68,7 +68,7 @@ class reservation {
     /**
      * @var ?DateTimeImmutable $datetime the date this reservation ends at, with time filled in
      */
-    private ?DateTimeImmutable $datetimeEnd;
+    private ?DateTimeImmutable $datetimeend;
 
     /**
      * Constructs a reservation
@@ -146,10 +146,10 @@ class reservation {
     public function get_datetime_end(): DateTimeImmutable {
         if (is_null($this->datetime)) {
             $slot = $this->get_slot();
-            $this->datetimeEnd = slot_helper::amend_date_with_unit_time($slot->startunit + $slot->duration, $this->date);
+            $this->datetimeend = slot_helper::amend_date_with_unit_time($slot->startunit + $slot->duration, $this->date);
         }
 
-        return $this->datetimeEnd;
+        return $this->datetimeend;
     }
 
     /**
