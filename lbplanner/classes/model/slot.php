@@ -148,7 +148,7 @@ class slot {
         $obj->room = $this->room;
         $obj->size = $this->size;
 
-        if ($this->id !== 0){
+        if ($this->id !== 0) {
             $obj->id = $this->id;
         }
         return $obj;
