@@ -49,7 +49,7 @@ class slot_helper {
      * how long the room names can be in characters
      * unicode characters might count as multiple characters
      */
-    const ROOM_MAXLENGTH = 7; // TODO: increase to 255 or sumn
+    const ROOM_MAXLENGTH = 7; // TODO: increase to 255 or sumn.
     /**
      * school units according to untis, in H:i format
      */
@@ -262,7 +262,7 @@ class slot_helper {
      */
     public static function calculate_slot_datetime(slot $slot, DateTimeInterface $now): DateTimeImmutable {
         $slotdaytime = self::SCHOOL_UNITS[$slot->startunit];
-        // NOTE: format and fromFormat use different date formatting conventions
+        // NOTE: format and fromFormat use different date formatting conventions.
         $slotdatetime = DateTime::createFromFormat('YY-MM-DD tHH:MM', $now->format('Y-m-d ').$slotdaytime);
         // Move to next day this weekday occurs (doesn't move if it's the same as today).
         $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
