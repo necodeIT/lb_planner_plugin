@@ -58,7 +58,7 @@ class courses_get_all_courses extends external_api {
         $courses = enrol_get_my_courses();
         // Remove Duplicates.
         $courses = array_unique($courses, SORT_REGULAR);
-        // Check this out: https://www.youtube.com/watch?v=z3Pzfi476HI .
+        // Check this out: https://www.youtube.com/watch?v=WmdAk2zyQkU .
         $catgirls = [];
 
         foreach ($courses as $course) {
