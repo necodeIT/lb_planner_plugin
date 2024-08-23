@@ -207,7 +207,7 @@ class slot_helper {
      * @return slot[] the filtered slot array
      */
     public static function filter_slots_for_user(array $allslots, mixed $user): array {
-        // TODO: replace this with helper function
+        // TODO: replace this with helper function.
         $mycourses = external_api::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $user->id]);
         $mycourseids = [];
         foreach ($mycourses as $course) {
