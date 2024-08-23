@@ -29,7 +29,6 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use external_api;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\model\{slot, reservation, slot_filter};
 
@@ -207,8 +206,7 @@ class slot_helper {
      * @return slot[] the filtered slot array
      */
     public static function filter_slots_for_user(array $allslots, mixed $user): array {
-        // TODO: replace this with helper function.
-        $mycourses = external_api::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $user->id]);
+        $mycourses = course_helper::get_all_lbplanner_courses();
         $mycourseids = [];
         foreach ($mycourses as $course) {
             array_push($mycourseids, $course->courseid);
