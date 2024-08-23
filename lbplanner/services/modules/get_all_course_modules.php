@@ -52,7 +52,6 @@ class modules_get_all_course_modules extends external_api {
      * Returns all the modules inside a course.
      *
      * @param int $courseid The ID of the course
-     * @param int $userid The ID of the user
      * @param bool $ekenabled whether or not to include ek modules
      * @return array the modules
      */

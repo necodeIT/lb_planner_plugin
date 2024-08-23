@@ -85,6 +85,7 @@ class course {
     /**
      * Takes data from DB and makes a new Course out of it
      *
+     * @param object $obj the DB object to get data from
      * @return object a representation of this course and its data
      * @throws \AssertionError
      */
