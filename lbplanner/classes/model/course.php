@@ -184,7 +184,7 @@ class course {
         $obj->userid = $this->userid;
         $obj->shortname = $this->shortname;
         $obj->color = $this->color;
-        $obj->enabled = $this->enabled ? 1:0; // The DB uses int instead of bool here.
+        $obj->enabled = $this->enabled ? 1 : 0; // The DB uses int instead of bool here.
 
         if ($this->id !== 0) {
             $obj->id = $this->id;
@@ -206,7 +206,7 @@ class course {
             'name' => $this->get_fullname(),
             'shortname' => $this->shortname,
             'color' => $this->color,
-            'enabled' => $this->enabled ? 1:0, // Moodle's API uses int instead of bool.
+            'enabled' => $this->enabled ? 1 : 0, // Moodle's API uses int instead of bool.
         ];
     }
 
@@ -219,12 +219,12 @@ class course {
         return new external_single_structure(
             [
                 'id' => new external_value(PARAM_INT, 'course ID'),
-                'courseid' => new external_value(PARAM_INT, 'the moodle-internal ID of the course'),
-                'userid' => new external_value(PARAM_INT, 'the user for whom these course settings are for'),
-                'name' => new external_value(PARAM_TEXT, 'the full name of this course'),
-                'shortname' => new external_value(PARAM_TEXT, 'the short name of this course for this user (maximum size: 5 chars)'),
-                'color' => new external_value(PARAM_TEXT, 'the color for this course as #RRGGBB'),
-                'enabled' => new external_value(PARAM_BOOL, 'whether the user wants to see this course'),
+                'courseid' => new external_value(PARAM_INT, 'moodle-internal course ID'),
+                'userid' => new external_value(PARAM_INT, 'The user for whom these course settings are for'),
+                'name' => new external_value(PARAM_TEXT, 'Full name of this course'),
+                'shortname' => new external_value(PARAM_TEXT, 'Short name of this course for this user (maximum size: 5 chars)'),
+                'color' => new external_value(PARAM_TEXT, 'Color for this course as #RRGGBB'),
+                'enabled' => new external_value(PARAM_BOOL, 'Whether the user wants to see this course'),
             ]
         );
     }
