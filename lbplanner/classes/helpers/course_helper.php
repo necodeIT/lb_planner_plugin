@@ -114,11 +114,10 @@ class course_helper {
             } else {
                 // IF not create an Object to be put into the LB Planner database.
                 $fetchedcourse = new course(
-                    0, $courseid,
-                    course_helper::COLORS[array_rand(course_helper::COLORS)],
+                    0, $courseid, $userid,
                     course::prepare_shortname($mdl_course->shortname),
+                    course_helper::COLORS[array_rand(course_helper::COLORS)],
                     false,
-                    $userid,
                 );
                 $fetchedcourse->set_fresh(
                     $DB->insert_record(
