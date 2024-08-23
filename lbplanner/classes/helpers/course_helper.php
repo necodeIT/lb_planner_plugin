@@ -95,39 +95,39 @@ class course_helper {
         global $DB, $USER;
         $userid = $USER->id;
 
-        $mdl_courses = enrol_get_my_courses();
+        $mdlcourses = enrol_get_my_courses();
         // Remove Duplicates.
-        $mdl_courses = array_unique($mdl_courses, SORT_REGULAR);
+        $mdlcourses = array_unique($mdlcourses, SORT_REGULAR);
         // Check this out: https://www.youtube.com/watch?v=WmdAk2zyQkU .
         $results = [];
 
-        foreach ($mdl_courses as $mdl_course) {
-            $courseid = $mdl_course->id;
+        foreach ($mdlcourses as $mdlcourse) {
+            $courseid = $mdlcourse->id;
             // Check if the course is from the current year.
             // TODO: pass fullname to function instead of courseid.
-            if (!course_helper::check_current_year($courseid)) {
+            if (!self::check_current_year($courseid)) {
                     continue;
             }
             // Check if the course is already in the LB Planner database.
-            if ($DB->record_exists(course_helper::LBPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid])) {
-                $fetchedcourse = course_helper::get_lbplanner_course($courseid, $userid);
+            if ($DB->record_exists(self::LBPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid])) {
+                $fetchedcourse = self::get_lbplanner_course($courseid, $userid);
             } else {
                 // IF not create an Object to be put into the LB Planner database.
                 $fetchedcourse = new course(
                     0, $courseid, $userid,
-                    course::prepare_shortname($mdl_course->shortname),
-                    course_helper::COLORS[array_rand(course_helper::COLORS)],
+                    course::prepare_shortname($mdlcourse->shortname),
+                    self::COLORS[array_rand(self::COLORS)],
                     false,
                 );
                 $fetchedcourse->set_fresh(
                     $DB->insert_record(
-                        course_helper::LBPLANNER_COURSE_TABLE,
+                        self::LBPLANNER_COURSE_TABLE,
                         $fetchedcourse->prepare_for_db()
                     )
                 );
             }
             // Add name to fetched Course.
-            $fetchedcourse->set_fullname($mdl_course->fullname);
+            $fetchedcourse->set_fullname($mdlcourse->fullname);
             array_push($results, $fetchedcourse);
         }
         return $results;
