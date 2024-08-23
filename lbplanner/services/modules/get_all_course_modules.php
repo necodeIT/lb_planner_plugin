@@ -56,7 +56,7 @@ class modules_get_all_course_modules extends external_api {
      * @param bool $ekenabled whether or not to include ek modules
      * @return array the modules
      */
-    public static function get_all_course_modules(int $courseid, int $userid, bool $ekenabled): array {
+    public static function get_all_course_modules(int $courseid, bool $ekenabled): array {
         global $USER;
         self::validate_parameters(
             self::get_all_course_modules_parameters(),

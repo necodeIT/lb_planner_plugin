@@ -51,16 +51,16 @@ class modules_get_all_modules extends external_api {
 
         $modules = [];
 
-        $courses = self::call_external_function('local_lbplanner_courses_get_all_courses', []);
+        $courses = course_helper::get_all_lbplanner_courses();
         $plan = plan_helper::get_plan(plan_helper::get_plan_id($USER->id));
         $ekenabled = $plan["enableek"];
 
-        foreach ($courses["data"] as $course) {
-            if ($course["enabled"] === course_helper::DISABLED_COURSE) {
+        foreach ($courses as $course) {
+            if ($course->enabled) {
                 continue;
             }
             $modules = array_merge(
-            modules_helper::get_all_course_modules($course['courseid'], $USER->id, $ekenabled),
+                modules_helper::get_all_course_modules($course->courseid, $USER->id, $ekenabled),
                 $modules
             );
         }
