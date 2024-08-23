@@ -152,7 +152,6 @@
 			<KEYS>
 				<KEY NAME="primary" TYPE="primary" FIELDS="id"/>
 				<KEY NAME="slotid" TYPE="foreign" FIELDS="slotid" REFTABLE="local_lbplanner_slots" REFFIELDS="id"/>
-				<KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="local_lbplanner_courses" REFFIELDS="courseid"/>
 			</KEYS>
 		</TABLE>
 		<TABLE NAME="local_lbplanner_supervisors" COMMENT="supervisors for slots">
