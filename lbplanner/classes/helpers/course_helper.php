@@ -18,7 +18,8 @@ namespace local_lbplanner\helpers;
 
 use context_course;
 use dml_exception;
-use stdClass;
+
+use local_lbplanner\model\course;
 
 /**
  * Helper class for courses
@@ -56,14 +57,6 @@ class course_helper {
             "#8B37CA",
             "#CA37B9",
         ];
-    /**
-     * constant that represents a disabled course
-     */
-    const DISABLED_COURSE = 0;
-    /**
-     * constant that represents an enabled course
-     */
-    const ENABLED_COURSE = 1;
 
     /**
      * Get the current school year from the config
@@ -86,12 +79,59 @@ class course_helper {
      * @param int $courseid id of the course in lbplanner
      * @param int $userid   id of the user
      *
-     * @return stdClass course from lbplanner
+     * @return course course from lbplanner
      * @throws dml_exception
      */
-    public static function get_lbplanner_course(int $courseid, int $userid): stdClass {
+    public static function get_lbplanner_course(int $courseid, int $userid): course {
         global $DB;
-        return $DB->get_record(self::LBPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid]);
+        return course::from_db($DB->get_record(self::LBPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid]));
+    }
+
+    /**
+     * Get all the courses of the current year.
+     * @return course[] all courses of the current year
+     */
+    public static function get_all_lbplanner_courses(): array {
+        global $DB, $USER;
+        $userid = $USER->id;
+
+        $mdl_courses = enrol_get_my_courses();
+        // Remove Duplicates.
+        $mdl_courses = array_unique($mdl_courses, SORT_REGULAR);
+        // Check this out: https://www.youtube.com/watch?v=WmdAk2zyQkU .
+        $results = [];
+
+        foreach ($mdl_courses as $mdl_course) {
+            $courseid = $mdl_course->id;
+            // Check if the course is from the current year.
+            // TODO: pass fullname to function instead of courseid.
+            if (!course_helper::check_current_year($courseid)) {
+                    continue;
+            }
+            // Check if the course is already in the LB Planner database.
+            if ($DB->record_exists(course_helper::LBPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid])) {
+                $fetchedcourse = course_helper::get_lbplanner_course($courseid, $userid);
+            } else {
+                // IF not create an Object to be put into the LB Planner database.
+                $fetchedcourse = new course(
+                    0, $courseid,
+                    course_helper::COLORS[array_rand(course_helper::COLORS)],
+                    course::prepare_shortname($mdl_course->shortname),
+                    false,
+                    $userid,
+                );
+                $fetchedcourse->set_fresh(
+                    $DB->insert_record(
+                        course_helper::LBPLANNER_COURSE_TABLE,
+                        $fetchedcourse->prepare_for_db()
+                    )
+                );
+            }
+            // Add name to fetched Course.
+            $fetchedcourse->set_fullname($mdl_course->fullname);
+            array_push($results, $fetchedcourse);
+        }
+        return $results;
     }
 
     /**
@@ -128,10 +168,6 @@ class course_helper {
      * @throws dml_exception
      */
     public static function check_current_year(int $courseid): bool {
-        if (strpos(self::get_fullname($courseid), self::get_current_year()) !== false) {
-            return true;
-        } else {
-            return false;
-        }
+        return strpos(self::get_fullname($courseid), self::get_current_year()) !== false;
     }
 }

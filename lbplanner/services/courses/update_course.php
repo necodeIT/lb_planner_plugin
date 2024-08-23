@@ -56,14 +56,12 @@ class courses_update_course extends external_api {
      * @param int $courseid The id of the course
      * @param string $color The color of the course
      * @param string $shortname The shortname of the course
-     * @param bool $enabled Whether the course is enabled or not
+     * @param int $enabled Whether the course is enabled or not (0 or 1)
      * @return void
-     * @throws dml_exception
-     * @throws invalid_parameter_exception
      * @throws moodle_exception
      */
-    public static function update_course($courseid, $color, $shortname, $enabled): void {
-        global $DB , $USER;
+    public static function update_course(int $courseid, string $color, string $shortname, int $enabled): void {
+        global $DB, $USER;
 
         self::validate_parameters(
             self::update_course_parameters(),
@@ -82,17 +80,16 @@ class courses_update_course extends external_api {
         $course = course_helper::get_lbplanner_course($courseid, $USER->id);
 
         if ($color !== null) {
-            $course->color = $color;
+            $course->set_color($color);
         }
         if ($shortname !== null) {
-            $course->shortname = $shortname;
+            $course->set_shortname($shortname);
         }
         if ($enabled !== null) {
-            $course->enabled = $enabled;
+            $course->set_enabled((bool) $enabled);
         }
 
-        $DB->update_record(course_helper::LBPLANNER_COURSE_TABLE, $course);
-
+        $DB->update_record(course_helper::LBPLANNER_COURSE_TABLE, $course->prepare_for_db());
     }
 
     /**
