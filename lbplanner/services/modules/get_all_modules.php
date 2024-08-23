@@ -19,10 +19,8 @@ namespace local_lbplanner_services;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
-use external_value;
 use local_lbplanner\helpers\course_helper;
 use local_lbplanner\helpers\modules_helper;
-use local_lbplanner\helpers\user_helper;
 use local_lbplanner\helpers\plan_helper;
 
 
@@ -40,36 +38,29 @@ class modules_get_all_modules extends external_api {
      * @return external_function_parameters
      */
     public static function get_all_modules_parameters(): external_function_parameters {
-        return new external_function_parameters([
-            'userid' => new external_value(PARAM_INT, 'The id of the user', VALUE_REQUIRED, null, NULL_NOT_ALLOWED),
-        ]);
+        return new external_function_parameters([]);
     }
 
     /**
      * Returns all the modules for a user.
      *
-     * @param int $userid The ID of the user
      * @return array the modules
      */
-    public static function get_all_modules(int $userid): array {
-        global $DB;
-
-        self::validate_parameters(self::get_all_modules_parameters(), ['userid' => $userid]);
-
-        user_helper::assert_access($userid);
+    public static function get_all_modules(): array {
+        global $USER;
 
         $modules = [];
 
-        $courses = self::call_external_function('local_lbplanner_courses_get_all_courses', ['userid' => $userid]);
-        $plan = plan_helper::get_plan(plan_helper::get_plan_id($userid));
+        $courses = self::call_external_function('local_lbplanner_courses_get_all_courses', []);
+        $plan = plan_helper::get_plan(plan_helper::get_plan_id($USER->id));
         $ekenabled = $plan["enableek"];
 
         foreach ($courses["data"] as $course) {
-            if ($course["enabled"] == course_helper::DISABLED_COURSE) {
+            if ($course["enabled"] === course_helper::DISABLED_COURSE) {
                 continue;
             }
             $modules = array_merge(
-            modules_helper::get_all_course_modules($course['courseid'], $userid, $ekenabled),
+            modules_helper::get_all_course_modules($course['courseid'], $USER->id, $ekenabled),
                 $modules
             );
         }
