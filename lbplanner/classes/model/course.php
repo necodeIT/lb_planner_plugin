@@ -96,7 +96,7 @@ class course {
 
     /**
      * Mark the object as freshly created and sets the new ID
-     * @param int $id the new ID after insertint into the DB
+     * @param int $id the new ID after inserting into the DB
      * @throws \AssertionError
      */
     public function set_fresh(int $id) {
