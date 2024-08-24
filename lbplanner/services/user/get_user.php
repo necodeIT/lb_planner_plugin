@@ -22,10 +22,11 @@ use external_api;
 use external_function_parameters;
 use external_single_structure;
 use external_value;
-use local_lbplanner\helpers\plan_helper;
-use local_lbplanner\helpers\user_helper;
 use core_user;
 use moodle_exception;
+
+use local_lbplanner\helpers\{user_helper, plan_helper, notifications_helper};
+use local_lbplanner\enums\{PLAN_EK, PLAN_ACCESS_TYPE, NOTIF_TRIGGER};
 
 /**
  * Get the data for a user.
@@ -58,58 +59,76 @@ class user_get_user extends external_api {
     /**
      * Gives back the data of a user.
      * Default: The user who calls this function
-     * @param int $userid (optional) gives back the data of the given user
+     * @param int $userid gives back the data of the given user
      * @throws coding_exception
      * @throws dml_exception
      * @throws moodle_exception
      * @return array The data of the user
      */
     public static function get_user(int $userid): array {
-        global $USER, $CFG;
-        include_once("$CFG->dirroot/user/lib.php");
+        global $USER, $DB;
 
         self::validate_parameters(self::get_user_parameters(), ['userid' => $userid]);
+
         // Checks if the user is enrolled in LB Planner.
         if (!user_helper::check_user_exists($userid)) {
-            throw new moodle_exception('User does not exist');
+            if (!user_helper::check_access($userid)) {
+                throw new moodle_exception('User does not exist & you don\'t have access to create it');
+            }
+
+            // Register user if not found.
+            $lbplanneruser = new \stdClass();
+            $lbplanneruser->userid = $userid;
+            $lbplanneruser->language = 'en';
+            $lbplanneruser->theme = 'default';
+            $lbplanneruser->colorblindness = "none";
+            $lbplanneruser->displaytaskcount = 1;
+            $DB->insert_record(user_helper::LB_PLANNER_USER_TABLE, $lbplanneruser);
+
+            // Create empty plan for newly registered user.
+            $plan = new \stdClass();
+            $plan->name = 'Plan for ' . $USER->username;
+            $plan->enableek = PLAN_EK::ENABLED;
+            $planid = $DB->insert_record(plan_helper::TABLE, $plan);
+
+            // Set user as owner of new plan.
+            $planaccess = new \stdClass();
+            $planaccess->userid = $userid;
+            $planaccess->accesstype = PLAN_ACCESS_TYPE::OWNER;
+            $planaccess->planid = $planid;
+            $DB->insert_record(plan_helper::ACCESS_TABLE, $planaccess);
+
+            // Notify the FE that this user likely hasn't used LBP before.
+            notifications_helper::notify_user($userid, -1, NOTIF_TRIGGER::USER_REGISTERED);
+        } else {
+            $lbplanneruser = user_helper::get_user($userid);
+            $planid = plan_helper::get_plan_id($userid);
         }
 
-        $lbplanneruser = user_helper::get_user($userid);
         // Check if the user is allowed to get the data for this userid.
-        if (user_helper::check_access($userid)) {
-            $mdluser = (user_get_user_details($USER));
-            return [
-                'userid' => $USER->id,
-                'username' => $USER->username,
-                'firstname' => $USER->firstname,
-                'lastname' => $USER->lastname,
-                'capabilities' => user_helper::get_user_capability_bitmask($userid),
-                'theme' => $lbplanneruser->theme,
-                'lang' => $lbplanneruser->language,
-                'profileimageurl' => $mdluser['profileimageurl'],
-                'planid' => plan_helper::get_plan_id($userid),
-                'colorblindness' => $lbplanneruser->colorblindness,
-                'displaytaskcount' => $lbplanneruser->displaytaskcount,
-                'vintage' => $USER->address,
-            ];
+        $access = user_helper::check_access($userid);
+        if ($USER->id == $userid) {
+            $mdluser = $USER;
         } else {
             $mdluser = core_user::get_user($userid, '*', MUST_EXIST);
-            return [
-                    'userid' => $mdluser->id,
-                    'username' => $mdluser->username,
-                    'firstname' => $mdluser->firstname,
-                    'lastname' => $mdluser->lastname,
-                    'capabilities' => null,
-                    'theme' => null,
-                    'lang' => null,
-                    'profileimageurl' => user_helper::get_mdl_user_picture($userid),
-                    'planid' => null,
-                    'colorblindness' => null,
-                    'displaytaskcount' => null,
-                    'vintage' => $mdluser->address,
-            ];
         }
+
+        return [
+            'userid' => $mdluser->id,
+            'username' => $mdluser->username,
+            'firstname' => $mdluser->firstname,
+            'lastname' => $mdluser->lastname,
+            'theme' => $access ? $lbplanneruser->theme : null,
+            'lang' => $access ? $lbplanneruser->language : null,
+            'profileimageurl' => user_helper::get_mdl_user_picture($userid),
+            'planid' => $access ? $planid : null,
+            'colorblindness' => $access ? $lbplanneruser->colorblindness : null,
+            'displaytaskcount' => $access ? $lbplanneruser->displaytaskcount : null,
+            'capabilities' => $access ? user_helper::get_user_capability_bitmask($userid) : null,
+            'vintage' => $mdluser->address,
+        ];
     }
+
     /**
      * Returns the data of a user.
      * @return external_single_structure

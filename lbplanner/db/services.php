@@ -44,15 +44,6 @@ $functions = [
         'capabilities' => 'local/lb_planner:student',
         'ajax' => true,
     ],
-    'local_lbplanner_user_register_user' => [
-        'classname' => 'local_lbplanner_services\user_register_user',
-        'methodname' => 'register_user',
-        'classpath' => 'local/lbplanner/services/user/register_user.php',
-        'description' => 'Register a new user in the lbplanner app',
-        'type' => 'write',
-        'capabilities' => 'local/lb_planner:student',
-        'ajax' => true,
-    ],
     'local_lbplanner_user_update_user' => [
         'classname' => 'local_lbplanner_services\user_update_user',
         'methodname' => 'update_user',
@@ -348,7 +339,6 @@ $services = [
         'functions' => [
             'local_lbplanner_user_get_user',
             'local_lbplanner_user_get_all_users',
-            'local_lbplanner_user_register_user',
             'local_lbplanner_user_update_user',
             'local_lbplanner_courses_get_all_courses',
             'local_lbplanner_courses_update_course',
