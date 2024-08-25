@@ -45,7 +45,9 @@ class slots_get_supervisor_slots extends external_api {
     public static function get_supervisor_slots(): array {
         global $USER;
 
-        return slot_helper::get_supervisor_slots($USER->id);
+        $slots = slot_helper::get_supervisor_slots($USER->id);
+
+        return array_map(fn(slot $slot) => $slot->prepare_for_api(), $slots);
     }
 
     /**
