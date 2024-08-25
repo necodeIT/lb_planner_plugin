@@ -111,8 +111,9 @@ class course {
      * @throws \coding_exception when the color format is wrong
      */
     public function set_color(string $color) {
-        if ($color[0] !== '#')
+        if ($color[0] !== '#') {
             throw new \coding_exception("incorrect color format - must be either #RGB or #RRGGBB, got \"{$color}\" instead");
+        }
         $len = strlen($color);
         if ($len === 4) {
             // Transforming #RGB to #RRGGBB.
@@ -126,7 +127,7 @@ class course {
             throw new \coding_exception("incorrect color format - got incorrect length of {$len}");
         }
         $rrggbb = strtoupper($rrggbb);
-        if (preg_match('/^#[1-9A-F]{6}$/', $rrggbb) === false){
+        if (preg_match('/^#[1-9A-F]{6}$/', $rrggbb) === false) {
             throw new \coding_exception("incorrect color format - found non-hexadecimal character in color \"{$color}\"");
         }
         $this->color = $rrggbb;

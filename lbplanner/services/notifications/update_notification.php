@@ -70,7 +70,12 @@ class notifications_update_notification extends external_api {
             throw new \moodle_exception('Notification does not exist');
         }
 
-        $notification = $DB->get_record(notifications_helper::LBPLANNER_NOTIFICATION_TABLE, ['id' => $notificationid], '*', MUST_EXIST);
+        $notification = $DB->get_record(
+            notifications_helper::LBPLANNER_NOTIFICATION_TABLE,
+            ['id' => $notificationid],
+            '*',
+            MUST_EXIST
+        );
         $notification->status = $status;
         $notification->timestamp_read = time();
 

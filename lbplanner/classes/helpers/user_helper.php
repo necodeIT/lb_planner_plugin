@@ -79,9 +79,6 @@ class user_helper {
      * @throws dml_exception
      */
     public static function is_admin(int $userid): bool {
-        /**
-         * @var \context $context
-         */
         $context = context_system::instance();
         return has_capability(CAPABILITY::ADMIN, $context, $userid, false);
     }
@@ -114,9 +111,6 @@ class user_helper {
      */
     public static function get_user_capability_bitmask(int $userid): int {
         $capabilities = 0;
-        /**
-         * @var \context $context
-         */
         $context = context_system::instance();
         if (has_capability(CAPABILITY::ADMIN, $context, $userid, false)) {
             $capabilities += CAPABILITY_FLAG::ADMIN;

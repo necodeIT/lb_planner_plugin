@@ -85,7 +85,14 @@ class user {
     /**
      * Constructs a new course
      */
-    public function __construct(int $lbpid, int $mdlid, string $theme, string $lang, string $colorblindness, int $displaytaskcount) {
+    public function __construct(
+        int $lbpid,
+        int $mdlid,
+        string $theme,
+        string $lang,
+        string $colorblindness,
+        int $displaytaskcount
+    ) {
         global $USER;
         $this->lbpid = $lbpid;
         $this->mdlid = $mdlid;
@@ -170,7 +177,7 @@ class user {
      */
     public function set_mdluser(\stdClass $mdluser): void {
         global $USER;
-        if ($this->mdluser !== null){
+        if ($this->mdluser !== null) {
             if ($this->mdluser->id !== $USER->id) {
                 throw new \coding_exception('tried to set cached mdluser twice');
             }
@@ -183,8 +190,9 @@ class user {
      * @return \stdClass mdluser
      */
     public function get_mdluser(): \stdClass {
-        if ($this->mdluser === null)
+        if ($this->mdluser === null) {
             $this->mdluser = user_helper::get_mdluser($this->mdlid);
+        }
 
         return $this->mdluser;
     }
@@ -194,7 +202,7 @@ class user {
      * @param int $planid
      */
     public function set_planid(int $planid): void {
-        if ($this->planid !== null){
+        if ($this->planid !== null) {
             throw new \coding_exception('tried to set cached planid twice');
         }
         $this->planid = $planid;
@@ -205,8 +213,9 @@ class user {
      * @return int planid
      */
     public function get_planid(): int {
-        if ($this->planid === null)
+        if ($this->planid === null) {
             $this->planid = plan_helper::get_plan_id($this->mdlid);
+        }
 
         return $this->planid;
     }
