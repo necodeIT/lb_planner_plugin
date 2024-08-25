@@ -258,7 +258,7 @@ class plan_helper {
      * @return int The ID of the new plan for the removed user
      */
     public static function remove_user(int $planid, int $userid, int $removeuserid): int {
-        global $DB;
+        global $DB; // TODO: use global user object.
         if (self::get_owner($planid) != $userid) {
             throw new \moodle_exception('Access denied');
         }
@@ -292,6 +292,7 @@ class plan_helper {
 
     /**
      * Get all invites that have been sent by the user.
+     * TODO: move to notifications_helper
      *
      * @param int $userid ID of the sender
      *
@@ -305,6 +306,7 @@ class plan_helper {
 
     /**
      * Get all invites that have been received by the user.
+     * TODO: move to notifications_helper
      *
      * @param int $userid ID of the receiver
      *
