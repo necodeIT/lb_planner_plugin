@@ -106,14 +106,30 @@ class course {
     }
 
     /**
-     * sets the color as #RRGGBB
+     * sets the color as #RRGGBB or #RGB in hexadecimal notation
      * @param string $color the color
-     * @throws \AssertionError
+     * @throws \coding_exception when the color format is wrong
      */
     public function set_color(string $color) {
-        // TODO: check color format.
-        assert(strlen($color) <= 10);
-        $this->color = $color;
+        if ($color[0] !== '#')
+            throw new \coding_exception("incorrect color format - must be either #RGB or #RRGGBB, got \"{$color}\" instead");
+        $len = strlen($color);
+        if ($len === 4) {
+            // Transforming #RGB to #RRGGBB.
+            // This way, 0 corresponds to 00, and F to FF, meaning the full spectrum is used.
+            // This is also how Browsers handle it.
+            $rrggbb = $color[0] . $color[1] . $color[1] . $color[2] . $color[2] . $color[3] . $color[3];
+        } else if ($len === 7) {
+            // Format #RRGGBB.
+            $rrggbb = $color;
+        } else {
+            throw new \coding_exception("incorrect color format - got incorrect length of {$len}");
+        }
+        $rrggbb = strtoupper($rrggbb);
+        if (preg_match('/^#[1-9A-F]{6}$/', $rrggbb) === false){
+            throw new \coding_exception("incorrect color format - found non-hexadecimal character in color \"{$color}\"");
+        }
+        $this->color = $rrggbb;
     }
 
     /**
