@@ -56,7 +56,7 @@ class modules_get_all_modules extends external_api {
         $ekenabled = $plan["enableek"];
 
         foreach ($courses as $course) {
-            if ($course->enabled) {
+            if (!$course->enabled) {
                 continue;
             }
             $modules = array_merge(
