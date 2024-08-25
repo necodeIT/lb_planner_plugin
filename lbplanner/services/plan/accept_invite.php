@@ -93,7 +93,7 @@ class plan_accept_invite extends external_api {
                     ]);
                 }
             }
-            // TODO: replace with helper function
+            // TODO: replace with helper function.
             self::call_external_function('local_lbplanner_plan_clear_plan', [
                 'planid' => $oldplanid,
                 'userid' => $USER->id,
