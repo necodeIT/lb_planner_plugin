@@ -62,6 +62,6 @@ class CAPABILITY_FLAG extends Enum {
      */
     public static function to_capability(int $num): string {
         $name = self::name_from($num);
-        return CAPABILITY::{$name};
+        return constant('CAPABILITY::'.$name);
     }
 }
