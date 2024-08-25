@@ -26,7 +26,6 @@
 namespace local_lbplanner\model;
 
 use coding_exception;
-use core_user;
 use external_single_structure;
 use external_value;
 use local_lbplanner\helpers\plan_helper;
@@ -84,6 +83,12 @@ class user {
 
     /**
      * Constructs a new course
+     * @param int $lbpid ID of the lb planner user
+     * @param int $mdlid ID of the moodle user
+     * @param string $theme user-chosen theme
+     * @param string $lang user language
+     * @param string $colorblindness user's colorblindness
+     * @param int $displaytaskcount user's display task count
      */
     public function __construct(
         int $lbpid,
@@ -295,7 +300,6 @@ class user {
     /**
      * Prepares full data for the API endpoint.
      *
-     * @param bool $access whether the full-access data should be prepared
      * @return array a full representation of this user and its data
      */
     public function prepare_for_api(): array {
