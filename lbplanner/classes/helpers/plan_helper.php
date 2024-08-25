@@ -226,17 +226,15 @@ class plan_helper {
      * Copies the given plan to the given user.
      *
      * @param int $planid The id of the plan.
-     * @param int $userid The id of the user.
+     * @param string $username Username of the user.
      *
      * @return integer The id of the new copy of the plan.
      */
-    public static function copy_plan(int $planid, int $userid): int {
+    public static function copy_plan(int $planid, string $username): int {
         global $DB;
 
-        $user = user_helper::get_mdl_user_info($userid); // TODO: get_mdl_user_info doesn't exist anymore.
-
         $plan = $DB->get_record(self::TABLE, ['id' => $planid]);
-        $plan->name = $plan->name . ' (' . $user->username . ')';
+        $plan->name = $plan->name . ' (' . $username . ')';
         $plan->id = null;
 
         $deadlines = self::get_deadlines($planid);
@@ -277,7 +275,7 @@ class plan_helper {
             throw new \moodle_exception('Cannot remove owner');
         }
 
-        $newplanid = self::copy_plan($planid, $removeuserid);
+        $newplanid = self::copy_plan($planid, user_helper::get_mdluser($removeuserid)->username);
 
         $oldaccess = $DB->get_record(
             self::ACCESS_TABLE,

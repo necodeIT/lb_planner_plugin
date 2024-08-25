@@ -19,6 +19,7 @@ namespace local_lbplanner\helpers;
 use external_function_parameters;
 use external_single_structure;
 use external_value;
+use local_lbplanner\enums\CAPABILITY;
 use stdClass;
 use local_lbplanner\helpers\user_helper;
 
@@ -89,8 +90,8 @@ class feedback_helper {
      * @throws \moodle_exception when the user has no access
      */
     public static function assert_admin_access() {
-        if (!has_capability(user_helper::CAPABILITY_ADMIN, \context_system::instance())
-            && !has_capability(user_helper::CAPABILITY_MANAGER, \context_system::instance())
+        if (!has_capability(CAPABILITY::ADMIN, \context_system::instance())
+            && !has_capability(CAPABILITY::MANAGER, \context_system::instance())
         ) {
             throw new \moodle_exception('Acces denied');
         }
