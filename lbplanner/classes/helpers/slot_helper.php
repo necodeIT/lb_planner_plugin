@@ -247,7 +247,7 @@ class slot_helper {
             $slotdatetime = self::calculate_slot_datetime($slot, $now);
 
             if ($now->diff($slotdatetime)->days <= $range) {
-                array_push($slots, $slot->prepare_for_api());
+                array_push($slots, $slot);
             }
         }
         return $slots;
