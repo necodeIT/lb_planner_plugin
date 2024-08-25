@@ -27,6 +27,7 @@ use moodle_exception;
 
 use local_lbplanner\helpers\{user_helper, plan_helper, notifications_helper};
 use local_lbplanner\enums\{PLAN_EK, PLAN_ACCESS_TYPE, NOTIF_TRIGGER};
+use local_lbplanner\model\user;
 
 /**
  * Get the data for a user.
@@ -70,26 +71,22 @@ class user_get_user extends external_api {
 
         self::validate_parameters(self::get_user_parameters(), ['userid' => $userid]);
 
+        // Check if the user is allowed to get the data for this userid.
+        user_helper::assert_access($userid);
+
         // Checks if the user is enrolled in LB Planner.
         if (!user_helper::check_user_exists($userid)) {
-            if (!user_helper::check_access($userid)) {
-                throw new moodle_exception('User does not exist & you don\'t have access to create it');
-            }
-
             // Register user if not found.
-            $lbplanneruser = new \stdClass();
-            $lbplanneruser->userid = $userid;
-            $lbplanneruser->language = 'en';
-            $lbplanneruser->theme = 'default';
-            $lbplanneruser->colorblindness = "none";
-            $lbplanneruser->displaytaskcount = 1;
-            $DB->insert_record(user_helper::LB_PLANNER_USER_TABLE, $lbplanneruser);
+            $lbplanneruser = new user(0, $userid, 'default', 'en', 'none', 1);
+            $lbpid = $DB->insert_record(user_helper::LB_PLANNER_USER_TABLE, $lbplanneruser->prepare_for_db());
+            $lbplanneruser->set_fresh($lbpid);
 
             // Create empty plan for newly registered user.
             $plan = new \stdClass();
             $plan->name = 'Plan for ' . $USER->username;
             $plan->enableek = PLAN_EK::ENABLED;
             $planid = $DB->insert_record(plan_helper::TABLE, $plan);
+            $lbplanneruser->set_planid($planid);
 
             // Set user as owner of new plan.
             $planaccess = new \stdClass();
@@ -102,31 +99,9 @@ class user_get_user extends external_api {
             notifications_helper::notify_user($userid, -1, NOTIF_TRIGGER::USER_REGISTERED);
         } else {
             $lbplanneruser = user_helper::get_user($userid);
-            $planid = plan_helper::get_plan_id($userid);
         }
 
-        // Check if the user is allowed to get the data for this userid.
-        $access = user_helper::check_access($userid);
-        if ($USER->id == $userid) {
-            $mdluser = $USER;
-        } else {
-            $mdluser = core_user::get_user($userid, '*', MUST_EXIST);
-        }
-
-        return [
-            'userid' => $mdluser->id,
-            'username' => $mdluser->username,
-            'firstname' => $mdluser->firstname,
-            'lastname' => $mdluser->lastname,
-            'theme' => $access ? $lbplanneruser->theme : null,
-            'lang' => $access ? $lbplanneruser->language : null,
-            'profileimageurl' => user_helper::get_mdl_user_picture($userid),
-            'planid' => $access ? $planid : null,
-            'colorblindness' => $access ? $lbplanneruser->colorblindness : null,
-            'displaytaskcount' => $access ? $lbplanneruser->displaytaskcount : null,
-            'capabilities' => $access ? user_helper::get_user_capability_bitmask($userid) : null,
-            'vintage' => $mdluser->address,
-        ];
+        return $lbplanneruser->prepare_for_api();
     }
 
     /**
@@ -134,21 +109,6 @@ class user_get_user extends external_api {
      * @return external_single_structure
      */
     public static function get_user_returns(): external_single_structure {
-        return new external_single_structure(
-            [
-                'userid' => new external_value(PARAM_INT, 'The id of the user'),
-                'username' => new external_value(PARAM_TEXT, 'The username of the user'),
-                'firstname' => new external_value(PARAM_TEXT, 'The firstname of the user'),
-                'lastname' => new external_value(PARAM_TEXT, 'The lastname of the user'),
-                'theme' => new external_value(PARAM_TEXT, 'The theme the user has selected'),
-                'lang' => new external_value(PARAM_TEXT, 'The language the user has selected'),
-                'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
-                'planid' => new external_value(PARAM_INT, 'The id of the plan the user is assigned to'),
-                'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
-                'displaytaskcount' => new external_value(PARAM_INT, 'If the user has the taskcount-enabled 1-yes 0-no'),
-                'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
-                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user'),
-            ]
-        );
+        return user::api_structure();
     }
 }
