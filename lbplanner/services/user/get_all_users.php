@@ -16,16 +16,16 @@
 
 namespace local_lbplanner_services;
 
-use core_user;
 use dml_exception;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
-use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
-use local_lbplanner\helpers\user_helper;
 use moodle_exception;
+
+use local_lbplanner\helpers\user_helper;
+use local_lbplanner\model\user;
 
 /**
  * Gets all users registered by the lbplanner app.
@@ -64,25 +64,16 @@ class user_get_all_users extends external_api {
 
         $users = $DB->get_records(user_helper::LB_PLANNER_USER_TABLE);
 
-        $result = [];
+        $results = [];
 
-        foreach ($users as $user) {
-            $mdluser = core_user::get_user($user->userid, '*', MUST_EXIST);
-            $result[] = [
-                'userid' => $user->userid,
-                'username' => $mdluser->username,
-                'firstname' => $mdluser->firstname,
-                'lastname' => $mdluser->lastname,
-                'profileimageurl' => user_helper::get_mdl_user_picture($mdluser->id),
-                'vintage' => $mdluser->address,
-            ];
+        foreach ($users as $userdata) {
+            $user = user::from_db($userdata);
+            if ($vintage === null || $vintage == $user->get_mdluser()->vintage) {
+                array_push($results, $user->prepare_for_api_short());
+            }
         }
-        if ($vintage != null) {
-            $result = array_filter($result, function ($user) use ($vintage) {
-                return $user['vintage'] == $vintage;
-            });
-        }
-        return $result;
+
+        return $results;
     }
 
     /**
@@ -91,16 +82,7 @@ class user_get_all_users extends external_api {
      */
     public static function get_all_users_returns(): external_multiple_structure {
         return new external_multiple_structure(
-            new external_single_structure(
-                [
-                    'userid' => new external_value(PARAM_INT, 'The id of the user'),
-                    'username' => new external_value(PARAM_TEXT, 'The username of the user'),
-                    'firstname' => new external_value(PARAM_TEXT, 'The firstname of the user'),
-                    'lastname' => new external_value(PARAM_TEXT, 'The lastname of the user'),
-                    'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
-                    'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user'),
-                ]
-            )
+            user::api_structure_short()
         );
     }
 }

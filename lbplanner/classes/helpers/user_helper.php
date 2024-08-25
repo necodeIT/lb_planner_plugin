@@ -24,6 +24,9 @@ use stdClass;
 use user_picture;
 use core_user;
 
+use local_lbplanner\enums\{CAPABILITY, CAPABILITY_FLAG};
+use local_lbplanner\model\user;
+
 /**
  * Provides helper methods for user related stuff.
  *
@@ -33,37 +36,6 @@ use core_user;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class user_helper {
-
-    /**
-     * Shortname of the admin CAPABILITY.
-     */
-    const CAPABILITY_ADMIN = 'local/lb_planner:admin';
-
-    /**
-     * Shortname of the manager CAPABILITY.
-     */
-    const CAPABILITY_MANAGER = 'local/lb_planner:manager';
-
-    /**
-     * Shortname of the teacher CAPABILITY.
-     */
-    const CAPABILITY_TEACHER = 'local/lb_planner:teacher';
-
-    /**
-     * Shortname of the student CAPABILITY.
-     */
-    const CAPABILITY_STUDENT = 'local/lb_planner:student';
-
-    /**
-     * Maps CAPABILITY shortnames to their corresponding enum value.
-     */
-    const CAPABILITY_ENUMS
-        = [
-            self::CAPABILITY_ADMIN => 1,
-            self::CAPABILITY_MANAGER => 2,
-            self::CAPABILITY_TEACHER => 4,
-            self::CAPABILITY_STUDENT => 8,
-        ];
 
     /**
      * Name of the user database
@@ -79,7 +51,7 @@ class user_helper {
      */
     public static function check_access(int $userid): bool {
         global $USER;
-        return $USER->id == $userid;
+        return ((int) $USER->id) === $userid;
     }
 
     /**
@@ -92,8 +64,7 @@ class user_helper {
      * @throws moodle_exception
      */
     public static function assert_access(int $userid): void {
-        global $USER;
-        if ($USER->id != $userid) {
+        if (!self::check_access($userid)) {
             throw new moodle_exception('Access denied');
         }
     }
@@ -108,8 +79,11 @@ class user_helper {
      * @throws dml_exception
      */
     public static function is_admin(int $userid): bool {
+        /**
+         * @var \context $context
+         */
         $context = context_system::instance();
-        return has_capability(self::CAPABILITY_ADMIN, $context, $userid, false);
+        return has_capability(CAPABILITY::ADMIN, $context, $userid, false);
     }
 
     /**
@@ -140,18 +114,21 @@ class user_helper {
      */
     public static function get_user_capability_bitmask(int $userid): int {
         $capabilities = 0;
+        /**
+         * @var \context $context
+         */
         $context = context_system::instance();
-        if (has_capability(self::CAPABILITY_ADMIN, $context, $userid, false)) {
-            $capabilities += self::CAPABILITY_ENUMS[self::CAPABILITY_ADMIN];
+        if (has_capability(CAPABILITY::ADMIN, $context, $userid, false)) {
+            $capabilities += CAPABILITY_FLAG::ADMIN;
         }
-        if (has_capability(self::CAPABILITY_MANAGER, $context, $userid, false)) {
-            $capabilities += self::CAPABILITY_ENUMS[self::CAPABILITY_MANAGER];
+        if (has_capability(CAPABILITY::MANAGER, $context, $userid, false)) {
+            $capabilities += CAPABILITY_FLAG::MANAGER;
         }
-        if (has_capability(self::CAPABILITY_TEACHER, $context, $userid, false)) {
-            $capabilities += self::CAPABILITY_ENUMS[self::CAPABILITY_TEACHER];
+        if (has_capability(CAPABILITY::TEACHER, $context, $userid, false)) {
+            $capabilities += CAPABILITY_FLAG::TEACHER;
         }
-        if (has_capability(self::CAPABILITY_STUDENT, $context, $userid, false)) {
-            $capabilities += self::CAPABILITY_ENUMS[self::CAPABILITY_STUDENT];
+        if (has_capability(CAPABILITY::STUDENT, $context, $userid, false)) {
+            $capabilities += CAPABILITY_FLAG::STUDENT;
         }
         return $capabilities;
     }
@@ -171,50 +148,32 @@ class user_helper {
 
     /**
      * Retrieves the user with the given id.
-     * The returned object contains the following properties:
-     * ```php
-     * $user->id // The lbplanner id of the user.
-     * $user->userid // The moodle id of the user.
-     * $user->theme // The name of the theme the user has set for the app.
-     * $user->language // The language the user has set for the app.
-     * ```
      *
      * @param int $userid The id of the user to retrieve.
      *
-     * @return stdClass The user with the given id.
+     * @return user The user with the given id.
      * @throws dml_exception
      */
-    public static function get_user(int $userid): stdClass {
+    public static function get_user(int $userid): user {
         global $DB;
-        return $DB->get_record(self::LB_PLANNER_USER_TABLE, ['userid' => $userid], '*', MUST_EXIST);
+        return user::from_db($DB->get_record(self::LB_PLANNER_USER_TABLE, ['userid' => $userid], '*', MUST_EXIST));
     }
 
     /**
-     * Retrieves the full name of the user with the given id.
+     * Retrieves the user with the given id.
      *
-     * @return string The full name of the user with the given id.
-     * @deprecated not in use
-     */
-    public static function get_complete_name(): string {
-        global $USER;
-        return $USER->firstname . ' ' . $USER->lastname;
-    }
-
-    /**
-     * This Function is used to get the user picture of a user.
+     * @param int $userid The id of the user to retrieve.
      *
-     * @param int $userid The id of the user to retrieve the picture for.
-     *
-     * @return string The url of the user picture.
+     * @return \stdClass The user with the given id.
      * @throws dml_exception
-     * @throws coding_exception
      */
-    public static function get_mdl_user_picture(int $userid): string {
-        global $PAGE;
-        $mdluser = core_user::get_user($userid, '*', MUST_EXIST);
-        $userpicture = new user_picture($mdluser);
-        $userpicture->size = 1; // Size f1.
-        return $userpicture->get_url($PAGE)->out(false);
+    public static function get_mdluser(int $userid): \stdClass {
+        global $USER;
+        if ($userid === ((int) $USER->id)) {
+            $data = $USER;
+        } else {
+            $data = core_user::get_user($userid, '*', MUST_EXIST);
+        }
+        return $data;
     }
-
 }

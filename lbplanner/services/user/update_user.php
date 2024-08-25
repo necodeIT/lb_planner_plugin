@@ -22,9 +22,10 @@ use external_function_parameters;
 use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
-use local_lbplanner\helpers\user_helper;
-use local_lbplanner\helpers\plan_helper;
 use moodle_exception;
+
+use local_lbplanner\helpers\{plan_helper, user_helper};
+use local_lbplanner\model\user;
 
 /**
  * Update the data for a user.
@@ -79,65 +80,35 @@ class user_update_user extends external_api {
                 'displaytaskcount' => $displaytaskcount,
             ]
         );
-        $userid = $USER->id;
-        user_helper::assert_access($userid);
+        user_helper::assert_access($USER->id);
 
         // Look if User-Id is in the DB.
-        if (!user_helper::check_user_exists($userid)) {
+        if (!user_helper::check_user_exists($USER->id)) {
             throw new moodle_exception('User does not exist');
         }
-        $user = user_helper::get_user($userid);
+        $user = user_helper::get_user($USER->id);
         if ($lang !== null) {
-            $user->language = $lang;
+            $user->set_lang($lang);
         }
         if ($colorblindness !== null) {
-            $user->colorblindness = $colorblindness;
+            $user->set_colorblindness($colorblindness);
         }
         if ($theme !== null) {
-            $user->theme = $theme;
+            $user->set_theme($theme);
         }
         if ($displaytaskcount !== null) {
-            $user->displaytaskcount = $displaytaskcount;
+            $user->set_displaytaskcount($displaytaskcount);
         }
 
-        $DB->update_record(user_helper::LB_PLANNER_USER_TABLE, $user);
+        $DB->update_record(user_helper::LB_PLANNER_USER_TABLE, $user->prepare_for_db());
 
-        return [
-            'userid' => $userid,
-            'lang' => $user->language,
-            'theme' => $user->theme,
-            'capabilities' => user_helper::get_user_capability_bitmask($userid),
-            'username' => $USER->username,
-            'firstname' => $USER->firstname,
-            'lastname' => $USER->lastname,
-            'profileimageurl' => user_helper::get_mdl_user_picture($userid),
-            'planid' => plan_helper::get_plan_id($userid),
-            'colorblindness' => $user->colorblindness,
-            'displaytaskcount' => $user->displaytaskcount,
-            'vintage' => $USER->address,
-
-        ];
+        return $user->prepare_for_api();
     }
     /**
      * Returns the data of a user.
      * @return external_single_structure
      */
     public static function update_user_returns(): external_single_structure {
-        return new external_single_structure(
-            [
-                'userid' => new external_value(PARAM_INT, 'The id of the user'),
-                'username' => new external_value(PARAM_TEXT, 'The username of the user'),
-                'firstname' => new external_value(PARAM_TEXT, 'The firstname of the user'),
-                'lastname' => new external_value(PARAM_TEXT, 'The lastname of the user'),
-                'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
-                'theme' => new external_value(PARAM_TEXT, 'The theme the user has selected'),
-                'lang' => new external_value(PARAM_TEXT, 'The language the user has selected'),
-                'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
-                'planid' => new external_value(PARAM_INT, 'The id of the plan the user is assigned to'),
-                'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness the user has selected'),
-                'displaytaskcount' => new external_value(PARAM_INT, 'If the user has the taskcount-enabled 1-yes 0-no'),
-                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user'),
-            ]
-        );
+        return user::api_structure();
     }
 }

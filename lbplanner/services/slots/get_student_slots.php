@@ -21,6 +21,7 @@ use external_function_parameters;
 use external_multiple_structure;
 use external_value;
 use local_lbplanner\helpers\slot_helper;
+use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\slot;
 
 /**
@@ -56,7 +57,7 @@ class slots_get_student_slots extends external_api {
 
         $superslots = slot_helper::get_supervisor_slots($USER->id);
 
-        $myslots = slot_helper::filter_slots_for_user($superslots, $userid);
+        $myslots = slot_helper::filter_slots_for_user($superslots, user_helper::get_mdluser($userid));
 
         $returnslots = slot_helper::filter_slots_for_time($myslots, slot_helper::RESERVATION_RANGE_SUPERVISOR);
 
