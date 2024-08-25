@@ -52,7 +52,7 @@ class slots_get_my_slots extends external_api {
 
         $returnslots = slot_helper::filter_slots_for_time($myslots, slot_helper::RESERVATION_RANGE_USER);
 
-        return $returnslots;
+        return array_map(fn(slot $slot) => $slot->prepare_for_api(), $returnslots);
     }
 
     /**
