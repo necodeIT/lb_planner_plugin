@@ -201,6 +201,7 @@ class slot_helper {
     /**
      * Filters an array of slots for the slots that the user can theoretically reserve
      * NOTE: not taking into account time or fullness, only filters i.e. users' class and courses
+     * TODO: replace $user with $vintage
      * @param slot[] $allslots the slots to filter
      * @param mixed $user a user object - e.g. $USER or a user object from the database
      * @return slot[] the filtered slot array
