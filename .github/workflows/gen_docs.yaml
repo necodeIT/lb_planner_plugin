@@ -37,10 +37,10 @@ jobs:
         run: python document_services.py ../docs/moodle
 
       - name: Push new documentation to docs repo
-        working-directory: docs
         uses: Andro999b/push@v1.3
         with:
           github_token: ${{ secrets.REPO_DOCS_TOKEN }}
           repository: 'necodeIT/lb_planner_docs'
           branch: main
           message: "GitHub Actions - Update Web Service Documentation to ${{ github.sha }}"
+          directory: docs
