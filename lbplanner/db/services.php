@@ -287,6 +287,15 @@ $functions = [
         'capabilities' => 'local/lb_planner:student',
         'ajax' => true,
     ],
+    'local_lbplanner_slots_get_slot_reservations' => [
+        'classname' => 'local_lbplanner_services\slots_get_slot_reservations',
+        'methodname' => 'get_slot_reservations',
+        'classpath' => 'local/lbplanner/services/slots/get_slot_reservations.php',
+        'description' => 'Get reservations for a slot',
+        'type' => 'write',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
     'local_lbplanner_slots_create_slot' => [
         'classname' => 'local_lbplanner_services\slots_create_slot',
         'methodname' => 'create_slot',

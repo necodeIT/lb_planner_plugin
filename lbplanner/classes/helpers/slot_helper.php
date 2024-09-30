@@ -294,7 +294,7 @@ class slot_helper {
      * @param int $supervisorid userid of the supervisor in question
      * @param int $slotid the slot to check
      *
-     * @return slot[] An array of the slots.
+     * @return bool Whether this user is supervisor for this slot
      */
     public static function check_slot_supervisor(int $supervisorid, int $slotid): bool {
         global $DB;
