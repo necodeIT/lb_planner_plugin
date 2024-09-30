@@ -177,7 +177,33 @@ class slot_helper {
             array_push($reservationsobj, new reservation(...$reservation));
         }
 
-        return $reservationsobj;
+        return self::filter_reservations_for_recency($reservationsobj);
+    }
+
+    /**
+     * Validates reservation recency and removes reservations that are outdated
+     * @param reservation[] $reservations input reservations
+     *
+     * @return reservation[] reservations that pass
+     */
+    public static function filter_reservations_for_recency(array $reservations): array {
+        global $DB;
+
+        $now = new DateTimeImmutable();
+
+        $goodeggs = [];
+        $badeggs = [];
+        foreach ($reservations as $reservation) {
+            if ($now->diff($reservation->get_datetime_end())->invert === 0){
+                array_push($goodeggs, $reservation);
+            } else {
+                array_push($badeggs, $reservation->id);
+            }
+        }
+
+        $DB->delete_records_list(self::TABLE_RESERVATIONS, 'id', $badeggs);
+
+        return $goodeggs;
     }
 
     /**
