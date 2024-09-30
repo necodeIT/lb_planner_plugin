@@ -3,7 +3,7 @@ name: Generate API Docs
 on:
   push:
     branches:
-      - LP-55-Backend-Refactor # This is temporary and will be replaced by `main` once the refactor is complete
+      - main
   workflow_dispatch: # For manual triggering
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
         with:
-          ref: LP-55-Backend-Refactor # This is temporary and will be replaced by `main` once the refactor is complete
+          ref: main
           path: moodle
 
       - name: Checkout docs repo
