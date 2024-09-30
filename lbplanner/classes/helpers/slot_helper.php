@@ -213,7 +213,7 @@ class slot_helper {
         $goodeggs = [];
         $badeggs = [];
         foreach ($reservations as $reservation) {
-            if ($now->diff($reservation->get_datetime_end())->invert === 0){
+            if ($now->diff($reservation->get_datetime_end())->invert === 0) {
                 array_push($goodeggs, $reservation);
             } else {
                 array_push($badeggs, $reservation->id);
@@ -344,6 +344,6 @@ class slot_helper {
     public static function check_slot_supervisor(int $supervisorid, int $slotid): bool {
         global $DB;
 
-        return $DB->record_exists(self::TABLE_SUPERVISORS, ['userid'=>$supervisorid, 'slotid'=>$slotid]);
+        return $DB->record_exists(self::TABLE_SUPERVISORS, ['userid' => $supervisorid, 'slotid' => $slotid]);
     }
 }
