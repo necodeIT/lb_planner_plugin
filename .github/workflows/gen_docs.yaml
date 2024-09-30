@@ -37,7 +37,7 @@ jobs:
         run: python document_services.py ../docs/moodle
 
       - name: Push new documentation to docs repo
-        uses: Andro999b/push@v1.3
+        uses: Smart-Transportation/push@v1.3
         with:
           github_token: ${{ secrets.REPO_DOCS_TOKEN }}
           repository: 'necodeIT/lb_planner_docs'
