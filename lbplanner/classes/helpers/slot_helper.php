@@ -181,6 +181,25 @@ class slot_helper {
     }
 
     /**
+     * Returns reservations for a user.
+     * @param int $userid ID of the user
+     *
+     * @return reservation[] the requested reservations
+     */
+    public static function get_reservations_for_user(int $userid): array {
+        global $DB;
+        $reservations = $DB->get_records(self::TABLE_RESERVATIONS, ['userid' => $userid]);
+
+        $reservationsobj = [];
+        foreach ($reservations as $reservation) {
+            $reservation['date'] = new DateTimeImmutable($reservation['date']);
+            array_push($reservationsobj, new reservation(...$reservation));
+        }
+
+        return self::filter_reservations_for_recency($reservationsobj);
+    }
+
+    /**
      * Validates reservation recency and removes reservations that are outdated
      * @param reservation[] $reservations input reservations
      *
