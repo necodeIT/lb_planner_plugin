@@ -27,7 +27,7 @@ use external_value;
  * @package local_lbplanner
  * @subpackage services_config
  * @copyright 2024 necodeIT
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class config_get_version extends external_api {
     /**

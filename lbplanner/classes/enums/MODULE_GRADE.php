@@ -20,7 +20,7 @@
  * @package local_lbplanner
  * @subpackage enums
  * @copyright 2024 NecodeIT
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
 namespace local_lbplanner\enums;

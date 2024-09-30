@@ -31,7 +31,7 @@ use local_lbplanner\helpers\user_helper;
  * @package    local_lbplanner
  * @subpackage helpers
  * @copyright  2024 NecodeIT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class feedback_helper {
 

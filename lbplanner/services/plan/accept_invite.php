@@ -29,7 +29,7 @@ use local_lbplanner\enums\{PLAN_ACCESS_TYPE, PLAN_INVITE_STATE, NOTIF_TRIGGER};
  * @package local_lbplanner
  * @subpackage services_plan
  * @copyright 2024 necodeIT
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_accept_invite extends external_api {
     /**

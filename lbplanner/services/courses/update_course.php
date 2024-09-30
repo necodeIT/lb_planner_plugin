@@ -30,7 +30,7 @@ use moodle_exception;
  * @package local_lbplanner
  * @subpackage services_courses
  * @copyright 2024 necodeIT
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class courses_update_course extends external_api {
     /**

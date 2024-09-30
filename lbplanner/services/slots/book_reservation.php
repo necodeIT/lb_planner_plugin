@@ -33,7 +33,7 @@ use local_lbplanner\model\reservation;
  * @package local_lbplanner
  * @subpackage services_slots
  * @copyright 2024 necodeIT
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_book_reservation extends external_api {
     /**
