@@ -24,8 +24,7 @@ use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\reservation;
 
 /**
- * Returns all slots a supervisor can theoretically reserve for a user.
- * This does not include times the user has already reserved a slot for.
+ * Returns all reservations for a slot.
  *
  * @package local_lbplanner
  * @subpackage services_slots
@@ -34,7 +33,7 @@ use local_lbplanner\model\reservation;
  */
 class slots_get_slot_reservations extends external_api {
     /**
-     * Parameters for get_student_slots.
+     * Parameters for slots_get_slot_reservations.
      * @return external_function_parameters
      */
     public static function get_slot_reservations_parameters(): external_function_parameters {
@@ -64,7 +63,7 @@ class slots_get_slot_reservations extends external_api {
     }
 
     /**
-     * Returns the structure of the slot array
+     * Returns the structure of the reservation array
      * @return external_multiple_structure
      */
     public static function get_slot_reservations_returns(): external_multiple_structure {
