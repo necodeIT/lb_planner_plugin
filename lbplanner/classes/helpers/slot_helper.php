@@ -299,12 +299,6 @@ class slot_helper {
     public static function check_slot_supervisor(int $supervisorid, int $slotid): bool {
         global $DB;
 
-        $result = $DB->get_record_sql(
-            'SELECT supervisor.userid FROM '.self::TABLE_SUPERVISORS.' as supervisor'.
-            'WHERE supervisor.userid=? AND supervisor.slotid=?',
-            [$supervisorid, $slotid]
-        );
-
-        return $result !== false;
+        return $DB->record_exists(self::TABLE_SUPERVISORS, ['userid'=>$supervisorid, 'slotid'=>$slotid]);
     }
 }
