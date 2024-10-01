@@ -177,7 +177,52 @@ class slot_helper {
             array_push($reservationsobj, new reservation(...$reservation));
         }
 
-        return $reservationsobj;
+        return self::filter_reservations_for_recency($reservationsobj);
+    }
+
+    /**
+     * Returns reservations for a user.
+     * @param int $userid ID of the user
+     *
+     * @return reservation[] the requested reservations
+     */
+    public static function get_reservations_for_user(int $userid): array {
+        global $DB;
+        $reservations = $DB->get_records(self::TABLE_RESERVATIONS, ['userid' => $userid]);
+
+        $reservationsobj = [];
+        foreach ($reservations as $reservation) {
+            $reservation['date'] = new DateTimeImmutable($reservation['date']);
+            array_push($reservationsobj, new reservation(...$reservation));
+        }
+
+        return self::filter_reservations_for_recency($reservationsobj);
+    }
+
+    /**
+     * Validates reservation recency and removes reservations that are outdated
+     * @param reservation[] $reservations input reservations
+     *
+     * @return reservation[] reservations that pass
+     */
+    public static function filter_reservations_for_recency(array $reservations): array {
+        global $DB;
+
+        $now = new DateTimeImmutable();
+
+        $goodeggs = [];
+        $badeggs = [];
+        foreach ($reservations as $reservation) {
+            if ($now->diff($reservation->get_datetime_end())->invert === 0) {
+                array_push($goodeggs, $reservation);
+            } else {
+                array_push($badeggs, $reservation->id);
+            }
+        }
+
+        $DB->delete_records_list(self::TABLE_RESERVATIONS, 'id', $badeggs);
+
+        return $goodeggs;
     }
 
     /**
@@ -294,17 +339,11 @@ class slot_helper {
      * @param int $supervisorid userid of the supervisor in question
      * @param int $slotid the slot to check
      *
-     * @return slot[] An array of the slots.
+     * @return bool Whether this user is supervisor for this slot
      */
     public static function check_slot_supervisor(int $supervisorid, int $slotid): bool {
         global $DB;
 
-        $result = $DB->get_record_sql(
-            'SELECT supervisor.userid FROM '.self::TABLE_SUPERVISORS.' as supervisor'.
-            'WHERE supervisor.userid=? AND supervisor.slotid=?',
-            [$supervisorid, $slotid]
-        );
-
-        return $result !== false;
+        return $DB->record_exists(self::TABLE_SUPERVISORS, ['userid' => $supervisorid, 'slotid' => $slotid]);
     }
 }
