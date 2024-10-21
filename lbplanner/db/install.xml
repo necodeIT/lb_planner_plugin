@@ -95,25 +95,6 @@
 				<KEY NAME="planid" TYPE="foreign" FIELDS="planid" REFTABLE="local_lbplanner_plans" REFFIELDS="id" />
 			</KEYS>
 		</TABLE>
-		<TABLE NAME="local_lbplanner_feedback" COMMENT="Table for Feedback for the LBPLANNER App">
-			<FIELDS>
-				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-				<FIELD NAME="content" TYPE="text" NOTNULL="true" SEQUENCE="false" />
-				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-				<FIELD NAME="notes" TYPE="text" NOTNULL="false" SEQUENCE="false" />
-				<FIELD NAME="type" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" />
-				<FIELD NAME="status" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" />
-				<FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" />
-				<FIELD NAME="lastmodified" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" />
-				<FIELD NAME="lastmodifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
-				<FIELD NAME="logfile" TYPE="text" NOTNULL="false" SEQUENCE="false" />
-			</FIELDS>
-			<KEYS>
-				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
-				<KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="local_lbplanner_users" REFFIELDS="userid" />
-				<KEY NAME="lastmodifiedby" TYPE="foreign" FIELDS="userid" REFTABLE="local_lbplanner_users" REFFIELDS="userid" />
-			</KEYS>
-		</TABLE>
 		<TABLE NAME="local_lbplanner_slots" COMMENT="All avaliable slots">
 			<FIELDS>
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
