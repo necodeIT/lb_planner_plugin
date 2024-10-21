@@ -23,6 +23,7 @@ use external_value;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
+use local_lbplanner\model\supervisor;
 use moodle_exception;
 
 /**
@@ -88,7 +89,7 @@ class slots_create_slot extends external_api {
      * @param int $size how many pupils this slot can fit
      */
     public static function create_slot(int $startunit, int $duration, int $weekday, string $room, int $size): array {
-        global $DB;
+        global $DB, $USER;
         self::validate_parameters(
             self::create_slot_parameters(),
             [
@@ -130,6 +131,12 @@ class slots_create_slot extends external_api {
         $slot = new slot(0, $startunit, $duration, $weekday, $room, $size);
         $id = $DB->insert_record(slot_helper::TABLE_SLOTS, $slot->prepare_for_db());
         $slot->set_fresh($id);
+
+        // Set current user as supervisor for this new slot.
+        $DB->insert_record(
+            slot_helper::TABLE_SUPERVISORS,
+            (new supervisor(0, $slot->id, $USER->id))->prepare_for_db()
+        );
 
         return $slot->prepare_for_api();
     }
