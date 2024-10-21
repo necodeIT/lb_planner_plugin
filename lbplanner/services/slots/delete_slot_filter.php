@@ -23,7 +23,7 @@ use local_lbplanner\helpers\slot_helper;
 
 /**
  * Delete a filter from a slot
- * 
+ *
  * NOTE: after deleting a filter, the associated slot may have reservations
  * for people who don't fit the filters anymore. This is intended behaviour.
  *
