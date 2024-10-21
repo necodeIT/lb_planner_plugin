@@ -162,6 +162,19 @@ class slot_helper {
     }
 
     /**
+     * Returns a singular slot filter.
+     * @param int $filterid ID of the filter
+     *
+     * @return slot_filter the requested filter
+     */
+    public static function get_slot_filter(int $filterid): slot_filter {
+        global $DB;
+        $filter = $DB->get_record(self::TABLE_SLOT_FILTERS, ['id' => $filterid]);
+
+        return new slot_filter(...$filter);
+    }
+
+    /**
      * Returns reservations for a slot.
      * @param int $slotid ID of the slot
      *
