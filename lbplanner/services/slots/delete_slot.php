@@ -58,7 +58,7 @@ class slots_delete_slot extends external_api {
         self::validate_parameters(
             self::delete_slot_parameters(),
             [
-                'slotid' => $slotid
+                'slotid' => $slotid,
             ]
         );
 
