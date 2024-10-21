@@ -25,6 +25,9 @@
 
 namespace local_lbplanner\model;
 
+use external_single_structure;
+use external_value;
+
 /**
  * Model class for a filter for slots
  */
@@ -54,12 +57,73 @@ class slot_filter {
      * @param ?string $vintage linked class or null if any
      */
     public function __construct(int $id, int $slotid, ?int $courseid, ?string $vintage) {
-        $this->id = $id;
-        $this->slotid = $slotid;
-        $this->courseid = $courseid;
+        assert(!(is_null($courseid) and is_null($vintage)));
         if (!is_null($vintage)) {
             assert(strlen($vintage) <= 7);
         }
+
+        $this->id = $id;
+        $this->slotid = $slotid;
+        $this->courseid = $courseid;
         $this->vintage = $vintage;
+    }
+
+    /**
+     * Mark the object as freshly created and sets the new ID
+     * @param int $id the new ID after inserting into the DB
+     */
+    public function set_fresh(int $id) {
+        assert($this->id === 0);
+        assert($id !== 0);
+        $this->id = $id;
+    }
+
+    /**
+     * Prepares data for the DB endpoint.
+     * doesn't set ID if it's 0
+     *
+     * @return object a representation of this object and its data
+     */
+    public function prepare_for_db(): object {
+        $obj = new \stdClass();
+
+        $obj->slotid = $this->slotid;
+        $obj->courseid = $this->courseid;
+        $obj->vintage = $this->vintage;
+
+        if ($this->id !== 0) {
+            $obj->id = $this->id;
+        }
+        return $obj;
+    }
+
+    /**
+     * Prepares data for the API endpoint.
+     *
+     * @return array a representation of this object and its data
+     */
+    public function prepare_for_api(): array {
+        return [
+            'id' => $this->id,
+            'slotid' => $this->slotid,
+            'courseid' => $this->courseid,
+            'vintage' => $this->vintage,
+        ];
+    }
+
+    /**
+     * Returns the data structure of this object for the API.
+     *
+     * @return external_single_structure The data structure of this object for the API.
+     */
+    public static function api_structure(): external_single_structure {
+        return new external_single_structure(
+            [
+                'id' => new external_value(PARAM_INT, 'filter ID'),
+                'slotid' => new external_value(PARAM_INT, 'ID of associated slot'),
+                'courseid' => new external_value(PARAM_INT, 'ID of course to filter for (or null if "any")'),
+                'vintage' => new external_value(PARAM_INT, 'class name to filter for (or null if "any")'),
+            ]
+        );
     }
 }
