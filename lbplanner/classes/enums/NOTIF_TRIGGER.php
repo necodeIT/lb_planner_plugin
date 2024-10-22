@@ -65,4 +65,8 @@ class NOTIF_TRIGGER extends Enum {
      * Unbook forced by supervisor
      */
     const UNBOOK_FORCED = 7;
+    /**
+     * Reservation booked by supervisor
+     */
+    const BOOK_FORCED = 8;
 }

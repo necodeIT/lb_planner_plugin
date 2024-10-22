@@ -167,13 +167,14 @@ class slot {
     }
 
     /**
-     * Returns whether this and $other overlap in their time and room.
+     * Returns whether this and $other overlap in their time.
      * @param slot $other the other slot
+     * @param bool $checkroom also require overlap in rooms
      *
      * @return bool whether slots overlap
      */
-    public function check_overlaps(slot $other): bool {
-        if ($this->room !== $other->room) {
+    public function check_overlaps(slot $other, bool $checkroom): bool {
+        if ($checkroom && ($this->room !== $other->room)) {
             return false;
         }
         if ($this->weekday !== $other->weekday) {
