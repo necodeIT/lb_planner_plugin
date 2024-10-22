@@ -23,7 +23,7 @@ use external_value;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
-use moodle_exception;
+use local_lbplanner\model\supervisor;
 
 /**
  * Create a slot
@@ -88,7 +88,7 @@ class slots_create_slot extends external_api {
      * @param int $size how many pupils this slot can fit
      */
     public static function create_slot(int $startunit, int $duration, int $weekday, string $room, int $size): array {
-        global $DB;
+        global $DB, $USER;
         self::validate_parameters(
             self::create_slot_parameters(),
             [
@@ -100,36 +100,18 @@ class slots_create_slot extends external_api {
             ]
         );
 
-        // Validating startunit.
-        $maxunit = count(slot_helper::SCHOOL_UNITS) - 1;
-        if ($startunit < 1) {
-            throw new moodle_exception('can\'t have a start unit smaller than 1');
-        } else if ($startunit > $maxunit) {
-            throw new moodle_exception("can't have a start unit larger than {$maxunit}");
-        }
-        // Validating duration.
-        if ($duration < 1) {
-            throw new moodle_exception('duration must be at least 1');
-        } else if ($startunit + $duration > $maxunit) {
-            throw new moodle_exception("slot goes past the max unit {$maxunit}");
-        }
-        // Validating weekday.
-        WEEKDAY::from($weekday);
-        // Validating room.
-        if (strlen($room) <= 1) {
-            throw new moodle_exception('room name has to be at least 2 characters long');
-        } else if (strlen($room) > slot_helper::ROOM_MAXLENGTH) {
-            throw new moodle_exception('room name has a maximum of '.slot_helper::ROOM_MAXLENGTH.' characters');
-        }
-        // Validating size.
-        if ($size < 0) {
-            throw new moodle_exception('can\'t have a negative size for a slot');
-        }
+        $slot = new slot(0, $startunit, $duration, $weekday, $room, $size);
+        $slot->validate();
 
         // Actually inserting the slot.
-        $slot = new slot(0, $startunit, $duration, $weekday, $room, $size);
         $id = $DB->insert_record(slot_helper::TABLE_SLOTS, $slot->prepare_for_db());
         $slot->set_fresh($id);
+
+        // Set current user as supervisor for this new slot.
+        $DB->insert_record(
+            slot_helper::TABLE_SUPERVISORS,
+            (new supervisor(0, $slot->id, $USER->id))->prepare_for_db()
+        );
 
         return $slot->prepare_for_api();
     }

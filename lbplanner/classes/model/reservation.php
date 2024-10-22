@@ -153,6 +153,24 @@ class reservation {
     }
 
     /**
+     * Returns whether this and $other overlap in their time and room.
+     * @param reservation $other the other reservation
+     *
+     * @return bool whether slots overlap
+     */
+    public function check_overlaps(reservation $other): bool {
+        // If the slots don't overlap, the reservations don't either.
+        if (!$this->get_slot()->check_overlaps($other->get_slot(), false)) {
+            return false;
+        }
+        // Now we only need to check whether the exact day is the same.
+        static $format = 'Y-m-d';
+        $thisdate = $this->get_datetime()->format($format);
+        $otherdate = $other->get_datetime()->format($format);
+        return $thisdate === $otherdate;
+    }
+
+    /**
      * Prepares data for the DB endpoint.
      * doesn't set ID if it's 0
      *

@@ -23,7 +23,8 @@ use external_api;
 use external_function_parameters;
 use external_single_structure;
 use external_value;
-
+use local_lbplanner\enums\NOTIF_TRIGGER;
+use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\reservation;
 
@@ -129,19 +130,44 @@ class slots_book_reservation extends external_api {
             }
         }
 
-        // TODO: check if user is already in a different slot at the same time.
-
         // Check if slot is full.
         if ($slot->get_fullness() >= $slot->size) {
             throw new \moodle_exception('Slot is already full');
         }
 
         $reservation = new reservation(0, $slotid, $dateobj, $userid, $USER->id);
+        $reservation->set_slot($slot);
+
+        // Check if user is already in a different slot at the same time.
+        $overlapreservations = [];
+        $existingreservations = slot_helper::get_reservations_for_user($userid);
+        foreach ($existingreservations as $exres) {
+            if ($reservation->check_overlaps($exres)) {
+                array_push($overlapreservations, $exres);
+            }
+        }
+
+        // If this is not a supervisor doing supervising, we throw an error if the user is in an oevrlapping reservation.
+        if ($userid === $USER->id && count($overlapreservations) > 0) {
+            throw new \moodle_exception('you\'re already in another reservation at this date and time…');
+        }
 
         $id = $DB->insert_record(slot_helper::TABLE_RESERVATIONS, $reservation->prepare_for_db());
         $reservation->set_fresh($id, $slot);
 
-        // TODO: if userid!=USER->id → send notif to the user that the supervisor booked a reservation for them.
+        // If this is a supervisor reserving for a student, notify the student.
+        if ($userid !== $USER->id) {
+            notifications_helper::notify_user($userid, $reservation->id, NOTIF_TRIGGER::BOOK_FORCED);
+
+            // Remove user from each overlapping reservation and notify them about it.
+            foreach ($overlapreservations as $overlapres) {
+                $DB->delete_records(
+                    slot_helper::TABLE_RESERVATIONS,
+                    ['id' => $overlapres->id]
+                );
+                notifications_helper::notify_user($userid, $overlapres->id, NOTIF_TRIGGER::UNBOOK_FORCED);
+            }
+        }
 
         return $reservation->prepare_for_api();
     }
