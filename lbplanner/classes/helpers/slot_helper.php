@@ -72,6 +72,12 @@ class slot_helper {
         '21:00',
     ];
     /**
+     * maximum school unit
+     *
+     * NOTE: const cannot use count() in php<8
+     */
+    const SCHOOL_UNIT_MAX = 16;
+    /**
      * local_lbplanner_slots table.
      */
     const TABLE_SLOTS = 'local_lbplanner_slots';

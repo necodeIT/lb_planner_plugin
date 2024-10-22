@@ -24,7 +24,6 @@ use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
 use local_lbplanner\model\supervisor;
-use moodle_exception;
 
 /**
  * Create a slot
@@ -101,34 +100,10 @@ class slots_create_slot extends external_api {
             ]
         );
 
-        // Validating startunit.
-        $maxunit = count(slot_helper::SCHOOL_UNITS) - 1;
-        if ($startunit < 1) {
-            throw new moodle_exception('can\'t have a start unit smaller than 1');
-        } else if ($startunit > $maxunit) {
-            throw new moodle_exception("can't have a start unit larger than {$maxunit}");
-        }
-        // Validating duration.
-        if ($duration < 1) {
-            throw new moodle_exception('duration must be at least 1');
-        } else if ($startunit + $duration > $maxunit) {
-            throw new moodle_exception("slot goes past the max unit {$maxunit}");
-        }
-        // Validating weekday.
-        WEEKDAY::from($weekday);
-        // Validating room.
-        if (strlen($room) <= 1) {
-            throw new moodle_exception('room name has to be at least 2 characters long');
-        } else if (strlen($room) > slot_helper::ROOM_MAXLENGTH) {
-            throw new moodle_exception('room name has a maximum of '.slot_helper::ROOM_MAXLENGTH.' characters');
-        }
-        // Validating size.
-        if ($size < 0) {
-            throw new moodle_exception('can\'t have a negative size for a slot');
-        }
+        $slot = new slot(0, $startunit, $duration, $weekday, $room, $size);
+        $slot->validate();
 
         // Actually inserting the slot.
-        $slot = new slot(0, $startunit, $duration, $weekday, $room, $size);
         $id = $DB->insert_record(slot_helper::TABLE_SLOTS, $slot->prepare_for_db());
         $slot->set_fresh($id);
 

@@ -30,6 +30,7 @@ use local_lbplanner\helpers\slot_helper;
 
 use external_single_structure;
 use external_value;
+use moodle_exception;
 
 /**
  * Model class for slot
@@ -105,6 +106,38 @@ class slot {
         $this->id = $id;
         $this->fullness = 0;
         $this->forcuruser = false;
+    }
+
+    /**
+     * Validate object data
+     * @throws moodle_exception
+     */
+    public function validate(): void {
+        static $maxunit = slot_helper::SCHOOL_UNIT_MAX;
+         // Validating startunit.
+        if ($this->startunit < 1) {
+            throw new moodle_exception('can\'t have a start unit smaller than 1');
+        } else if ($this->startunit > $maxunit) {
+            throw new moodle_exception("can't have a start unit larger than {$maxunit}");
+        }
+        // Validating duration.
+        if ($this->duration < 1) {
+            throw new moodle_exception('duration must be at least 1');
+        } else if ($this->startunit + $this->duration > $maxunit) {
+            throw new moodle_exception("slot goes past the max unit {$maxunit}");
+        }
+        // Validating weekday.
+        WEEKDAY::from($this->weekday);
+        // Validating room.
+        if (strlen($this->room) <= 1) {
+            throw new moodle_exception('room name has to be at least 2 characters long');
+        } else if (strlen($this->room) > slot_helper::ROOM_MAXLENGTH) {
+            throw new moodle_exception('room name has a maximum of '.slot_helper::ROOM_MAXLENGTH.' characters');
+        }
+        // Validating size.
+        if ($this->size < 0) {
+            throw new moodle_exception('can\'t have a negative size for a slot');
+        }
     }
 
     /**

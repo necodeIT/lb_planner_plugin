@@ -350,6 +350,15 @@ $functions = [
         'capabilities' => 'local/lb_planner:teacher',
         'ajax' => true,
     ],
+    'local_lbplanner_slots_update_slot' => [
+        'classname' => 'update_slot\slots_update_slot',
+        'methodname' => 'create_slot',
+        'classpath' => 'local/lbplanner/services/slots/update_slot.php',
+        'description' => 'Update a slot\'s values',
+        'type' => 'write',
+        'capabilities' => 'local/lb_planner:teacher',
+        'ajax' => true,
+    ],
     'local_lbplanner_slots_delete_slot' => [
         'classname' => 'local_lbplanner_services\slots_delete_slot',
         'methodname' => 'delete_slot',
