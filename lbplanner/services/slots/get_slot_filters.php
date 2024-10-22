@@ -68,11 +68,11 @@ class slots_get_slot_filters extends external_api {
         }
         // Get all filters for this slot, and return their API representations.
         $filters = slot_helper::get_filters_for_slot($slotid);
-        $filters_returns = [];
-        foreach($filters as $filter) {
-            array_push($filters_returns, $filter->prepare_for_api());
+        $filterdicts = [];
+        foreach ($filters as $filter) {
+            array_push($filterdicts, $filter->prepare_for_api());
         }
-        return $filters_returns;
+        return $filterdicts;
     }
 
     /**
