@@ -72,7 +72,7 @@ class slots_add_slot_filter extends external_api {
      * @param ?int $courseid course to filter for (or null if 'any')
      * @param ?string $vintage school class to filter for (or null if 'any')
      */
-    public static function add_slot_filter(int $slotid, ?int $courseid, ?string $vintage): void {
+    public static function add_slot_filter(int $slotid, ?int $courseid, ?string $vintage): array {
         global $USER, $DB;
         self::validate_parameters(
             self::add_slot_filter_parameters(),
@@ -88,7 +88,7 @@ class slots_add_slot_filter extends external_api {
             throw new \moodle_exception('Insufficient Permission: you\'re not supervisor of this slot');
         }
         // Ensure that either $courseid or $vintage are non-null.
-        if (is_null($courseid) and is_null($vintage)) {
+        if (is_null($courseid) && is_null($vintage)) {
             throw new \moodle_exception('courseid and vintage can\'t both be null');
         }
 
