@@ -386,6 +386,15 @@ $functions = [
         'capabilities' => 'local/lb_planner:teacher',
         'ajax' => true,
     ],
+    'local_lbplanner_slots_get_slot_filters' => [
+        'classname' => 'local_lbplanner_services\slots_get_slot_filters',
+        'methodname' => 'get_slot_filters',
+        'classpath' => 'local/lbplanner/services/slots/get_slot_filters.php',
+        'description' => 'Returns all filters associated with a slot',
+        'type' => 'read',
+        'capabilities' => 'local/lb_planner:teacher',
+        'ajax' => true,
+    ],
 ];
 
 $services = [
@@ -427,6 +436,7 @@ $services = [
             'local_lbplanner_slots_delete_slot',
             'local_lbplanner_slots_delete_slot_filter',
             'local_lbplanner_slots_get_my_slots',
+            'local_lbplanner_slots_get_slot_filters',
             'local_lbplanner_slots_get_student_slots',
             'local_lbplanner_slots_get_supervisor_slots',
         ],
