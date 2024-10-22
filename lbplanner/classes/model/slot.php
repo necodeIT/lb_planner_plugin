@@ -167,6 +167,32 @@ class slot {
     }
 
     /**
+     * Returns whether this and $other overlap in their time and room.
+     * @param slot $other the other slot
+     *
+     * @return bool whether slots overlap
+     */
+    public function check_overlaps(slot $other): bool {
+        if ($this->room !== $other->room) {
+            return false;
+        }
+        if ($this->weekday !== $other->weekday) {
+            return false;
+        }
+        if ($this->startunit === $other->startunit) {
+            return true;
+        }
+        // Now only three variants are left: one entirely inside the other, or both intersecting partially.
+        // In either case, if one of the startunits is inside the other's range, then we know the time ranges overlap.
+        // Logically, only the one that starts later can be inside the other's range.
+        $this_before_other = $this->startunit < $other;
+        $a = $this_before_other ? $this : $other;
+        $b = $this_before_other ? $other : $this;
+
+        return ($a->startunit + $a->duration) > $b->startunit;
+    }
+
+    /**
      * Prepares data for the DB endpoint.
      * doesn't set ID if it's 0
      *

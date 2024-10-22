@@ -136,6 +136,24 @@ class slot_helper {
     }
 
     /**
+     * Returns slots associated with a specific room.
+     * @param string $room the room name to look for
+     *
+     * @return slot[] An array of the slots.
+     */
+    public static function get_slots_by_room(string $room): array {
+        global $DB;
+        $slots = $DB->get_records(self::TABLE_SLOTS, ['room' => $room]);
+
+        $slotsobj = [];
+        foreach ($slots as $slot) {
+            array_push($slotsobj, new slot(...$slot));
+        }
+
+        return $slotsobj;
+    }
+
+    /**
      * Returns a singular slot.
      * @param int $slotid ID of the slot
      *
