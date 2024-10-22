@@ -186,9 +186,9 @@ class slot {
         // Now only three variants are left: one entirely inside the other, or both intersecting partially.
         // In either case, if one of the startunits is inside the other's range, then we know the time ranges overlap.
         // Logically, only the one that starts later can be inside the other's range.
-        $this_before_other = $this->startunit < $other;
-        $a = $this_before_other ? $this : $other;
-        $b = $this_before_other ? $other : $this;
+        $thisbeforeother = $this->startunit < $other;
+        $a = $thisbeforeother ? $this : $other;
+        $b = $thisbeforeother ? $other : $this;
 
         return ($a->startunit + $a->duration) > $b->startunit;
     }
