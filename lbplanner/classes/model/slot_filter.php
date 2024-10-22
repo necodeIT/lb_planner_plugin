@@ -57,7 +57,7 @@ class slot_filter {
      * @param ?string $vintage linked class or null if any
      */
     public function __construct(int $id, int $slotid, ?int $courseid, ?string $vintage) {
-        assert(!(is_null($courseid) and is_null($vintage)));
+        assert(!(is_null($courseid) && is_null($vintage)));
         if (!is_null($vintage)) {
             assert(strlen($vintage) <= 7);
         }
