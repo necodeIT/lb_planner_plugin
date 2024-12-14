@@ -60,7 +60,7 @@ class CAPABILITY extends Enum {
      * @return int the bitmappable flag
      * @link CAPABILITY_FLAG
      */
-    public static function to_capability(string $str): int {
+    public static function to_flag(string $str): int {
         $name = self::name_from($str);
         return constant('CAPABILITY_FLAG::'.$name);
     }

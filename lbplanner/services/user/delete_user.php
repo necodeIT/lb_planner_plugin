@@ -59,13 +59,11 @@ class user_delete_user extends external_api {
      * @throws moodle_exception
      */
     public static function delete_user($userid) {
-        global $DB, $USER;
+        global $DB;
 
         self::validate_parameters(self::delete_user_parameters(), ['userid' => $userid]);
 
-        if (!user_helper::is_admin($USER->id)) {
-            user_helper::assert_access($userid);
-        }
+        user_helper::assert_access($userid);
 
         // Check if User is in user table.
         if (!$DB->record_exists(user_helper::LB_PLANNER_USER_TABLE, ['userid' => $userid])) {
