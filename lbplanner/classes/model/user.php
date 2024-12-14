@@ -326,7 +326,7 @@ class user {
                 'firstname' => new external_value(PARAM_TEXT, 'The firstname of the user'),
                 'lastname' => new external_value(PARAM_TEXT, 'The lastname of the user'),
                 'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
-                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_OPTIONAL),
+                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_DEFAULT),
             ]
         );
     }
@@ -369,7 +369,7 @@ class user {
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
                 'displaytaskcount' => new external_value(PARAM_INT, 'If the user has the taskcount-enabled 1-yes 0-no'),
                 'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
-                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_OPTIONAL),
+                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_DEFAULT),
             ]
         );
     }
