@@ -28,6 +28,7 @@ namespace local_lbplanner\model;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\helpers\slot_helper;
 
+use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use moodle_exception;
@@ -68,6 +69,10 @@ class slot {
      * @var ?bool $forcuruser whether the current user has reserved this slot (gets filled in by helper functions)
      */
     private ?bool $forcuruser;
+    /**
+     * @var ?int[] $supervisors list of supervisors for this slot
+     */
+    private ?array $supervisors;
 
     /**
      * Constructs a new Slot
@@ -167,6 +172,25 @@ class slot {
     }
 
     /**
+     * Returns the list of supervisor userIDs
+     *
+     * @return int[] this slot's supervsisors' userIDs
+     */
+    public function get_supervisors(): array {
+        global $DB;
+        if (is_null($this->supervisors)) {
+            $this->supervisors = $DB->get_records(
+                slot_helper::TABLE_SUPERVISORS,
+                ['slotid' => $this->id],
+                '',
+                ['userid']
+            );
+        }
+
+        return $this->supervisors;
+    }
+
+    /**
      * Returns whether this and $other overlap in their time.
      * @param slot $other the other slot
      * @param bool $checkroom also require overlap in rooms
@@ -229,6 +253,7 @@ class slot {
             'size' => $this->size,
             'fullness' => $this->get_fullness(),
             'forcuruser' => $this->get_forcuruser(),
+            'supervisors' => $this->get_supervisors(),
         ];
     }
 
@@ -248,6 +273,10 @@ class slot {
                 'size' => new external_value(PARAM_INT, 'total capacity of the slot'),
                 'fullness' => new external_value(PARAM_INT, 'how many people have already reserved this slot'),
                 'forcuruser' => new external_value(PARAM_BOOL, 'whether the current user has reserved this slot'),
+                'supervisors' => new external_multiple_structure(
+                    new external_value(PARAM_INT),
+                    'this slot\'s supervisors\' userIDs'
+                ),
             ]
         );
     }
