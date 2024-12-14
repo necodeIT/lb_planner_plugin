@@ -296,14 +296,21 @@ class user {
      */
     public function prepare_for_api_short(): array {
         $mdluser = $this->get_mdluser();
-        return [
+        $capabilitybm = $this->get_capability_bitmask();
+
+        $data = [
             'userid' => $this->mdlid,
             'username' => $mdluser->username,
             'firstname' => $mdluser->firstname,
             'lastname' => $mdluser->lastname,
             'profileimageurl' => $this->get_pfp(),
-            'vintage' => $mdluser->address,
         ];
+
+        if ($capabilitybm & CAPABILITY_FLAG::STUDENT) {
+            $data['vintage'] = $mdluser->address;
+        }
+
+        return $data;
     }
 
     /**
@@ -319,7 +326,7 @@ class user {
                 'firstname' => new external_value(PARAM_TEXT, 'The firstname of the user'),
                 'lastname' => new external_value(PARAM_TEXT, 'The lastname of the user'),
                 'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
-                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user'),
+                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_OPTIONAL),
             ]
         );
     }
@@ -362,7 +369,7 @@ class user {
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
                 'displaytaskcount' => new external_value(PARAM_INT, 'If the user has the taskcount-enabled 1-yes 0-no'),
                 'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
-                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user'),
+                'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_OPTIONAL),
             ]
         );
     }
