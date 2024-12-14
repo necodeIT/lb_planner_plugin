@@ -26,8 +26,11 @@
 namespace local_lbplanner\model;
 
 use coding_exception;
+use context_system;
 use external_single_structure;
 use external_value;
+use local_lbplanner\enums\CAPABILITY;
+use local_lbplanner\enums\CAPABILITY_FLAG;
 use local_lbplanner\helpers\plan_helper;
 use local_lbplanner\helpers\user_helper;
 use user_picture;
@@ -82,6 +85,11 @@ class user {
     private ?int $planid;
 
     /**
+     * @var ?int $capability_bitmask the cached user capability bitmask
+     */
+    private ?int $capability_bitmask;
+
+    /**
      * Constructs a new course
      * @param int $lbpid ID of the lb planner user
      * @param int $mdlid ID of the moodle user
@@ -107,6 +115,7 @@ class user {
         $this->set_displaytaskcount($displaytaskcount);
         $this->planid = null;
         $this->pfp = null;
+        $this->capability_bitmask = null;
 
         if ($mdlid === (int) $USER->id) {
             $this->mdluser = $USER;
@@ -241,6 +250,24 @@ class user {
     }
 
     /**
+     * gets the user's capability bitmask
+     * @return int
+     */
+    public function get_capability_bitmask(): int {
+        if ($this->capability_bitmask === null) {
+            $context = context_system::instance();
+            $this->capability_bitmask = 0;
+            foreach (CAPABILITY::cases() as $case) {
+                if (has_capability($case->value, $context, $this->mdlid, false)) {
+                    $this->capability_bitmask |= CAPABILITY::to_flag($case->value);
+                }
+            }
+        }
+
+        return $this->capability_bitmask;
+    }
+
+    /**
      * Prepares data for the DB endpoint.
      * doesn't set ID if it's 0
      *
@@ -303,21 +330,17 @@ class user {
      * @return array a full representation of this user and its data
      */
     public function prepare_for_api(): array {
-        $mdluser = $this->get_mdluser();
-        return [
-            'userid' => $mdluser->id,
-            'username' => $mdluser->username,
-            'firstname' => $mdluser->firstname,
-            'lastname' => $mdluser->lastname,
-            'theme' => $this->theme,
-            'lang' => $this->lang,
-            'profileimageurl' => $this->get_pfp(),
-            'planid' => $this->get_planid(),
-            'colorblindness' => $this->colorblindness,
-            'displaytaskcount' => $this->displaytaskcount,
-            'capabilities' => user_helper::get_user_capability_bitmask($this->mdlid),
-            'vintage' => $mdluser->address,
-        ];
+        return array_merge(
+            $this->prepare_for_api_short(),
+            [
+                'theme' => $this->theme,
+                'lang' => $this->lang,
+                'planid' => $this->get_planid(),
+                'colorblindness' => $this->colorblindness,
+                'displaytaskcount' => $this->displaytaskcount,
+                'capabilities' => $this->get_capability_bitmask(),
+            ]
+        );
     }
 
     /**

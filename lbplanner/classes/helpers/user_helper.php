@@ -16,15 +16,13 @@
 
 namespace local_lbplanner\helpers;
 
-use coding_exception;
 use context_system;
 use dml_exception;
 use moodle_exception;
 use stdClass;
-use user_picture;
 use core_user;
 
-use local_lbplanner\enums\{CAPABILITY, CAPABILITY_FLAG};
+use local_lbplanner\enums\CAPABILITY;
 use local_lbplanner\model\user;
 
 /**
@@ -51,7 +49,13 @@ class user_helper {
      */
     public static function check_access(int $userid): bool {
         global $USER;
-        return ((int) $USER->id) === $userid;
+
+        if (((int) $USER->id) === $userid) {
+            return true;
+        } else {
+            $context = context_system::instance();
+            return has_capability(CAPABILITY::ADMIN, $context, $USER->id);
+        }
     }
 
     /**
@@ -67,64 +71,6 @@ class user_helper {
         if (!self::check_access($userid)) {
             throw new moodle_exception('Access denied');
         }
-    }
-
-    /**
-     * Checks if the given user is an admin.
-     *
-     * @param int $userid The id of the user to check.
-     *
-     * @return bool True if the given user is an admin, false otherwise.
-     * @throws coding_exception
-     * @throws dml_exception
-     */
-    public static function is_admin(int $userid): bool {
-        $context = context_system::instance();
-        return has_capability(CAPABILITY::ADMIN, $context, $userid, false);
-    }
-
-    /**
-     * Gives back a bitmask which represents the capabilities of the given user.
-     * 0 = no capabilities
-     * 1 = admin
-     * 2 = manager
-     * 3 = admin + manager
-     * 4 = teacher
-     * 5 = admin + teacher
-     * 6 = manager + teacher
-     * 7 = admin + manager + teacher
-     * 8 = student
-     * 9 = admin + student
-     * 10 = manager + student
-     * 11 = admin + manager + student
-     * 12 = teacher + student
-     * 13 = admin + teacher + student
-     * 14 = manager + teacher + student
-     * 15 = admin + manager + teacher + student
-     *
-     *
-     * @param int $userid The id of the user to check access for.
-     *
-     * @return int The capabilities of the given user.
-     * @throws coding_exception
-     * @throws dml_exception
-     */
-    public static function get_user_capability_bitmask(int $userid): int {
-        $capabilities = 0;
-        $context = context_system::instance();
-        if (has_capability(CAPABILITY::ADMIN, $context, $userid, false)) {
-            $capabilities += CAPABILITY_FLAG::ADMIN;
-        }
-        if (has_capability(CAPABILITY::MANAGER, $context, $userid, false)) {
-            $capabilities += CAPABILITY_FLAG::MANAGER;
-        }
-        if (has_capability(CAPABILITY::TEACHER, $context, $userid, false)) {
-            $capabilities += CAPABILITY_FLAG::TEACHER;
-        }
-        if (has_capability(CAPABILITY::STUDENT, $context, $userid, false)) {
-            $capabilities += CAPABILITY_FLAG::STUDENT;
-        }
-        return $capabilities;
     }
 
     /**
