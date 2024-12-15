@@ -270,6 +270,9 @@ class PHPConstructor(PHPExpression):
 
                 return IRArray(con.toIR(), description=desc, required=required)
             case 'external_value':
+                if len(self.parameters) < 2:
+                    warn("found external_value with not enough parameters", self.parameters)
+                    return IRValue(None, None, nullable=True, description="", required=True)
                 assert isinstance(self.parameters[0], PHPConstant)
                 assert isinstance(self.parameters[1], PHPString)
                 type = convert_php_type_to_normal_type(self.parameters[0].name)
