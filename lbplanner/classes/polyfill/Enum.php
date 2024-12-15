@@ -40,7 +40,7 @@ class Enum {
      * @return ?EnumCase the matching enum case or null if not found and $try==true
      * @throws ValueError if not found and $try==false
      */
-    private static function find(mixed $value, bool $try): ?EnumCase {
+    private static function find($value, bool $try): ?EnumCase {
         foreach (static::cases() as $case) {
             if ($case->value === $value) {
                 return $case;
@@ -78,7 +78,7 @@ class Enum {
      * @param mixed $value the value to be matched
      * @return mixed either the matching enum value or null if not found
      */
-    public static function try_from(mixed $value): mixed {
+    public static function try_from($value) {
         // TODO: replace with nullsafe operator in php8.
         $case = static::find($value, true);
         if (is_null($case)) {
@@ -93,16 +93,15 @@ class Enum {
      * @return mixed the matching enum value
      * @throws ValueError if not found
      */
-    public static function from(mixed $value): mixed {
+    public static function from($value) {
         return static::find($value, false)->value;
     }
     /**
      * tries to match the passed value to one of the enum values
      * @param mixed $value the value to be matched
-     * @return string the matching enum case name
-     * @throws mixed either the matching enum case name or null if not found
+     * @return ?string either the matching enum case name or null if not found
      */
-    public static function try_name_from(mixed $value): ?string {
+    public static function try_name_from($value): ?string {
         // TODO: replace with nullsafe operator in php8.
         $case = static::find($value, true);
         if (is_null($case)) {
@@ -117,7 +116,7 @@ class Enum {
      * @return string the matching enum case name
      * @throws ValueError if not found
      */
-    public static function name_from(mixed $value): string {
+    public static function name_from($value): string {
         return static::find($value, false)->name;
     }
     /**
