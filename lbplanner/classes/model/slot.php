@@ -274,8 +274,7 @@ class slot {
                 'fullness' => new external_value(PARAM_INT, 'how many people have already reserved this slot'),
                 'forcuruser' => new external_value(PARAM_BOOL, 'whether the current user has reserved this slot'),
                 'supervisors' => new external_multiple_structure(
-                    new external_value(PARAM_INT),
-                    'this slot\'s supervisors\' userIDs'
+                    new external_value(PARAM_INT, 'this slot\'s supervisors\' userIDs')
                 ),
             ]
         );
