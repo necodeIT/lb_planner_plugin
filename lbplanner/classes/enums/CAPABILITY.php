@@ -61,7 +61,6 @@ class CAPABILITY extends Enum {
      * @link CAPABILITY_FLAG
      */
     public static function to_flag(string $str): int {
-        $name = self::name_from($str);
-        return constant('CAPABILITY_FLAG::'.$name);
+        return CAPABILITY_FLAG::get(self::name_from($str));
     }
 }

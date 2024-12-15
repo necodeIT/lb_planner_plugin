@@ -55,6 +55,26 @@ class Enum {
     }
     /**
      * tries to match the passed value to one of the enum values
+     * @param string $name the value to be matched
+     * @param bool $try whether to return null (true) or throw an error (false) if not found
+     * @return ?EnumCase the matching enum case or null if not found and $try==true
+     * @throws ValueError if not found and $try==false
+     */
+    private static function find_from_name(string $name, bool $try): ?EnumCase {
+        foreach (static::cases() as $case) {
+            if ($case->name === $name) {
+                return $case;
+            }
+        }
+
+        if ($try) {
+            return null;
+        } else {
+            throw new ValueError("name {$name} doesn't exist in ".static::class);
+        }
+    }
+    /**
+     * tries to match the passed value to one of the enum values
      * @param mixed $value the value to be matched
      * @return mixed either the matching enum value or null if not found
      */
@@ -99,6 +119,23 @@ class Enum {
      */
     public static function name_from(mixed $value): string {
         return static::find($value, false)->name;
+    }
+    /**
+     * tries to get a value based on the name
+     * @param string $name the name to look for
+     * @return mixed the matching enum case value
+     * @throws ValueError if not found
+     */
+    public static function get(string $name) {
+        return static::find_from_name($name, false)->value;
+    }
+    /**
+     * tries to get a value based on the name
+     * @param string $name the name to look for
+     * @return ?mixed either the matching enum case value or null if not found
+     */
+    public static function try_get(string $name) {
+        return static::find_from_name($name, false)->value;
     }
     /**
      * Returns an array of all the cases that exist in this enum
