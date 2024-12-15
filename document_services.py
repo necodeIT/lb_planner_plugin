@@ -723,7 +723,11 @@ def parse_function(input_text: str, imports: list[str]) -> IRElement | None:
         warn("non-constructor at top level", expr)
         return None
 
-    return expr.toIR()
+    topelement = expr.toIR()
+    if isinstance(topelement, IRObject) and len(topelement.fields) == 0:
+        return None
+    else:
+        return topelement
 
 
 if __name__ == "__main__":
