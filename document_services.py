@@ -38,6 +38,16 @@ def warn(msg: str, *context: Any):
         sep=""
     )
 
+def convert_php_type_to_normal_type(param_type: str) -> str:
+    CONVERSIONS = {
+        "PARAM_INT": "int",
+        "PARAM_TEXT": "String",
+        "PARAM_URL": "String",
+        "PARAM_BOOL": "bool",
+    }
+
+    return CONVERSIONS.get(param_type, param_type)
+
 def explain_php_value(val: str) -> tuple[None | str | int | bool, str]:
     SPECIAL_VALUES = {
         "$USER->id": ("derived from token", "int"), # this exact phrase is checked for in the web UI
@@ -161,13 +171,13 @@ class PHPClassMemberFunction(PHPExpression):
             new_file_content = f.read()
             meth_matches: list[str] = re.findall(meth_pattern, new_file_content, re.DOTALL)
             if len(meth_matches) == 0:
-                warn(f"Couldn't find {self} inside {self.fp}")
+                warn(f"couldn't find {self} inside {self.fp}")
                 return PHPConstant('null')
             elif len(meth_matches) > 1:
                 raise Exception(f"Found multiple definitions for {self} inside {self.fp}")
             else:
                 imports = extract_imports(new_file_content)
-                result = parse_function(meth_matches[0], imports)
+                result = parse_code(meth_matches[0], imports)
 
                 return result
 
@@ -217,6 +227,89 @@ class PHPConstructor(PHPExpression):
     def __str__(self) -> str:
         return f"new {self.name}(" + ", ".join(str(p) for p in self.parameters) + ")"
 
+    def toIR(self) -> 'IRElement':
+        match self.name:
+            case 'external_function_parameters' | 'external_single_structure':
+                assert isinstance(self.parameters[0], PHPArray)
+                arr = self.parameters[0]
+                fields = {}
+                if len(arr.values) != 0:
+                    assert arr.keys is not None
+                    for k, v in zip(arr.keys, arr.values):
+                        assert isinstance(v, PHPConstructor)
+                        fields[k.get_value()] = v.toIR()
+
+                desc = ""
+                if len(self.parameters) >= 2:
+                    assert isinstance(self.parameters[1], PHPString)
+                    desc = self.parameters[1].get_value()
+
+                required = True
+                if len(self.parameters) >= 3:
+                    assert isinstance(self.parameters[2], PHPConstant)
+                    _required = parse_isrequired(self.parameters[2].name)
+                    if _required is not None:
+                        required = _required
+
+                return IRObject(fields, description=desc, required=required)
+            case 'external_multiple_structure':
+                assert isinstance(self.parameters[0], PHPConstructor)
+                con = self.parameters[0]
+
+                desc = ""
+                if len(self.parameters) >= 2:
+                    assert isinstance(self.parameters[1], PHPString)
+                    desc = self.parameters[1].get_value()
+
+                required = True
+                if len(self.parameters) >= 3:
+                    assert isinstance(self.parameters[2], PHPConstant)
+                    _required = parse_isrequired(self.parameters[2].name)
+                    if _required is not None:
+                        required = _required
+
+                return IRArray(con.toIR(), description=desc, required=required)
+            case 'external_value':
+                assert isinstance(self.parameters[0], PHPConstant)
+                assert isinstance(self.parameters[1], PHPString)
+                type = convert_php_type_to_normal_type(self.parameters[0].name)
+                desc = self.parameters[1].get_value()
+
+                required = True
+                if len(self.parameters) >= 3:
+                    assert isinstance(self.parameters[2], PHPConstant)
+                    _required = parse_isrequired(self.parameters[2].name)
+                    if _required is not None:
+                        required = _required
+
+                default: None | bool | str = None
+                if len(self.parameters) >= 4:
+                    if isinstance(self.parameters[3], PHPConstant):
+                        match self.parameters[3].name:
+                            case 'null':
+                                default = None
+                            case 'false':
+                                default = False
+                            case 'true':
+                                default = True
+                            case _:
+                                warn("unknown PHPConstant as default", self.parameters[3])
+                                default = None
+                    elif isinstance(self.parameters[3], PHPUserID):
+                        default = "derived from token"
+
+                nullable = False
+                if len(self.parameters) >= 5:
+                    assert isinstance(self.parameters[4], PHPConstant)
+                    _nullable = parse_nullable(self.parameters[4].name)
+                    if _nullable is not None:
+                        nullable = _nullable
+
+                return IRValue(type, default_value=default, nullable=nullable, description=desc, required=required)
+            case _:
+                warn(f"unkown constructor name: {self.name}")
+                return IRValue(None, None, nullable=True)
+
 class PHPConstant(PHPExpression):
     __slots__ = ('name')
 
@@ -253,22 +346,54 @@ class FunctionInfoEx(FunctionInfo):
 
     def __init__(self,
                  parent: FunctionInfo,
-                 parameters: PHPExpression,
-                 returns: PHPExpression):
+                 parameters: 'IRElement | None',
+                 returns: 'IRElement | None'):
         super().__init__(**parent.__dict__)
 
         self.parameters = parameters
         self.returns = returns
 
-def parse_code(code: str, imports: list[str]):
+class IRElement(SlotsDict, ABC):
+    __slots__ = ('description', 'required', 'type')
+
+    def __init__(self, description: str, required: bool):
+        self.description = description
+        self.required = required
+
+class IRValue(IRElement):
+    __slots__ = ('default_value', 'type', 'nullable')
+
+    def __init__(self, type, default_value, nullable: bool, **kwargs):
+        self.type = type
+        self.default_value = default_value
+        self.nullable = nullable
+        super().__init__(**kwargs)
+
+class IRObject(IRElement):
+    __slots__ = ('fields',)
+    fields: dict[str, IRElement]
+
+    def __init__(self, fields: dict[str, IRElement], **kwargs):
+        self.fields = fields
+        self.type = 'ObjectValue'
+        super().__init__(**kwargs)
+
+class IRArray(IRElement):
+    __slots__ = ('value',)
+    value: IRElement
+
+    def __init__(self, value: IRElement, **kwargs):
+        self.value = value
+        self.type = 'ArrayValue'
+        super().__init__(**kwargs)
+
+def parse_code(code: str, imports: list[str]) -> PHPExpression:
     code = code.strip()
-    while len(code) > 0:
+    while True:
         i, expr = parse_statement(code, imports)
         if expr is not None:
-            break
+            return expr
         code = code[i:].strip()
-
-    return expr
 
 def parse_statement(code: str, imports: list[str]) -> tuple[int, PHPExpression | None]:
     buf = []
@@ -366,9 +491,15 @@ def parse_expression(code: str, imports: list[str]) -> tuple[int, PHPExpression 
             i += iplus
             assert code[i:i + 2] == '()'
             i += 2
-            C = PHPEnumFormat if funcname == 'format' else PHPClassMemberFunction
-            fp_import = find_import(imports, classname)
-            expr = C(classname, funcname, fp_import)
+            C: type[PHPClassMemberFunction]
+            fp_import: str | None
+            if funcname == 'format':
+                C = PHPEnumFormat
+                fp_import = path.join(path.dirname(__file__), "lbplanner", "enums", f"{classname}.php")
+            else:
+                C = PHPClassMemberFunction
+                fp_import = find_import(imports, classname)
+            expr = C(classname, funcname, fp_import).resolve()
             buf = []
         else:
             # unkown character? simply bail
@@ -564,7 +695,7 @@ def find_import(uses: list[str], symbol: str) -> str | None:
         warn(f"found potential import collision for {symbol}", uses)
         return None
     elif len(fp_l) == 0:
-        warn(f"Couldn't find symbol: {symbol}", uses)
+        warn(f"couldn't find symbol: {symbol}", uses)
         return None
     else:
         return fp_l[0]
@@ -579,12 +710,20 @@ def extract_imports(input_str: str) -> list[str]:
 
     return imports
 
-def parse_function(input_text: str, imports: list[str]) -> PHPExpression:
+def parse_function(input_text: str, imports: list[str]) -> IRElement | None:
     ss = input_text.index('{')
     se = input_text.rindex('}')
     func_body = input_text[ss + 1:se]
 
-    return parse_code(func_body, imports)
+    expr = parse_code(func_body, imports)
+
+    if isinstance(expr, PHPConstant) and expr.name == 'null':
+        return None
+    elif not isinstance(expr, PHPConstructor):
+        warn("non-constructor at top level", expr)
+        return None
+
+    return expr.toIR()
 
 
 if __name__ == "__main__":
@@ -610,10 +749,6 @@ if __name__ == "__main__":
             returns = parse_function(returns_func, imports)
 
             params = parse_function(params_func, imports)
-
-            print(info.name)
-            print(params)
-            print(returns)
 
             complete_info.append(FunctionInfoEx(info, params, returns))
 
