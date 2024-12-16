@@ -42,7 +42,7 @@ class user_get_all_users extends external_api {
      */
     public static function get_all_users_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'vintage' => new external_value(PARAM_TEXT, 'The vintage to filter the users by', VALUE_DEFAULT, null),
+            'vintage' => new external_value(PARAM_TEXT, 'The vintage to filter the users by', VALUE_DEFAULT, null, NULL_ALLOWED),
         ]);
     }
 
