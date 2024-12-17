@@ -48,7 +48,7 @@ class user_get_all_users extends external_api {
 
     /**
      * Gives back all users registered by the lbplanner app.
-     * @param string $vintage (optional) gives back all users with the given vintage
+     * @param ?string $vintage (optional) gives back all users with the given vintage
      * @throws moodle_exception
      * @throws dml_exception
      * @throws invalid_parameter_exception
