@@ -53,7 +53,7 @@ class user_get_all_users extends external_api {
      * @throws dml_exception
      * @throws invalid_parameter_exception
      */
-    public static function get_all_users(string $vintage): array {
+    public static function get_all_users(?string $vintage): array {
         global $DB, $USER;
 
         self::validate_parameters(self::get_all_users_parameters(), ['vintage' => $vintage]);
