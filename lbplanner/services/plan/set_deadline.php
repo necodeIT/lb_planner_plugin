@@ -87,10 +87,10 @@ class plan_set_deadline extends external_api {
             throw new \moodle_exception('Access denied');
         }
 
-        // If a deadline already exists.
-        if (!$DB->record_exists(plan_helper::DEADLINES_TABLE, ['moduleid' => $moduleid, 'planid' => $planid])) {
+        $deadline = $DB->get_record(plan_helper::DEADLINES_TABLE, ['moduleid' => $moduleid, 'planid' => $planid]);
+
+        if ($deadline !== false) {
             // Update the existing deadline.
-            $deadline = $DB->get_record(plan_helper::DEADLINES_TABLE, ['moduleid' => $moduleid, 'planid' => $planid]);
 
             $deadline->deadlinestart = $deadlinestart;
             $deadline->deadlineend = $deadlineend;
