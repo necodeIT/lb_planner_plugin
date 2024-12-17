@@ -118,7 +118,7 @@ class plan_helper {
         if ($field === false) {
             return PLAN_ACCESS_TYPE::NONE;
         } else {
-            return PLAN_ACCESS_TYPE::from($field);
+            return PLAN_ACCESS_TYPE::from((int)$field);
         }
     }
 
