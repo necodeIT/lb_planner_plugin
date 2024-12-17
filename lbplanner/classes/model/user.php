@@ -85,9 +85,9 @@ class user {
     private ?int $planid;
 
     /**
-     * @var ?int $capability_bitmask the cached user capability bitmask
+     * @var ?int $capabilitybitmask the cached user capability bitmask
      */
-    private ?int $capability_bitmask;
+    private ?int $capabilitybitmask;
 
     /**
      * Constructs a new course
@@ -115,7 +115,7 @@ class user {
         $this->set_displaytaskcount($displaytaskcount);
         $this->planid = null;
         $this->pfp = null;
-        $this->capability_bitmask = null;
+        $this->capabilitybitmask = null;
 
         if ($mdlid === (int) $USER->id) {
             $this->mdluser = $USER;
@@ -253,18 +253,18 @@ class user {
      * gets the user's capability bitmask
      * @return int
      */
-    public function get_capability_bitmask(): int {
-        if ($this->capability_bitmask === null) {
+    public function get_capabilitybitmask(): int {
+        if ($this->capabilitybitmask === null) {
             $context = context_system::instance();
-            $this->capability_bitmask = 0;
+            $this->capabilitybitmask = 0;
             foreach (CAPABILITY::cases() as $case) {
                 if (has_capability($case->value, $context, $this->mdlid, false)) {
-                    $this->capability_bitmask |= CAPABILITY::to_flag($case->value);
+                    $this->capabilitybitmask |= CAPABILITY::to_flag($case->value);
                 }
             }
         }
 
-        return $this->capability_bitmask;
+        return $this->capabilitybitmask;
     }
 
     /**
@@ -296,7 +296,7 @@ class user {
      */
     public function prepare_for_api_short(): array {
         $mdluser = $this->get_mdluser();
-        $capabilitybm = $this->get_capability_bitmask();
+        $capabilitybm = $this->get_capabilitybitmask();
 
         $data = [
             'userid' => $this->mdlid,
@@ -345,7 +345,7 @@ class user {
                 'planid' => $this->get_planid(),
                 'colorblindness' => $this->colorblindness,
                 'displaytaskcount' => $this->displaytaskcount,
-                'capabilities' => $this->get_capability_bitmask(),
+                'capabilities' => $this->get_capabilitybitmask(),
             ]
         );
     }
