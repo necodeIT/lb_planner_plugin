@@ -26,7 +26,6 @@
 namespace local_lbplanner\polyfill;
 
 use ReflectionClass;
-use ValueError;
 use local_lbplanner\polyfill\EnumCase;
 
 /**
@@ -38,7 +37,7 @@ class Enum {
      * @param mixed $value the value to be matched
      * @param bool $try whether to return null (true) or throw an error (false) if not found
      * @return ?EnumCase the matching enum case or null if not found and $try==true
-     * @throws ValueError if not found and $try==false
+     * @throws \moodle_exception if not found and $try==false
      */
     private static function find($value, bool $try): ?EnumCase {
         foreach (static::cases() as $case) {
@@ -50,7 +49,7 @@ class Enum {
         if ($try) {
             return null;
         } else {
-            throw new ValueError("value {$value} cannot be represented as a value in enum ".static::class);
+            throw new \moodle_exception("value {$value} cannot be represented as a value in enum ".static::class);
         }
     }
     /**
