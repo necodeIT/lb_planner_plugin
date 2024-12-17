@@ -578,7 +578,6 @@ def parse_string(code: str) -> tuple[int, PHPStringLiteral]:
         if c == quotetype:
             return i, PHPStringLiteral("".join(result))
         elif c == '\\':
-            i += 1
             if code[i] == quotetype:
                 result.append(quotetype)
             elif code[i] == '\\':
@@ -592,6 +591,7 @@ def parse_string(code: str) -> tuple[int, PHPStringLiteral]:
                 result.append('\r')
             else:
                 raise NotImplementedError(f"can't escape \"{code[i]}\" in double-quoted string")
+            i += 1
         else:
             if simple:
                 result.append(c)
