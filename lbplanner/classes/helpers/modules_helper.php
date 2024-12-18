@@ -145,7 +145,7 @@ class modules_helper {
     /**
      * Checks what type the module is.
      *
-     * @param string $modulename The name of the module.
+     * @param int $moduleid The ID of the module.
      * @return int The enum value for the module type.
      */
     public static function determine_type(int $moduleid): int {
