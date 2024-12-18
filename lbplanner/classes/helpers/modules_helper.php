@@ -149,7 +149,11 @@ class modules_helper {
      * @return int The enum value for the module type.
      */
     public static function determine_type(int $moduleid): int {
-        $categorycontroller = category_controller::create(config_helper::get_category_id());
+        $catid = config_helper::get_category_id();
+        if ($catid === -1) {
+            throw new \moodle_exception('couldn\'t find custom fields category ID');
+        }
+        $categorycontroller = category_controller::create($catid);
         $datacontroller = $categorycontroller->get_handler()->get_instance_data($moduleid)[0];
         $type = intval($datacontroller->get('value'));
         MODULE_TYPE::name_from($type); // Basically asserting that this value exists as a module type.
