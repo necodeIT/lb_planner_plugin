@@ -55,6 +55,11 @@ class CAPABILITY extends Enum {
     const STUDENT = 'local/lb_planner:student';
 
     /**
+     * Shortname of the slotmaster CAPABILITY.
+     */
+    const SLOTMASTER = 'local/lb_planner:slotmaster';
+
+    /**
      * Matches a capability string to its bitmappable flag
      * @param string $str the capability string
      * @return int the bitmappable flag
