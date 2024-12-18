@@ -55,6 +55,11 @@ class CAPABILITY_FLAG extends Enum {
     const STUDENT = 8;
 
     /**
+     * Flag of the slotmaster CAPABILITY.
+     */
+    const SLOTMASTER = 16;
+
+    /**
      * matches a flag to its capability string
      * @param int $num the bitmappable flag
      * @return string the capability string

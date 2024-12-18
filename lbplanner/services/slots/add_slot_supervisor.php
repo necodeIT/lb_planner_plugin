@@ -71,9 +71,7 @@ class slots_add_slot_supervisor extends external_api {
         );
 
         // Check if current user is supervisor for this slot, throw error if not.
-        if (!slot_helper::check_slot_supervisor($USER->id, $slotid)) {
-            throw new \moodle_exception('Insufficient Permission: you\'re not supervisor of this slot');
-        }
+        slot_helper::assert_slot_supervisor($USER->id, $slotid);
 
         // Add supervisor.
         $DB->insert_record(
