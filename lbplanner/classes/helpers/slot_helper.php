@@ -400,7 +400,7 @@ class slot_helper {
      * @param int $supervisorid userid of the supervisor in question
      * @param int $slotid the slot to check
      *
-     * @throw \moodle_exception if the user has insufficient permissions
+     * @throws \moodle_exception if the user has insufficient permissions
      */
     public static function assert_slot_supervisor(int $supervisorid, int $slotid): void {
         if (!self::check_slot_supervisor($supervisorid, $slotid)) {
