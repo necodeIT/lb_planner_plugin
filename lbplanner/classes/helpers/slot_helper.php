@@ -25,10 +25,12 @@
 
 namespace local_lbplanner\helpers;
 
+use context_system;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use local_lbplanner\enums\CAPABILITY;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\model\{slot, reservation, slot_filter};
 
@@ -372,14 +374,23 @@ class slot_helper {
     }
 
     /**
-     * Checks whether a user is supervisor for a specific slot.
+     * Checks whether a user has supervisor-level permissions for a specific slot.
+     * NOTE: The user in question does not necessarily literally be the slot's supervisor, just have sufficient permissions!
      * @param int $supervisorid userid of the supervisor in question
      * @param int $slotid the slot to check
      *
-     * @return bool Whether this user is supervisor for this slot
+     * @return bool Whether this user has perms for this slot
      */
     public static function check_slot_supervisor(int $supervisorid, int $slotid): bool {
         global $DB;
+
+        $context = context_system::instance();
+        if (
+            has_capability(CAPABILITY::ADMIN, $context, $supervisorid)
+            || has_capability(CAPABILITY::SLOTMASTER, $context, $supervisorid)
+        ) {
+            return true;
+        }
 
         return $DB->record_exists(self::TABLE_SUPERVISORS, ['userid' => $supervisorid, 'slotid' => $slotid]);
     }
