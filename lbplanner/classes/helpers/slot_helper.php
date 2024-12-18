@@ -394,4 +394,17 @@ class slot_helper {
 
         return $DB->record_exists(self::TABLE_SUPERVISORS, ['userid' => $supervisorid, 'slotid' => $slotid]);
     }
+
+    /**
+     * Same as {@see check_slot_supervisor()}, except it throws an error if permissions are insufficient.
+     * @param int $supervisorid userid of the supervisor in question
+     * @param int $slotid the slot to check
+     *
+     * @throw \moodle_exception if the user has insufficient permissions
+     */
+    public static function assert_slot_supervisor(int $supervisorid, int $slotid): void {
+        if (!self::check_slot_supervisor($supervisorid, $slotid)) {
+            throw new \moodle_exception('Insufficient Permission: you\'re not supervisor of this slot');
+        }
+    }
 }

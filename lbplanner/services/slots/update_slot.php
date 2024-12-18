@@ -109,9 +109,7 @@ class slots_update_slot extends external_api {
         );
 
         // Check if user is supervisor for this slot, throw error if not.
-        if (!slot_helper::check_slot_supervisor($USER->id, $slotid)) {
-            throw new \moodle_exception('Insufficient Permission: you\'re not supervisor of this slot');
-        }
+        slot_helper::assert_slot_supervisor($USER->id, $slotid);
 
         // Replace slot's values with new values if not null.
         $slot = slot_helper::get_slot($slotid);

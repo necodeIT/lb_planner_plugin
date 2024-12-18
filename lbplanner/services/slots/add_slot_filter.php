@@ -84,9 +84,7 @@ class slots_add_slot_filter extends external_api {
         );
 
         // Check if user is supervisor for this slot, throw error if not.
-        if (!slot_helper::check_slot_supervisor($USER->id, $slotid)) {
-            throw new \moodle_exception('Insufficient Permission: you\'re not supervisor of this slot');
-        }
+        slot_helper::assert_slot_supervisor($USER->id, $slotid);
         // Ensure that either $courseid or $vintage are non-null.
         if (is_null($courseid) && is_null($vintage)) {
             throw new \moodle_exception('courseid and vintage can\'t both be null');

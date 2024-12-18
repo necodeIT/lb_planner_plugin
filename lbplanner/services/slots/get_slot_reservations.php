@@ -53,9 +53,7 @@ class slots_get_slot_reservations extends external_api {
             ['slotid' => $slotid]
         );
 
-        if (!slot_helper::check_slot_supervisor($USER->id, $slotid)) {
-            throw new \moodle_exception('Insufficient Permissions: not a supervisor of this slot');
-        }
+        slot_helper::assert_slot_supervisor($USER->id, $slotid);
 
         $reservations = slot_helper::get_reservations_for_slot($slotid);
 
