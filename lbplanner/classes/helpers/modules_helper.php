@@ -25,9 +25,11 @@
 
 namespace local_lbplanner\helpers;
 
+use core_customfield\category_controller;
 use core_external\{external_single_structure, external_value};
 use moodle_url;
 use local_lbplanner\enums\{MODULE_STATUS, MODULE_GRADE, MODULE_TYPE};
+use local_modcustomfields\customfield\mod_handler;
 
 /**
  * Contains helper functions for working with modules.
@@ -141,36 +143,17 @@ class modules_helper {
     }
 
     /**
-     * Maps the given name to a module type.
+     * Checks what type the module is.
      *
      * @param string $modulename The name of the module.
-     * @return integer The enum value for the module type.
+     * @return int The enum value for the module type.
      */
-    public static function determin_type(string $modulename): int {
-        // Convert module name to uppercase.
-        $modulename = strtoupper($modulename);
-
-        // Return TYPE_TEST if the name contains 'test' or 'sa'.
-        if (strpos($modulename, '[TEST]') !== false || strpos($modulename, '[SA]') !== false) {
-            return MODULE_TYPE::TEST;
-        }
-        // Return TYPE_GK if the name contains 'GK'.
-
-        if (strpos($modulename, '[GK]') !== false) {
-            return MODULE_TYPE::GK;
-        }
-
-        if (strpos($modulename, '[EK]') !== false) {
-            return MODULE_TYPE::EK;
-        }
-
-        // Return TYPE_EK if the name contains 'M'.
-        if (strpos($modulename, '[M]') !== false) {
-            return MODULE_TYPE::M;
-        }
-
-        // Return TYPE_NONE elswise.
-        return MODULE_TYPE::NONE;
+    public static function determine_type(int $moduleid): int {
+        $categorycontroller = category_controller::create(config_helper::get_category_id());
+        $datacontroller = $categorycontroller->get_handler()->get_instance_data($moduleid)[0];
+        $type = intval($datacontroller->get('value'));
+        MODULE_TYPE::name_from($type); // Basically asserting that this value exists as a module type.
+        return $type;
     }
 
     /**
@@ -206,11 +189,8 @@ class modules_helper {
         $module = $DB->get_record(self::ASSIGN_TABLE, ['id' => $moduleid]);
 
         // Determine module type.
-        $type = self::determin_type($module->name);
+        $type = self::determine_type($moduleid);
 
-        if ($type == MODULE_TYPE::NONE) {
-            return [];
-        }
         // Check if there are any submissions or feedbacks for this module.
 
         $submitted = false;
@@ -291,7 +271,7 @@ class modules_helper {
         $modules = [];
 
         foreach ($mdlmodules as $mdlmodule) {
-            if (!$ekenabled && self::determin_type($mdlmodule->name) == MODULE_TYPE::EK) {
+            if (!$ekenabled && self::determine_type($mdlmodule->id) == MODULE_TYPE::EK) {
                 continue;
             }
             $module = self::get_module($mdlmodule->id, $userid);

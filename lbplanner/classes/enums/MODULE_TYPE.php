@@ -49,8 +49,4 @@ class MODULE_TYPE extends Enum {
      * TODO: ???
      */
     const M  = 3;
-    /**
-     * TODO: ???
-     */
-    const NONE = 4;
 }
