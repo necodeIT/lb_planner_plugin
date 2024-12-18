@@ -46,4 +46,9 @@ $capabilities = [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
     ],
+    'local/lb_planner:slotmaster' => [
+        'riskbitmask' => RISK_SPAM || RISK_PERSONAL,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+    ],
 ];
