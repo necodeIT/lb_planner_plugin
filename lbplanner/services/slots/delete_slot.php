@@ -61,9 +61,7 @@ class slots_delete_slot extends external_api {
         );
 
         // Check if user is supervisor for this slot, throw error if not.
-        if (!slot_helper::check_slot_supervisor($USER->id, $slotid)) {
-            throw new \moodle_exception('Insufficient Permission: you\'re not supervisor of this slot');
-        }
+        slot_helper::assert_slot_supervisor($USER->id, $slotid);
 
         // Notify affected users.
         $reservations = slot_helper::get_reservations_for_slot($slotid);

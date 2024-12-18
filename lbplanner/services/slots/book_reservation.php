@@ -100,10 +100,7 @@ class slots_book_reservation extends external_api {
             $student = $USER;
         } else {
             // Supervisor reserving slot for student.
-
-            if (!slot_helper::check_slot_supervisor($USER->id, $slotid)) {
-                throw new \moodle_exception('Forbidden: you\'re not a supervisor of this slot');
-            }
+            slot_helper::assert_slot_supervisor($USER->id, $slotid);
 
             $maxdays = slot_helper::RESERVATION_RANGE_USER;
             $student = core_user::get_user($userid, '*', MUST_EXIST);
