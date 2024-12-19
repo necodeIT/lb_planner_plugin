@@ -93,7 +93,7 @@ class config_helper {
                 $fieldcontroller->set(
                     'configdata',
                     '{"required":"1","uniquevalues":"0","options":"GK\r\nEK\r\nTEST\r\nM",
-                "defaultvalue":"GK","locked":"0","visibility":"2"}'
+                "defaultvalue":"","locked":"0","visibility":"2"}'
                 );
                 $fieldcontroller->set('shortname', 'lb_planner_gk_ek');
                 $fieldcontroller->save();
