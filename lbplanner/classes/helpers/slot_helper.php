@@ -25,7 +25,8 @@
 
 namespace local_lbplanner\helpers;
 
-use context_system;
+use core\context\system as context_system;
+
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
