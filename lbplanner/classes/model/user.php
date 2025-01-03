@@ -306,7 +306,7 @@ class user {
             'profileimageurl' => $this->get_pfp(),
         ];
 
-        if ($capabilitybm & CAPABILITY_FLAG::STUDENT) {
+        if ($capabilitybm & CAPABILITY_FLAG::STUDENT && strlen($mdluser->address) > 0) {
             $data['vintage'] = $mdluser->address;
         }
 
