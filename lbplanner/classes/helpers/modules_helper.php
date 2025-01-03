@@ -25,7 +25,7 @@
 
 namespace local_lbplanner\helpers;
 
-use \core_external\{external_single_structure, external_value};
+use core_external\{external_single_structure, external_value};
 use moodle_url;
 use local_lbplanner\enums\{MODULE_STATUS, MODULE_GRADE, MODULE_TYPE};
 

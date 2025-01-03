@@ -26,8 +26,8 @@
 namespace local_lbplanner\model;
 
 use coding_exception;
-use \core\context\system as context_system;
-use \core_external\{external_single_structure, external_value};
+use core\context\system as context_system;
+use core_external\{external_single_structure, external_value};
 use user_picture;
 
 use local_lbplanner\enums\CAPABILITY;

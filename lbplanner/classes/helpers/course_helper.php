@@ -16,7 +16,7 @@
 
 namespace local_lbplanner\helpers;
 
-use \core\context\course as context_course;
+use core\context\course as context_course;
 use dml_exception;
 
 use local_lbplanner\model\course;

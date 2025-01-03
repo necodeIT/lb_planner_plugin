@@ -16,7 +16,7 @@
 
 namespace local_lbplanner_services;
 
-use \core_external\{external_api, external_function_parameters, external_value};
+use core_external\{external_api, external_function_parameters, external_value};
 use local_lbplanner\enums\PLAN_ACCESS_TYPE;
 use local_lbplanner\helpers\plan_helper;
 

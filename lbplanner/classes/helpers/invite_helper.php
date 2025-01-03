@@ -16,7 +16,7 @@
 
 namespace local_lbplanner\helpers;
 
-use \core_external\{external_single_structure, external_value};
+use core_external\{external_single_structure, external_value};
 
 /**
  * Helper class for plan invites

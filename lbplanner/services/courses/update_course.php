@@ -16,7 +16,7 @@
 
 namespace local_lbplanner_services;
 
-use \core_external\{external_api, external_function_parameters, external_value};
+use core_external\{external_api, external_function_parameters, external_value};
 use local_lbplanner\helpers\course_helper;
 use moodle_exception;
 

@@ -25,7 +25,7 @@
 
 namespace local_lbplanner\model;
 
-use \core_external\{external_single_structure, external_value};
+use core_external\{external_single_structure, external_value};
 use local_lbplanner\helpers\course_helper;
 
 /**
