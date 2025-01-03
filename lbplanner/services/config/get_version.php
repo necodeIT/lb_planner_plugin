@@ -16,7 +16,7 @@
 
 namespace local_lbplanner_services;
 
-use \core_external\{external_api, external_function_parameters, external_single_structure, external_value};
+use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
 
 /**
  * Get version service.

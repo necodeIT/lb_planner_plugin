@@ -16,7 +16,7 @@
 
 namespace local_lbplanner\helpers;
 
-use \core\context\system as context_system;
+use core\context\system as context_system;
 use dml_exception;
 use moodle_exception;
 use stdClass;

@@ -17,7 +17,7 @@
 namespace local_lbplanner_services;
 
 use dml_exception;
-use \core_external\{external_api, external_function_parameters, external_value};
+use core_external\{external_api, external_function_parameters, external_value};
 use local_lbplanner\helpers\{user_helper, plan_helper, course_helper, notifications_helper};
 use local_lbplanner\enums\{PLAN_INVITE_STATE, PLAN_ACCESS_TYPE};
 use moodle_exception;

@@ -19,7 +19,7 @@ namespace local_lbplanner_services;
 use DateTimeImmutable;
 
 use core_user;
-use \core_external\{external_api, external_function_parameters, external_single_structure, external_value};
+use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
 use local_lbplanner\enums\NOTIF_TRIGGER;
 use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\helpers\slot_helper;

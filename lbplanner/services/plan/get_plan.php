@@ -16,7 +16,7 @@
 
 namespace local_lbplanner_services;
 
-use \core_external\{external_function_parameters, external_single_structure};
+use core_external\{external_function_parameters, external_single_structure};
 use local_lbplanner\helpers\plan_helper;
 
 /**
