@@ -28,9 +28,7 @@ namespace local_lbplanner\model;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\helpers\slot_helper;
 
-use external_multiple_structure;
-use external_single_structure;
-use external_value;
+use \core_external\{external_multiple_structure, external_single_structure, external_value};
 use moodle_exception;
 
 /**

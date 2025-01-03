@@ -25,8 +25,7 @@
 
 namespace local_lbplanner\helpers;
 
-use external_single_structure;
-use external_value;
+use \core_external\{external_single_structure, external_value};
 use local_lbplanner\enums\{NOTIF_STATUS, NOTIF_TRIGGER};
 
 /**

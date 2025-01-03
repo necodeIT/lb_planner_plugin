@@ -25,9 +25,7 @@
 
 namespace local_lbplanner\helpers;
 
-use external_single_structure;
-use external_value;
-use external_multiple_structure;
+use \core_external\{external_value, external_single_structure, external_multiple_structure};
 use local_lbplanner\enums\PLAN_ACCESS_TYPE;
 
 /**

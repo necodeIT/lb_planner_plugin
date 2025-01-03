@@ -18,11 +18,7 @@ namespace local_lbplanner_services;
 
 use coding_exception;
 use dml_exception;
-use external_api;
-use external_function_parameters;
-use external_single_structure;
-use external_value;
-use core_user;
+use \core_external\{external_function_parameters, external_single_structure, external_value};
 use moodle_exception;
 
 use local_lbplanner\helpers\{user_helper, plan_helper, notifications_helper};
@@ -39,7 +35,7 @@ use local_lbplanner\model\user;
  * @copyright 2024 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
-class user_get_user extends external_api {
+class user_get_user extends \core_external\external_api {
     /**
      * Parameters for get_user
      * @return external_function_parameters

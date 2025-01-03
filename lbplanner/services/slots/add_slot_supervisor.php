@@ -16,9 +16,7 @@
 
 namespace local_lbplanner_services;
 
-use external_api;
-use external_function_parameters;
-use external_value;
+use \core_external\{external_api, external_function_parameters, external_value};
 
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\supervisor;
