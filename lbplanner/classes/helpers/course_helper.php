@@ -16,7 +16,7 @@
 
 namespace local_lbplanner\helpers;
 
-use context_course;
+use \core\context\course as context_course;
 use dml_exception;
 
 use local_lbplanner\model\course;
@@ -143,6 +143,10 @@ class course_helper {
      */
     public static function check_access(int $courseid, int $userid): bool {
         $context = context_course::instance($courseid);
+        if ($context === false) {
+            return false;
+        }
+        // @var $context context
         return is_enrolled($context, $userid, '', true);
     }
 

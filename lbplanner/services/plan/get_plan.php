@@ -16,9 +16,7 @@
 
 namespace local_lbplanner_services;
 
-use external_api;
-use external_function_parameters;
-use external_single_structure;
+use \core_external\{external_function_parameters, external_single_structure};
 use local_lbplanner\helpers\plan_helper;
 
 /**
@@ -29,7 +27,7 @@ use local_lbplanner\helpers\plan_helper;
  * @copyright 2024 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
-class plan_get_plan extends external_api {
+class plan_get_plan extends \core_external\external_api {
     /**
      * Parameters for get_plan.
      * @return external_function_parameters

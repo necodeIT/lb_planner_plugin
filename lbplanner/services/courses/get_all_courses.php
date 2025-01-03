@@ -16,9 +16,7 @@
 
 namespace local_lbplanner_services;
 
-use external_api;
-use external_function_parameters;
-use external_multiple_structure;
+use \core_external\{external_function_parameters, external_multiple_structure};
 
 use local_lbplanner\helpers\course_helper;
 use local_lbplanner\model\course;
@@ -31,7 +29,7 @@ use local_lbplanner\model\course;
  * @copyright 2024 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
-class courses_get_all_courses extends external_api {
+class courses_get_all_courses extends \core_external\external_api {
 
     /**
      * Has no Parameters

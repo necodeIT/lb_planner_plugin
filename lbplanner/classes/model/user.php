@@ -26,14 +26,14 @@
 namespace local_lbplanner\model;
 
 use coding_exception;
-use context_system;
-use external_single_structure;
-use external_value;
+use \core\context\system as context_system;
+use \core_external\{external_single_structure, external_value};
+use user_picture;
+
 use local_lbplanner\enums\CAPABILITY;
 use local_lbplanner\enums\CAPABILITY_FLAG;
 use local_lbplanner\helpers\plan_helper;
 use local_lbplanner\helpers\user_helper;
-use user_picture;
 
 /**
  * Model class for course

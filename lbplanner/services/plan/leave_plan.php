@@ -16,8 +16,7 @@
 
 namespace local_lbplanner_services;
 
-use external_api;
-use external_function_parameters;
+use \core_external\{external_api, external_function_parameters};
 use local_lbplanner\helpers\plan_helper;
 use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_ACCESS_TYPE, PLAN_INVITE_STATE};
