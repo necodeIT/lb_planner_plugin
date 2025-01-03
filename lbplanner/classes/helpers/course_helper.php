@@ -146,7 +146,6 @@ class course_helper {
         if ($context === false) {
             return false;
         }
-        // @var $context context
         return is_enrolled($context, $userid, '', true);
     }
 
