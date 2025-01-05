@@ -55,11 +55,6 @@ class user {
     public string $theme;
 
     /**
-     * @var string $lang user language
-     */
-    public string $lang;
-
-    /**
      * @var string $colorblindness the kind of color blindness of a user
      */
     public string $colorblindness;
@@ -94,7 +89,6 @@ class user {
      * @param int $lbpid ID of the lb planner user
      * @param int $mdlid ID of the moodle user
      * @param string $theme user-chosen theme
-     * @param string $lang user language
      * @param string $colorblindness user's colorblindness
      * @param int $displaytaskcount user's display task count
      */
@@ -102,7 +96,6 @@ class user {
         int $lbpid,
         int $mdlid,
         string $theme,
-        string $lang,
         string $colorblindness,
         int $displaytaskcount
     ) {
@@ -110,7 +103,6 @@ class user {
         $this->lbpid = $lbpid;
         $this->mdlid = $mdlid;
         $this->set_theme($theme);
-        $this->set_lang($lang);
         $this->set_colorblindness($colorblindness);
         $this->set_displaytaskcount($displaytaskcount);
         $this->planid = null;
@@ -131,7 +123,7 @@ class user {
      * @return user a representation of this user and its data
      */
     public static function from_db(object $obj): self {
-        return new self($obj->id, $obj->userid, $obj->theme, $obj->language, $obj->colorblindness, $obj->displaytaskcount);
+        return new self($obj->id, $obj->userid, $obj->theme, $obj->colorblindness, $obj->displaytaskcount);
     }
 
     /**
@@ -163,18 +155,6 @@ class user {
      */
     public function set_colorblindness(string $cbn): void {
         $this->colorblindness = $cbn;
-    }
-
-    /**
-     * Sets user language
-     * @param string $lang language
-     * @throws \coding_exception if $lang isn't ISO 639-1 conformant
-     */
-    public function set_lang(string $lang): void {
-        if (preg_match('/^[a-z]{2}$/', $lang) !== 1) {
-            throw new \coding_exception('Incorrect language format - must be ISO 639-1, e.g. en or de');
-        }
-        $this->lang = $lang;
     }
 
     /**
@@ -278,7 +258,6 @@ class user {
 
         $obj->userid = $this->mdlid;
         $obj->theme = $this->theme;
-        $obj->language = $this->lang;
         $obj->colorblindness = $this->colorblindness;
         $obj->displaytaskcount = $this->displaytaskcount;
 
@@ -342,7 +321,6 @@ class user {
             $this->prepare_for_api_short(),
             [
                 'theme' => $this->theme,
-                'lang' => $this->lang,
                 'planid' => $this->get_planid(),
                 'colorblindness' => $this->colorblindness,
                 'displaytaskcount' => $this->displaytaskcount,
@@ -365,7 +343,6 @@ class user {
                 'firstname' => new external_value(PARAM_TEXT, 'The firstname of the user'),
                 'lastname' => new external_value(PARAM_TEXT, 'The lastname of the user'),
                 'theme' => new external_value(PARAM_TEXT, 'The theme the user has selected'),
-                'lang' => new external_value(PARAM_TEXT, 'The language the user has selected'),
                 'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
                 'planid' => new external_value(PARAM_INT, 'The id of the plan the user is assigned to'),
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
