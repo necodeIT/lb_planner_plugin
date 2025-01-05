@@ -5,7 +5,6 @@
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
 				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User ID assigned from moodle." />
 				<FIELD NAME="theme" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the theme the user has selected in the app." />
-				<FIELD NAME="language" TYPE="char" LENGTH="2" NOTNULL="true" DEFAULT="en" SEQUENCE="false" COMMENT="Language the user has selected in the app." />
 				<FIELD NAME="colorblindness" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The colorblindness the user has selected in the app." />
 				<FIELD NAME="displaytaskcount" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="The display task count the user has selected in the app." />
 			</FIELDS>
@@ -43,7 +42,7 @@
 				<KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="local_lbplanner_users" REFFIELDS="userid" />
 			</KEYS>
 		</TABLE>
-		<TABLE NAME="local_lbplanner_plan_invites" COMMENT="Table for Invites for the LBPLANNER Appme">
+		<TABLE NAME="local_lbplanner_plan_invites" COMMENT="Table for Invites for the LBPLANNER App">
 			<FIELDS>
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
 				<FIELD NAME="planid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The id of the plan the user is inviting to." />
