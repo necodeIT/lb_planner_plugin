@@ -387,8 +387,7 @@ class slot_helper {
 
         $context = context_system::instance();
         if (
-            has_capability(CAPABILITY::ADMIN, $context, $supervisorid)
-            || has_capability(CAPABILITY::SLOTMASTER, $context, $supervisorid)
+            has_capability(CAPABILITY::SLOTMASTER, $context, $supervisorid)
         ) {
             return true;
         }

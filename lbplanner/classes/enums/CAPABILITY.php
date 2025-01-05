@@ -35,16 +35,6 @@ use local_lbplanner\enums\CAPABILITY_FLAG;
  */
 class CAPABILITY extends Enum {
     /**
-     * Shortname of the admin CAPABILITY.
-     */
-    const ADMIN = 'local/lb_planner:admin';
-
-    /**
-     * Shortname of the manager CAPABILITY.
-     */
-    const MANAGER = 'local/lb_planner:manager';
-
-    /**
      * Shortname of the teacher CAPABILITY.
      */
     const TEACHER = 'local/lb_planner:teacher';
