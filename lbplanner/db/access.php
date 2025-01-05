@@ -36,19 +36,18 @@ $capabilities = [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
     ],
-    'local/lb_planner:admin' => [
-        'riskbitmask' => RISK_SPAM || RISK_PERSONAL,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-    ],
-    'local/lb_planner:manager' => [
-        'riskbitmask' => RISK_SPAM || RISK_PERSONAL,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-    ],
     'local/lb_planner:slotmaster' => [
         'riskbitmask' => RISK_SPAM || RISK_PERSONAL,
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
+    ],
+];
+
+$deprecatedcapabilities = [
+    'local/lb_planner:admin' => [
+        'message' => 'this capability was removed because of internal changes making it unnecessary',
+    ],
+    'local/lb_planner:manager' => [
+        'message' => 'this capability was removed because of internal changes making it unnecessary',
     ],
 ];
