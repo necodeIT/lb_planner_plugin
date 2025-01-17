@@ -58,17 +58,13 @@ class config_helper {
     }
 
     /**
-     * Adds a customfield to moodle for each activity where teachers can select GK EK or both.
-     *
-     * Default value is GK.
-     * @throws \coding_exception
-     * @throws \moodle_exception
-     * @throws \coding_exception
+     * Adds a customfield to moodle for each activity where teachers can select GK EK Test or M.
+     * Default value is empty.
      */
     public static function add_customfield(): void {
         // Check if the category is already created and only create it if it doesn't exist.
         // Check if plugin "modcustomfields" is installed and create the category and the custom field.
-        if (!get_config('local_lbplanner', 'categoryid')) {
+        if (config_helper::get_category_id() === -1) {
 
             if (array_key_exists('modcustomfields', core_component::get_plugin_list('local'))) {
 
@@ -100,16 +96,28 @@ class config_helper {
             }
         }
     }
+    /**
+     * Adds a customfield to moodle for each activity where teachers can select GK EK or both.
+     *
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    public static function remove_customfield(): void {
+        $handler = mod_handler::create();
+        $catcontroller = category_controller::create(config_helper::get_category_id(), null, $handler);
+        $handler->delete_category($catcontroller);
+    }
 
     /**
      * Get the category id from the config
      * @return int the category id if it is set, -1 otherwise
      */
     public static function get_category_id(): int {
-        if (!get_config('local_lbplanner', 'categoryid')) {
+        $catid = get_config('local_lbplanner', 'categoryid');
+        if ($catid === false) {
             return -1;
         } else {
-            return intval(get_config('local_lbplanner', 'categoryid'));
+            return intval($catid);
         }
     }
 }
