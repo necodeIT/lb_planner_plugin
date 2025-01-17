@@ -30,6 +30,5 @@ use local_lbplanner\helpers\config_helper;
  * Runs when plugin is first installed
  */
 function xmldb_local_lbplanner_install() {
-    config_helper::set_default_active_year();
     config_helper::add_customfield();
 }

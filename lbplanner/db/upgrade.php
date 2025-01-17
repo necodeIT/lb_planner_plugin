@@ -34,8 +34,10 @@ use local_lbplanner\helpers\config_helper;
  */
 function xmldb_local_lbplanner_upgrade($oldversion): bool {
     if ($oldversion < 2024022700) {
-        config_helper::set_default_active_year();
         config_helper::add_customfield();
+    }
+    if ($oldversion < 20250117) {
+        unset_config('defaultactiveyear', 'local_lbplanner');
     }
     return true;
 }

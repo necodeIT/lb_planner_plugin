@@ -59,21 +59,6 @@ class course_helper {
         ];
 
     /**
-     * Get the current school year from the config
-     * Definition of a school year: 2020/2021
-     * Check in config_helper.php for more info how the date is set for defaultactiveyear
-     *
-     * @return string the current year the last 2 digits (20/20)
-     * @throws dml_exception
-     */
-    public static function get_current_year(): string {
-        if (strpos(get_config('local_lbplanner', 'activeyear'), '/') !== false) {
-            return get_config('local_lbplanner', 'activeyear');
-        }
-        return get_config('local_lbplanner', 'defaultactiveyear');
-    }
-
-    /**
      * Get course from lbpanner DB
      *
      * @param int $courseid id of the course in lbplanner
@@ -88,7 +73,7 @@ class course_helper {
     }
 
     /**
-     * Get all the courses of the current year.
+     * Get all current courses.
      * @return course[] all courses of the current year
      */
     public static function get_all_lbplanner_courses(): array {
@@ -98,14 +83,12 @@ class course_helper {
         $mdlcourses = enrol_get_my_courses();
         // Remove Duplicates.
         $mdlcourses = array_unique($mdlcourses, SORT_REGULAR);
-        // Check this out: https://www.youtube.com/watch?v=WmdAk2zyQkU .
         $results = [];
 
         foreach ($mdlcourses as $mdlcourse) {
             $courseid = $mdlcourse->id;
-            // Check if the course is from the current year.
-            // TODO: pass fullname to function instead of courseid.
-            if (!self::check_current_year($courseid)) {
+            // Check if the course is outdated.
+            if (!course::check_year($mdlcourse)) {
                     continue;
             }
             // Check if the course is already in the LB Planner database.
@@ -128,6 +111,7 @@ class course_helper {
             }
             // Add name to fetched Course.
             $fetchedcourse->set_fullname($mdlcourse->fullname);
+            $fetchedcourse->set_mdlcourse($mdlcourse);
             array_push($results, $fetchedcourse);
         }
         return $results;
@@ -159,17 +143,5 @@ class course_helper {
      */
     public static function get_fullname(int $courseid): string {
         return get_course($courseid)->fullname;
-    }
-
-    /**
-     * Check if the course is from the current year
-     *
-     * @param int $courseid the course id
-     *
-     * @return bool true if the course is from the current year
-     * @throws dml_exception
-     */
-    public static function check_current_year(int $courseid): bool {
-        return strpos(self::get_fullname($courseid), self::get_current_year()) !== false;
     }
 }

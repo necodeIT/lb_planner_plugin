@@ -26,6 +26,7 @@
 namespace local_lbplanner\model;
 
 use core_external\{external_single_structure, external_value};
+use DateTimeImmutable;
 use local_lbplanner\helpers\course_helper;
 
 /**
@@ -61,6 +62,10 @@ class course {
      * @var bool $enabled whether the user wants to see this course
      */
     public bool $enabled;
+    /**
+     * @var ?\stdClass $mdlcourse cached moodle course object
+     */
+    private ?\stdClass $mdlcourse;
 
     /**
      * Constructs a new course
@@ -79,6 +84,7 @@ class course {
         $this->set_color($color);
         $this->enabled = $enabled;
         $this->fullname = null;
+        $this->mdlcourse = null;
     }
 
     /**
@@ -153,6 +159,7 @@ class course {
 
     /**
      * sets the cached fullname (mainly for deduplicating DB requests)
+     * TODO: remove in favour of cached mdluser
      * @param string $fullname the cached fullname
      */
     public function set_fullname(string $fullname) {
@@ -186,6 +193,41 @@ class course {
             $shortname = substr($shortname, 0, 5);
         }
         return strtoupper($shortname);
+    }
+
+    /**
+     * Check if the course is outdated
+     * @param $mdlcourse the moodle course object to check
+     * @return bool false if the course's end is one year or longer ago, true otherwise
+     */
+    public static function check_year(\stdClass $mdlcourse): bool {
+        $enddate = $mdlcourse->enddate;
+        $now = new DateTimeImmutable();
+        $dti = $now->setTimestamp($enddate);
+        return $now->diff($dti)->y >= 0;
+    }
+
+    /**
+     * sets the associated moodle course (for caching)
+     * @param \stdClass $mdlcourse
+     */
+    public function set_mdlcourse(\stdClass $mdlcourse): void {
+        if ($this->mdlcourse !== null) {
+            throw new \coding_exception('tried to set cached mdluser twice');
+        }
+        $this->mdlcourse = $mdlcourse;
+    }
+
+    /**
+     * gets the associated moodle course
+     * @return \stdClass mdlcourse
+     */
+    public function get_mdlcourse(): \stdClass {
+        if ($this->mdlcourse === null) {
+            $this->mdlcourse = get_course($this->id);
+        }
+
+        return $this->mdlcourse;
     }
 
     /**

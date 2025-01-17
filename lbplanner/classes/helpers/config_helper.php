@@ -31,33 +31,6 @@ use local_modcustomfields\customfield\mod_handler;
  */
 class config_helper {
     /**
-     * Sets the current active year
-     */
-    public static function set_default_active_year() {
-        $currentmonth = idate('m');
-        $currentyear = idate('Y') % 100;
-        $lastyear = $currentyear - 1;
-        $nextyear = $currentyear + 1;
-        // Adding the default active year, when the plugin is installed for the first time.
-        // If the current month is between August and December, the default active year is set to current year and the next year.
-        if ($currentmonth >= 8 && $currentmonth <= 12) {
-            set_config(
-                'defaultactiveyear',
-                $currentyear . '/' . $nextyear,
-                'local_lbplanner'
-            );
-            // If the current month is between January and July, the default active year is set to the previous year and the
-            // current year.
-        } else {
-            set_config(
-                'defaultactiveyear',
-                $lastyear . '/' . $currentyear,
-                'local_lbplanner'
-            );
-        }
-    }
-
-    /**
      * Adds a customfield to moodle for each activity where teachers can select GK EK Test or M.
      * Default value is empty.
      */
