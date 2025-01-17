@@ -64,7 +64,7 @@ class config_helper {
     public static function add_customfield(): void {
         // Check if the category is already created and only create it if it doesn't exist.
         // Check if plugin "modcustomfields" is installed and create the category and the custom field.
-        if (config_helper::get_category_id() === -1) {
+        if (self::get_category_id() === -1) {
 
             if (array_key_exists('modcustomfields', core_component::get_plugin_list('local'))) {
 
@@ -104,7 +104,7 @@ class config_helper {
      */
     public static function remove_customfield(): void {
         $handler = mod_handler::create();
-        $catcontroller = category_controller::create(config_helper::get_category_id(), null, $handler);
+        $catcontroller = category_controller::create(self::get_category_id(), null, $handler);
         $handler->delete_category($catcontroller);
     }
 
