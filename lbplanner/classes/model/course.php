@@ -197,7 +197,7 @@ class course {
 
     /**
      * Check if the course is outdated
-     * @param $mdlcourse the moodle course object to check
+     * @param \stdClass $mdlcourse the moodle course object to check
      * @return bool false if the course's end is one year or longer ago, true otherwise
      */
     public static function check_year(\stdClass $mdlcourse): bool {
