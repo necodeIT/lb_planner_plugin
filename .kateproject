@@ -1,4 +1,5 @@
 {
+	"name": "lbplanner-plugin",
 	"lspclient": {
 		"servers": {
 			"php" : {
