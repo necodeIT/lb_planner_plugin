@@ -18,7 +18,7 @@
  * Defines versioning
  *
  * @package local_lbplanner
- * @copyright 2024 NecodeIT
+ * @copyright 2025 NecodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -28,7 +28,7 @@ $release = '0.0.0';
 
 $plugin->component = 'local_lbplanner';
 $plugin->release = 'Alpha v.'.$release;
-$plugin->version = 2024031200;
+$plugin->version = 2025011800;
 $plugin->dependencies = [
     // Depend upon version 2023110600 of local_modcustomfields.
     'local_modcustomfields' => 2023110600,
