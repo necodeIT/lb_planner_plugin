@@ -71,6 +71,10 @@ class slot {
      * @var ?int[] $supervisors list of supervisors for this slot
      */
     private ?array $supervisors;
+    /**
+     * @var ?slot_filter[] $filters list of filters for this slot
+     */
+    private ?array $filters
 
     /**
      * Constructs a new Slot
@@ -97,6 +101,8 @@ class slot {
         $this->size = $size;
         $this->fullness = null;
         $this->forcuruser = null;
+        $this->supervisors = null;
+        $this->filters = null;
     }
 
     /**
@@ -109,6 +115,7 @@ class slot {
         $this->id = $id;
         $this->fullness = 0;
         $this->forcuruser = false;
+        $this->filters = [];
     }
 
     /**
@@ -189,6 +196,19 @@ class slot {
     }
 
     /**
+     * Returns filters for this slot.
+     *
+     * @return slot_filter[] the requested filters
+     */
+    public function get_filters(): array {
+        if (is_null($this->filters)) {
+            $this->filters = slot_helper::get_filters_for_slot($this->id);
+        }
+
+        return $this->filters;
+    }
+
+    /**
      * Returns whether this and $other overlap in their time.
      * @param slot $other the other slot
      * @param bool $checkroom also require overlap in rooms
@@ -252,6 +272,7 @@ class slot {
             'fullness' => $this->get_fullness(),
             'forcuruser' => $this->get_forcuruser(),
             'supervisors' => $this->get_supervisors(),
+            'filters' => array_map(fn($f) => $f->prepare_for_api(), $this->get_filters()),
         ];
     }
 
@@ -273,6 +294,9 @@ class slot {
                 'forcuruser' => new external_value(PARAM_BOOL, 'whether the current user has reserved this slot'),
                 'supervisors' => new external_multiple_structure(
                     new external_value(PARAM_INT, 'this slot\'s supervisors\' userIDs')
+                ),
+                'filters' => new external_multiple_structure(
+                    slot_filter::api_structure()
                 ),
             ]
         );

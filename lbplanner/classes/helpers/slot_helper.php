@@ -300,7 +300,7 @@ class slot_helper {
 
         $slots = [];
         foreach ($allslots as $slot) {
-            $filters = self::get_filters_for_slot($slot->id);
+            $filters = $slot->get_filters();
             foreach ($filters as $filter) {
                 // Checking for course ID.
                 if (!is_null($filter->courseid) && !in_array($filter->courseid, $mycourseids)) {
