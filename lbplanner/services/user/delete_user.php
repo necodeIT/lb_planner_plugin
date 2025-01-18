@@ -38,30 +38,17 @@ class user_delete_user extends external_api {
      * @return external_function_parameters
      */
     public static function delete_user_parameters(): external_function_parameters {
-        global $USER;
-        return new external_function_parameters(
-            ['userid' => new external_value(
-                PARAM_INT,
-                'The id of the user to delete',
-                VALUE_DEFAULT,
-                $USER->id,
-                NULL_NOT_ALLOWED,
-            )]
-        );
+        return new external_function_parameters([]);
     }
 
     /**
      * Removes all user data stored by the lbplanner app
-     * @param int $userid (optional) the id of the user to delete
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public static function delete_user($userid) {
-        global $DB;
-
-        self::validate_parameters(self::delete_user_parameters(), ['userid' => $userid]);
-
-        user_helper::assert_access($userid);
+    public static function delete_user() {
+        global $DB, $USER;
+        $userid = $USER->id;
 
         // Check if User is in user table.
         if (!$DB->record_exists(user_helper::LB_PLANNER_USER_TABLE, ['userid' => $userid])) {

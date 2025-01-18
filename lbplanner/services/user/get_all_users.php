@@ -51,13 +51,9 @@ class user_get_all_users extends external_api {
      * @throws invalid_parameter_exception
      */
     public static function get_all_users(?string $vintage): array {
-        global $DB, $USER;
+        global $DB;
 
         self::validate_parameters(self::get_all_users_parameters(), ['vintage' => $vintage]);
-
-        // Check if token is allowed to access this function.
-
-        user_helper::assert_access($USER->id);
 
         $users = $DB->get_records(user_helper::LB_PLANNER_USER_TABLE);
 

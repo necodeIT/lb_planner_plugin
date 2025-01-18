@@ -41,39 +41,23 @@ class user_get_user extends \core_external\external_api {
      * @return external_function_parameters
      */
     public static function get_user_parameters(): external_function_parameters {
-        global $USER;
-        return new external_function_parameters([
-            'userid' => new external_value(
-                PARAM_INT,
-                'The id of the user to get the data for. If not provided it will be inferred via the token',
-                VALUE_DEFAULT,
-                $USER->id,
-                NULL_NOT_ALLOWED,
-            ),
-        ]);
+        return new external_function_parameters([]);
     }
 
     /**
-     * Gives back the data of a user.
-     * Default: The user who calls this function
-     * @param int $userid gives back the data of the given user
+     * Gives back the data of the user calling the function.
      * @throws coding_exception
      * @throws dml_exception
      * @throws moodle_exception
      * @return array The data of the user
      */
-    public static function get_user(int $userid): array {
+    public static function get_user(): array {
         global $USER, $DB;
 
-        self::validate_parameters(self::get_user_parameters(), ['userid' => $userid]);
-
-        // Check if the user is allowed to get the data for this userid.
-        user_helper::assert_access($userid);
-
         // Checks if the user is enrolled in LB Planner.
-        if (!user_helper::check_user_exists($userid)) {
+        if (!user_helper::check_user_exists($USER->id)) {
             // Register user if not found.
-            $lbplanneruser = new user(0, $userid, 'default', 'en', 'none', 1);
+            $lbplanneruser = new user(0, $USER->id, 'default', 'en', 'none', 1);
             $lbpid = $DB->insert_record(user_helper::LB_PLANNER_USER_TABLE, $lbplanneruser->prepare_for_db());
             $lbplanneruser->set_fresh($lbpid);
 
@@ -86,15 +70,15 @@ class user_get_user extends \core_external\external_api {
 
             // Set user as owner of new plan.
             $planaccess = new \stdClass();
-            $planaccess->userid = $userid;
+            $planaccess->userid = $USER->id;
             $planaccess->accesstype = PLAN_ACCESS_TYPE::OWNER;
             $planaccess->planid = $planid;
             $DB->insert_record(plan_helper::ACCESS_TABLE, $planaccess);
 
             // Notify the FE that this user likely hasn't used LBP before.
-            notifications_helper::notify_user($userid, -1, NOTIF_TRIGGER::USER_REGISTERED);
+            notifications_helper::notify_user($USER->id, -1, NOTIF_TRIGGER::USER_REGISTERED);
         } else {
-            $lbplanneruser = user_helper::get_user($userid);
+            $lbplanneruser = user_helper::get_user($USER->id);
         }
 
         return $lbplanneruser->prepare_for_api();

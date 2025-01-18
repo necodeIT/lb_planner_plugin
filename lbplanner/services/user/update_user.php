@@ -77,7 +77,6 @@ class user_update_user extends external_api {
                 'displaytaskcount' => $displaytaskcount,
             ]
         );
-        user_helper::assert_access($USER->id);
 
         // Look if User-Id is in the DB.
         if (!user_helper::check_user_exists($USER->id)) {
