@@ -74,7 +74,7 @@ class slot {
     /**
      * @var ?slot_filter[] $filters list of filters for this slot
      */
-    private ?array $filters
+    private ?array $filters;
 
     /**
      * Constructs a new Slot
