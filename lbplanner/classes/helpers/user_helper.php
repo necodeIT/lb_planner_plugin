@@ -41,39 +41,6 @@ class user_helper {
     const LB_PLANNER_USER_TABLE = 'local_lbplanner_users';
 
     /**
-     * Checks if the current user has access to the given user id.
-     *
-     * @param int $userid The id of the user to check access for.
-     *
-     * @return bool True if the current user has access to the given user id, false otherwise.
-     */
-    public static function check_access(int $userid): bool {
-        global $USER;
-
-        if (((int) $USER->id) === $userid) {
-            return true;
-        } else {
-            $context = context_system::instance();
-            return has_capability(CAPABILITY::ADMIN, $context, $USER->id);
-        }
-    }
-
-    /**
-     * Checks if the current user has access to the given user id.
-     * Throws an exception if the current user does not have access.
-     *
-     * @param int $userid The id of the user to check access for.
-     *
-     * @return void
-     * @throws moodle_exception
-     */
-    public static function assert_access(int $userid): void {
-        if (!self::check_access($userid)) {
-            throw new moodle_exception('Access denied');
-        }
-    }
-
-    /**
      * Checks if the given user exists in the LB_PLANNER_USER database.
      *
      * @param int $userid The id of the user to check.
