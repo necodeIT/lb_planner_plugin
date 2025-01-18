@@ -89,6 +89,23 @@ def parse_nullable(inpot: str) -> bool | None:
         warn(f"found weird value for nullable: {inpot}")
         return None
 
+class PHPNameResolution:
+    __slots__ = ('namespace', 'imports')
+    namespace: str | None
+    imports: list[str]
+
+    def __init__(self, namespace: str | None, imports: list[str]):
+        self.namespace = namespace
+        self.imports = imports
+
+    def __str__(self) -> str:
+        statements = []
+        if self.namespace is not None:
+            statements.append(f"namespace local_lbplanner\\{self.namespace};")
+        for use in self.imports:
+            statements.append(f"use local_lbplanner\\{use}")
+        return " ".join(statements)
+
 class PHPExpression(ABC):
     @abstractmethod
     def __str__(self) -> str:
@@ -169,17 +186,18 @@ class PHPClassMemberFunction(PHPExpression):
 
         with open(self.fp, "r") as f:
             new_file_content = f.read()
-            meth_matches: list[str] = re.findall(meth_pattern, new_file_content, re.DOTALL)
-            if len(meth_matches) == 0:
-                warn(f"couldn't find {self} inside {self.fp}")
-                return PHPConstant('null')
-            elif len(meth_matches) > 1:
-                raise Exception(f"Found multiple definitions for {self} inside {self.fp}")
-            else:
-                imports = extract_imports(new_file_content)
-                result = parse_code(meth_matches[0], imports)
 
-                return result
+        meth_matches: list[str] = re.findall(meth_pattern, new_file_content, re.DOTALL)
+        if len(meth_matches) == 0:
+            warn(f"couldn't find {self} inside {self.fp}")
+            return PHPConstant('null')
+        elif len(meth_matches) > 1:
+            raise Exception(f"Found multiple definitions for {self} inside {self.fp}")
+        else:
+            imports = extract_imports(new_file_content)
+            result = parse_code(meth_matches[0], imports)
+
+            return result
 
     def __str__(self) -> str:
         return f"{self.classname}::{self.funcname}()"
@@ -275,7 +293,7 @@ class PHPConstructor(PHPExpression):
                     return IRValue(None, None, nullable=True, description="", required=True)
                 assert isinstance(self.parameters[0], PHPConstant)
                 assert isinstance(self.parameters[1], PHPString)
-                type = convert_php_type_to_normal_type(self.parameters[0].name)
+                typ = convert_php_type_to_normal_type(self.parameters[0].name)
                 desc = self.parameters[1].get_value()
 
                 required = True
@@ -308,7 +326,7 @@ class PHPConstructor(PHPExpression):
                     if _nullable is not None:
                         nullable = _nullable
 
-                return IRValue(type, default_value=default, nullable=nullable, description=desc, required=required)
+                return IRValue(typ, default_value=default, nullable=nullable, description=desc, required=required)
             case _:
                 warn(f"unkown constructor name: {self.name}")
                 return IRValue(None, None, nullable=True)
@@ -390,15 +408,15 @@ class IRArray(IRElement):
         self.type = 'ArrayValue'
         super().__init__(**kwargs)
 
-def parse_code(code: str, imports: list[str]) -> PHPExpression:
+def parse_code(code: str, nr: PHPNameResolution) -> PHPExpression:
     code = code.strip()
     while True:
-        i, expr = parse_statement(code, imports)
+        i, expr = parse_statement(code, nr)
         if expr is not None:
             return expr
         code = code[i:].strip()
 
-def parse_statement(code: str, imports: list[str]) -> tuple[int, PHPExpression | None]:
+def parse_statement(code: str, nr: PHPNameResolution) -> tuple[int, PHPExpression | None]:
     buf = []
     i = 0
     while True:
@@ -418,7 +436,7 @@ def parse_statement(code: str, imports: list[str]) -> tuple[int, PHPExpression |
                 # just skip this statement; we're not interested in globals
                 return i + code[i:].index(';') + 1, None
             elif word == 'return':
-                iplus, expr = parse_expression(code[i:], imports)
+                iplus, expr = parse_expression(code[i:], nr)
                 i += iplus
 
                 return i + 1, expr
@@ -431,7 +449,7 @@ def parse_statement(code: str, imports: list[str]) -> tuple[int, PHPExpression |
         else:
             raise ValueError(f"unknown char: {c}")
 
-def parse_expression(code: str, imports: list[str]) -> tuple[int, PHPExpression | None]:
+def parse_expression(code: str, nr: PHPNameResolution) -> tuple[int, PHPExpression | None]:
     expr: PHPExpression | None = None
 
     buf: list[str] = []
@@ -456,7 +474,7 @@ def parse_expression(code: str, imports: list[str]) -> tuple[int, PHPExpression 
             buf = []
 
             if word == 'new':
-                iplus, expr = parse_constructor(code[i:], imports)
+                iplus, expr = parse_constructor(code[i:], nr)
                 i += iplus
             else:
                 # just assume this is a constant
@@ -468,7 +486,7 @@ def parse_expression(code: str, imports: list[str]) -> tuple[int, PHPExpression 
             if len(buf) > 0:
                 raise NotImplementedError("map access not implemented")
 
-            iplus, expr = parse_array(code[i:])
+            iplus, expr = parse_array(code[i:], nr)
             i += iplus
         elif c in '\'"':
             assert len(buf) == 0
@@ -479,7 +497,7 @@ def parse_expression(code: str, imports: list[str]) -> tuple[int, PHPExpression 
         elif c == '.':
             assert isinstance(expr, PHPString)
             i += 1
-            iplus, after = parse_expression(code[i:], imports)
+            iplus, after = parse_expression(code[i:], nr)
             i += iplus
             assert isinstance(after, PHPString)
             expr = PHPConcat(expr, after)
@@ -501,7 +519,7 @@ def parse_expression(code: str, imports: list[str]) -> tuple[int, PHPExpression 
                 fp_import = path.join(path.dirname(__file__), "lbplanner", "enums", f"{classname}.php")
             else:
                 C = PHPClassMemberFunction
-                fp_import = find_import(imports, classname)
+                fp_import = find_import(nr, classname)
             expr = C(classname, funcname, fp_import).resolve()
             buf = []
         else:
@@ -513,7 +531,7 @@ def parse_expression(code: str, imports: list[str]) -> tuple[int, PHPExpression 
                 expr = PHPConstant(word)
             return i, expr
 
-def parse_constructor(code: str, imports: list[str]) -> tuple[int, PHPConstructor]:
+def parse_constructor(code: str, nr: PHPNameResolution) -> tuple[int, PHPConstructor]:
     paramlist: list[PHPExpression] = []
     fnname, parenth, params = code.partition('(')
     assert fnname.replace('_', '').isalpha()
@@ -521,7 +539,7 @@ def parse_constructor(code: str, imports: list[str]) -> tuple[int, PHPConstructo
     offset = len(fnname) + 1
     i = 0
     while True:
-        iplus, expr = parse_expression(params[i:], imports)
+        iplus, expr = parse_expression(params[i:], nr)
         i += iplus
 
         if expr is not None:
@@ -534,14 +552,14 @@ def parse_constructor(code: str, imports: list[str]) -> tuple[int, PHPConstructo
         else:
             raise ValueError(f"unknown char: {params[i]}")
 
-def parse_array(code: str) -> tuple[int, PHPArray]:
+def parse_array(code: str, nr: PHPNameResolution) -> tuple[int, PHPArray]:
     associative: bool | None = None
     keys: list[PHPString] = []
     vals: list[PHPExpression] = []
 
     i = 0
     while True:
-        iplus, expr = parse_expression(code[i:], imports)
+        iplus, expr = parse_expression(code[i:], nr)
         i += iplus
 
         if code[i] == ',':
@@ -669,7 +687,10 @@ def extract_php_functions(php_code: str, name: str) -> tuple[str | None, str | N
 
     return parameters_function, returns_function
 
-def find_import(uses: list[str], symbol: str) -> str | None:
+def find_import(nr: PHPNameResolution, symbol: str) -> str | None:
+
+    def makepath(p: str, symbol: str):
+        return path.join(path.dirname(__file__), "lbplanner", p, f"{symbol}.php")
 
     namespaces = { # it's technically possible to import from outside /classes/
         "helpers": "classes/helpers",
@@ -678,7 +699,7 @@ def find_import(uses: list[str], symbol: str) -> str | None:
         "model": "classes/model",
     }
     fp_l: list[str] = []
-    for use in uses:
+    for use in nr.imports:
         im_symbol = use.split('\\')[-1].replace(';', '')
         found = False
         if im_symbol.startswith('{'):
@@ -692,33 +713,44 @@ def find_import(uses: list[str], symbol: str) -> str | None:
             continue
         for namespace, p in namespaces.items():
             if use.startswith(namespace):
-                fp_l.append(path.join(path.dirname(__file__), "lbplanner", p, f"{symbol}.php"))
+                fp_l.append(makepath(p, symbol))
+
+    if len(fp_l) == 0 and nr.namespace is not None:
+        fallback = makepath(namespaces[nr.namespace], symbol)
+
+        if path.exists(fallback):
+            fp_l.append(fallback)
 
     if len(fp_l) > 1:
-        warn(f"found potential import collision for {symbol}", uses)
+        warn(f"found potential import collision for {symbol} using [{nr}]")
         return None
     elif len(fp_l) == 0:
-        warn(f"couldn't find symbol: {symbol}", uses)
+        warn(f"couldn't find symbol: {symbol} using [{nr}]")
         return None
     else:
         return fp_l[0]
 
-def extract_imports(input_str: str) -> list[str]:
-    prefix = "use local_lbplanner\\"
+def extract_imports(input_str: str) -> PHPNameResolution:
+    useprefix = "use local_lbplanner\\"
+    nsprefix = "namespace local_lbplanner\\"
     imports = []
+    namespace = None
 
     for line in input_str.splitlines(False):
-        if line.startswith(prefix):
-            imports.append(line.removeprefix(prefix))
+        if line.startswith(useprefix):
+            imports.append(line.removeprefix(useprefix))
+        if line.startswith(nsprefix):
+            assert namespace is None
+            namespace = line.removeprefix(nsprefix).removesuffix(';')
 
-    return imports
+    return PHPNameResolution(namespace, imports)
 
-def parse_function(input_text: str, imports: list[str]) -> IRElement | None:
+def parse_function(input_text: str, nr: PHPNameResolution) -> IRElement | None:
     ss = input_text.index('{')
     se = input_text.rindex('}')
     func_body = input_text[ss + 1:se]
 
-    expr = parse_code(func_body, imports)
+    expr = parse_code(func_body, nr)
 
     if isinstance(expr, PHPConstant) and expr.name == 'null':
         return None
@@ -733,7 +765,8 @@ def parse_function(input_text: str, imports: list[str]) -> IRElement | None:
         return topelement
 
 
-if __name__ == "__main__":
+def main():
+    global CURRENT_SERVICE
     with open("lbplanner/db/services.php", "r") as file:
         content = file.read()
 
@@ -784,3 +817,7 @@ if __name__ == "__main__":
 
     if HAS_WARNED:
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
