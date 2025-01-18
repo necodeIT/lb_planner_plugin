@@ -341,6 +341,15 @@ $functions = [
         'capabilities' => 'local/lb_planner:teacher',
         'ajax' => true,
     ],
+    'local_lbplanner_slots_remove_slot_supervisor' => [
+        'classname' => 'local_lbplanner_services\slots_remove_slot_supervisor',
+        'methodname' => 'remove_slot_supervisor',
+        'classpath' => 'local/lbplanner/services/slots/remove_slot_supervisor.php',
+        'description' => 'Removes supervisor from a slot',
+        'type' => 'write',
+        'capabilities' => 'local/lb_planner:teacher',
+        'ajax' => true,
+    ],
     'local_lbplanner_slots_add_slot_filter' => [
         'classname' => 'local_lbplanner_services\slots_add_slot_filter',
         'methodname' => 'add_slot_filter',
@@ -408,6 +417,7 @@ $services = [
             'local_lbplanner_slots_get_slot_filters',
             'local_lbplanner_slots_get_student_slots',
             'local_lbplanner_slots_get_supervisor_slots',
+            'local_lbplanner_slots_remove_slot_supervisor',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,
