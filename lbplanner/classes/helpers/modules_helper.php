@@ -147,6 +147,7 @@ class modules_helper {
      *
      * @param int $moduleid The ID of the module.
      * @return int The enum value for the module type.
+     * @throws \moodle_exception
      */
     public static function determine_type(int $moduleid): int {
         $catid = config_helper::get_category_id();
@@ -154,8 +155,11 @@ class modules_helper {
             throw new \moodle_exception('couldn\'t find custom fields category ID');
         }
         $categorycontroller = category_controller::create($catid);
-        $datacontroller = $categorycontroller->get_handler()->get_instance_data($moduleid)[0];
-        $type = intval($datacontroller->get('value'));
+        $instancedata = $categorycontroller->get_handler()->get_instance_data($moduleid);
+        if (count($instancedata) === 0) {
+            throw new \moodle_exception("couldn't find any instance data for module ID {$moduleid} in category ID {$catid}");
+        }
+        $type = intval($instancedata[1]->get('value')); // NOTE: why the hell is this on index one?
         MODULE_TYPE::name_from($type); // Basically asserting that this value exists as a module type.
         return $type;
     }
