@@ -257,7 +257,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/get_student_slots.php',
         'description' => 'Get all slots a supervisor can theoretically reserve for a student.',
         'type' => 'read',
-        'capabilities' => 'local/lb_planner:student',
+        'capabilities' => 'local/lb_planner:teacher',
         'ajax' => true,
     ],
     'local_lbplanner_slots_get_supervisor_slots' => [
@@ -266,7 +266,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/get_supervisor_slots.php',
         'description' => 'Get all slots belonging to the supervisor.',
         'type' => 'read',
-        'capabilities' => 'local/lb_planner:student',
+        'capabilities' => 'local/lb_planner:teacher',
         'ajax' => true,
     ],
     'local_lbplanner_slots_book_reservation' => [
@@ -293,7 +293,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/get_slot_reservations.php',
         'description' => 'Get reservations for a slot',
         'type' => 'write',
-        'capabilities' => 'local/lb_planner:student',
+        'capabilities' => 'local/lb_planner:teacher',
         'ajax' => true,
     ],
     'local_lbplanner_slots_get_my_reservations' => [
@@ -311,7 +311,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/create_slot.php',
         'description' => 'Create a slot',
         'type' => 'write',
-        'capabilities' => 'local/lb_planner:teacher',
+        'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
     'local_lbplanner_slots_update_slot' => [
@@ -320,7 +320,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/update_slot.php',
         'description' => 'Update a slot\'s values',
         'type' => 'write',
-        'capabilities' => 'local/lb_planner:teacher',
+        'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
     'local_lbplanner_slots_delete_slot' => [
@@ -329,7 +329,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/delete_slot.php',
         'description' => 'Delete a slot',
         'type' => 'write',
-        'capabilities' => 'local/lb_planner:teacher',
+        'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
     'local_lbplanner_slots_add_slot_supervisor' => [
@@ -338,7 +338,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/add_slot_supervisor.php',
         'description' => 'Add supervisor to a slot',
         'type' => 'write',
-        'capabilities' => 'local/lb_planner:teacher',
+        'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
     'local_lbplanner_slots_remove_slot_supervisor' => [
@@ -347,7 +347,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/remove_slot_supervisor.php',
         'description' => 'Removes supervisor from a slot',
         'type' => 'write',
-        'capabilities' => 'local/lb_planner:teacher',
+        'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
     'local_lbplanner_slots_add_slot_filter' => [
@@ -356,7 +356,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/add_slot_filter.php',
         'description' => 'Add a slot filter',
         'type' => 'write',
-        'capabilities' => 'local/lb_planner:teacher',
+        'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
     'local_lbplanner_slots_delete_slot_filter' => [
@@ -365,7 +365,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/delete_slot_filter.php',
         'description' => 'Delete a slot filter',
         'type' => 'write',
-        'capabilities' => 'local/lb_planner:teacher',
+        'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
     'local_lbplanner_slots_get_slot_filters' => [
@@ -374,7 +374,7 @@ $functions = [
         'classpath' => 'local/lbplanner/services/slots/get_slot_filters.php',
         'description' => 'Returns all filters associated with a slot',
         'type' => 'read',
-        'capabilities' => 'local/lb_planner:teacher',
+        'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
 ];
