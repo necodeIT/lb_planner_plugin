@@ -167,7 +167,7 @@ class module {
                     [
                         'course' => $this->get_courseid(),
                         'instance' => $this->assignid,
-                        'module' => 1
+                        'module' => 1,
                     ]
                 );
             }
@@ -200,7 +200,7 @@ class module {
      */
     public function get_courseid(): int {
         $viacm = false;
-        // try to take path of least cache misses to get course ID
+        // Try to take path of least cache misses to get course ID.
         if ($this->assignobj === null) {
             if ($this->cmobj !== null) {
                 $viacm = true;
