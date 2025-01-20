@@ -39,7 +39,6 @@ class user_update_user extends external_api {
      */
     public static function update_user_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'lang' => new external_value(PARAM_TEXT, 'The language the user has selected', VALUE_DEFAULT, null),
             'theme' => new external_value(PARAM_TEXT, 'The theme the user has selected', VALUE_DEFAULT, null),
             'colorblindness' => new external_value(
                 PARAM_TEXT,
@@ -65,13 +64,12 @@ class user_update_user extends external_api {
      * @throws dml_exception
      * @throws invalid_parameter_exception
      */
-    public static function update_user($lang, $theme, $colorblindness, $displaytaskcount): array {
+    public static function update_user($theme, $colorblindness, $displaytaskcount): array {
         global $DB, $USER;
 
         self::validate_parameters(
             self::update_user_parameters(),
             [
-                'lang' => $lang,
                 'theme' => $theme,
                 'colorblindness' => $colorblindness,
                 'displaytaskcount' => $displaytaskcount,
@@ -83,9 +81,6 @@ class user_update_user extends external_api {
             throw new moodle_exception('User does not exist');
         }
         $user = user_helper::get_user($USER->id);
-        if ($lang !== null) {
-            $user->set_lang($lang);
-        }
         if ($colorblindness !== null) {
             $user->set_colorblindness($colorblindness);
         }
