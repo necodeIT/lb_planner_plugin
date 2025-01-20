@@ -197,20 +197,20 @@ class module {
      * @return int course ID
      */
     public function get_courseid(): int {
-        $via_cm = false;
+        $viacm = false;
         // try to take path of least cache misses to get course ID
         if ($this->assignobj === null) {
             if ($this->cmobj !== null) {
-                $via_cm = true;
+                $viacm = true;
             } else {
                 if ($this->cmid !== null) {
-                    $via_cm = true;
+                    $viacm = true;
                 } else if ($this->cmid === null) {
                     throw new \coding_exception('invalid module model: neither cmid nor assignid defined');
                 }
             }
         }
-        if ($via_cm) {
+        if ($viacm) {
             return intval($this->get_cmobj()->course);
         } else {
             return intval($this->get_assignobj()->course);
