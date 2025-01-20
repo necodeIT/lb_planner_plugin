@@ -85,6 +85,7 @@ class module {
 
     /**
      * Creates a module object from the assignment ID.
+     * @param int $id the assignment ID
      * @return module a module object with filled-in assignment ID
      */
     public static function from_assignid(int $id): self {
@@ -95,6 +96,7 @@ class module {
 
     /**
      * Creates a module object from the assignment ID.
+     * @param \stdClass $assignobj the assignment object from moodle's DB
      * @return module a module object with filled-in assignment ID
      */
     public static function from_assignobj(\stdClass $assignobj): self {
@@ -220,6 +222,7 @@ class module {
     /**
      * Fetches the necessary caches and returns the module status.
      * @param int $userid ID of user to request status for
+     * @param ?int $planid the planid of the user or null (param exists purely to deduplicate DB calls)
      * @return int status
      * @see \local_lbplanner\enums\MODULE_STATUS
      */
@@ -295,7 +298,8 @@ class module {
 
     /**
      * Prepares full user-specific data for the API endpoint.
-     *
+     * @param int $userid ID of the user to see this module in context of
+     * @param ?int $planid the planid of the user or null (param exists purely to deduplicate DB calls)
      * @return array a shortened representation of this user and its data
      */
     public function prepare_for_api_personal(int $userid, ?int $planid = null): array {
