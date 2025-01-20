@@ -114,7 +114,7 @@ class modules_helper {
         } else if (count($instancedata) > 1) {
             throw new \moodle_exception("found multiple data for module ID {$cmid} in category ID {$catid}");
         }
-        $type = intval($instancedata[1]->get_value()); // NOTE: why the hell is this on index one?
+        $type = intval($instancedata[1]->get_value()) - 1; // NOTE: why the hell is this on index one?
         MODULE_TYPE::name_from($type); // Basically asserting that this value exists as a module type.
         return $type;
     }
