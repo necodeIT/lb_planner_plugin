@@ -18,6 +18,8 @@ namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_multiple_structure, external_value};
 use local_lbplanner\helpers\modules_helper;
+use local_lbplanner\helpers\plan_helper;
+use local_lbplanner\model\module;
 
 /**
  * Get all the modules of the given course.
@@ -59,7 +61,9 @@ class modules_get_all_course_modules extends external_api {
             ['courseid' => $courseid, 'ekenabled' => $ekenabled]
         );
 
-        return modules_helper::get_all_course_modules($courseid, $USER->id, $ekenabled);
+        $planid = plan_helper::get_plan_id($USER->id);
+        $modules = modules_helper::get_all_modules_by_course($courseid, $ekenabled);
+        return array_map(fn(module $m) => $m->prepare_for_api_personal($USER->id, $planid), $modules);
     }
 
     /**
@@ -68,7 +72,7 @@ class modules_get_all_course_modules extends external_api {
      */
     public static function get_all_course_modules_returns(): external_multiple_structure {
         return new external_multiple_structure(
-            modules_helper::structure(),
+            module::api_structure_personal(),
         );
     }
 }

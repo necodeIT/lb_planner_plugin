@@ -17,8 +17,7 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
-use local_lbplanner\helpers\modules_helper;
-use local_lbplanner\helpers\user_helper;
+use local_lbplanner\model\module;
 
 /**
  * Get the data for a module.
@@ -35,22 +34,22 @@ class modules_get_module extends external_api {
      */
     public static function get_module_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'moduleid' => new external_value(PARAM_INT, 'The id of the module', VALUE_REQUIRED, null, NULL_NOT_ALLOWED),
+            'assignid' => new external_value(PARAM_INT, 'The assignment ID of the module', VALUE_REQUIRED, null, NULL_NOT_ALLOWED),
         ]);
     }
 
     /**
      * Returns the data for a module
      *
-     * @param int $moduleid The ID of the course
+     * @param int $assignid The assignment ID of the module
      * @return array the module
      */
-    public static function get_module(int $moduleid): array {
+    public static function get_module(int $assignid): array {
         global $USER;
 
-        self::validate_parameters(self::get_module_parameters(), ['moduleid' => $moduleid, 'userid' => $USER->id]);
+        self::validate_parameters(self::get_module_parameters(), ['moduleid' => $assignid]);
 
-        return modules_helper::get_module($moduleid, $USER->id);
+        return module::from_assignid($assignid)->prepare_for_api_personal($USER->id);
     }
 
     /**
@@ -58,6 +57,6 @@ class modules_get_module extends external_api {
      * @return external_single_structure
      */
     public static function get_module_returns(): external_single_structure {
-        return modules_helper::structure();
+        return module::api_structure_personal();
     }
 }
