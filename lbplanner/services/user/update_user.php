@@ -55,7 +55,6 @@ class user_update_user extends external_api {
 
     /**
      * Updates the given user in the lbplanner DB
-     * @param string $lang language the user choose
      * @param string $theme The theme the user has selected
      * @param string $colorblindness The colorblindness the user has selected
      * @param int $displaytaskcount The displaytaskcount the user has selected
