@@ -119,6 +119,14 @@ class modules_helper {
         return $type;
     }
 
+    /**
+     * Returns status of a module
+     * @param module $module the module to query for
+     * @param int $userid the userid to see this in context of
+     * @param ?int $planid the planid of the user or null (param exists purely to deduplicate DB calls)
+     * @return int the module status
+     * @see \local_lbplanner\enums\MODULE_STATUS
+     */
     public static function get_module_status(module $module, int $userid, ?int $planid = null): int {
         global $DB;
 
