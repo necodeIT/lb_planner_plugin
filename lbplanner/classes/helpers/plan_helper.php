@@ -82,7 +82,7 @@ class plan_helper {
             'userid', ['planid' => $planid, 'accesstype' => PLAN_ACCESS_TYPE::OWNER]
         );
 
-        return $owner;
+        return intval($owner);
     }
 
     /**
