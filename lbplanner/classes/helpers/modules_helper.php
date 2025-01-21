@@ -161,9 +161,9 @@ class modules_helper {
         $deadline = $module->get_deadline($planid);
 
         if ($deadline !== null) {
-            $UTCTZ = new DateTimeZone('UTC');
-            $now = (new DateTimeImmutable('yesterday', $UTCTZ));
-            // take timestamp and remove time from it
+            $utctz = new DateTimeZone('UTC');
+            $now = (new DateTimeImmutable('yesterday', $utctz));
+            // Take timestamp and remove time from it.
             $deadlineend = $now->setTimestamp(intval($deadline->deadlineend))->setTime(0, 0, 0, 0);
             if ($now->diff($deadlineend)->invert === 1) {
                 return MODULE_STATUS::LATE;
