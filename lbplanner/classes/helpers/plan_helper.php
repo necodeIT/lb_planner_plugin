@@ -26,6 +26,8 @@
 namespace local_lbplanner\helpers;
 
 use core_external\{external_value, external_single_structure, external_multiple_structure};
+use DateTimeImmutable;
+use DateTimeZone;
 use local_lbplanner\enums\PLAN_ACCESS_TYPE;
 
 /**
@@ -314,6 +316,32 @@ class plan_helper {
         global $DB;
         $invites = $DB->get_records(self::INVITES_TABLE, ['inviteeid' => $userid]);
         return $invites;
+    }
+
+    /**
+     * normalizes timestamp from UTC to server's localtime
+     * @param int $utcts UNIX timestamp in UTC+0
+     * @return int UNIX timestamp in localtime
+     */
+    public static function timestamp_utc_to_localtime(int $utcts) {
+        return (new DateTimeImmutable())
+            ->setTimezone(new DateTimeZone('UTC+0'))
+            ->setTimestamp($utcts)
+            ->setTimezone(new DateTimeZone(date_default_timezone_get()))
+            ->getTimestamp();
+    }
+
+    /**
+     * normalizes timestamp from server's localtime to UTC
+     * @param int $localts UNIX timestamp in localtime
+     * @return int UNIX timestamp in UTC+0
+     */
+    public static function timestamp_localtime_to_utc(int $localts) {
+        return (new DateTimeImmutable())
+            ->setTimezone(new DateTimeZone(date_default_timezone_get()))
+            ->setTimestamp($localts)
+            ->setTimezone(new DateTimeZone('UTC+0'))
+            ->getTimestamp();
     }
 }
 
