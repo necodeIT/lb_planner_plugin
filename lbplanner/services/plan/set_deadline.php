@@ -43,14 +43,14 @@ class plan_set_deadline extends external_api {
             ),
             'deadlinestart' => new external_value(
                 PARAM_INT,
-                'Start of the deadline',
+                'Start of the deadline as a UTC+0 UNIX timestamp',
                 VALUE_REQUIRED,
                 null,
                 NULL_NOT_ALLOWED
             ),
             'deadlineend' => new external_value(
                 PARAM_INT,
-                'End of the deadline',
+                'End of the deadline as a UTC+0 UNIX timestamp',
                 VALUE_REQUIRED,
                 null,
                 NULL_NOT_ALLOWED

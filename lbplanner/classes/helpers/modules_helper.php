@@ -27,6 +27,7 @@ namespace local_lbplanner\helpers;
 
 use core_customfield\category_controller;
 use DateTimeImmutable;
+use DateTimeZone;
 use local_lbplanner\enums\{MODULE_STATUS, MODULE_GRADE, MODULE_TYPE};
 use local_lbplanner\model\module;
 
@@ -160,8 +161,11 @@ class modules_helper {
         $deadline = $module->get_deadline($planid);
 
         if ($deadline !== null) {
-            $now = (new DateTimeImmutable())->getTimestamp();
-            if ($deadline->deadlineend < $now) {
+            $UTCTZ = new DateTimeZone('UTC');
+            $now = (new DateTimeImmutable('yesterday', $UTCTZ));
+            // take timestamp and remove time from it
+            $deadlineend = $now->setTimestamp(intval($deadline->deadlineend))->setTime(0, 0, 0, 0);
+            if ($now->diff($deadlineend)->invert === 1) {
                 return MODULE_STATUS::LATE;
             }
         }
