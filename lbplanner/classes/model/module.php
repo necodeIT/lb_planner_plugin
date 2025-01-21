@@ -176,12 +176,11 @@ class module {
     }
 
     /**
-     * Fetches the necessary caches and returns the shortname.
-     * @return string shortname
+     * Fetches the necessary caches and returns the name.
+     * @return string name
      */
-    public function get_shortname(): string {
-        $name = $this->get_assignobj()->name;
-        return substr($name, 0, 5);
+    public function get_name(): string {
+        return $this->get_assignobj()->name;
     }
 
     /**
@@ -306,7 +305,7 @@ class module {
         return [
             'assignid' => $this->get_assignid(),
             'cmid' => $this->get_cmid(),
-            'shortname' => $this->get_shortname(),
+            'name' => $this->get_name(),
             'courseid' => $this->get_courseid(),
             'status' => $this->get_status($userid, $planid),
             'type' => $this->get_type(),
@@ -325,7 +324,7 @@ class module {
             [
                 'assignid' => new external_value(PARAM_INT, 'Assignment ID (formerly "module ID")'),
                 'cmid' => new external_value(PARAM_INT, 'Course module ID'),
-                'shortname' => new external_value(PARAM_TEXT, 'Shortened module name (max. 5 chars)'),
+                'name' => new external_value(PARAM_TEXT, 'Shortened module name (max. 5 chars)'),
                 'courseid' => new external_value(PARAM_INT, 'Course ID'),
                 'status' => new external_value(PARAM_INT, 'Module status '.MODULE_STATUS::format()),
                 'type' => new external_value(PARAM_INT, 'Module type '.MODULE_TYPE::format()),
