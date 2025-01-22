@@ -42,7 +42,7 @@ class plan_get_plan extends \core_external\external_api {
      * @return array
      */
     public static function get_plan(): array {
-        global $DB, $USER;
+        global $USER;
 
         $planid = plan_helper::get_plan_id($USER->id);
 

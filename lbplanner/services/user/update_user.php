@@ -50,6 +50,11 @@ class user_update_user extends external_api {
                 'If the user has the taskcount-enabled 1-yes 0-no',
                 VALUE_DEFAULT,
                 null),
+            'ekenabled' => new external_value(
+                PARAM_BOOL,
+                'Whether the user wants to see EK modules',
+                VALUE_DEFAULT,
+                null),
         ]);
     }
 
@@ -58,12 +63,13 @@ class user_update_user extends external_api {
      * @param string $theme The theme the user has selected
      * @param string $colorblindness The colorblindness the user has selected
      * @param int $displaytaskcount The displaytaskcount the user has selected
+     * @param bool $ekenabled whether the user wants to see EK modules
      * @return array The updated user
      * @throws moodle_exception
      * @throws dml_exception
      * @throws invalid_parameter_exception
      */
-    public static function update_user($theme, $colorblindness, $displaytaskcount): array {
+    public static function update_user($theme, $colorblindness, $displaytaskcount, $ekenabled): array {
         global $DB, $USER;
 
         self::validate_parameters(
@@ -72,6 +78,7 @@ class user_update_user extends external_api {
                 'theme' => $theme,
                 'colorblindness' => $colorblindness,
                 'displaytaskcount' => $displaytaskcount,
+                'ekenabled' => $ekenabled,
             ]
         );
 
@@ -89,6 +96,7 @@ class user_update_user extends external_api {
         if ($displaytaskcount !== null) {
             $user->set_displaytaskcount($displaytaskcount);
         }
+        $user->ekenabled = $ekenabled;
 
         $DB->update_record(user_helper::LB_PLANNER_USER_TABLE, $user->prepare_for_db());
 

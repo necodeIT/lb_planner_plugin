@@ -184,7 +184,6 @@ class plan_helper {
         return [
             'name' => $plan->name,
             'planid' => $planid,
-            'enableek' => $plan->enableek,
             'deadlines' => self::get_deadlines($planid),
             'members' => $members,
         ];
@@ -200,7 +199,6 @@ class plan_helper {
             [
                 'name' => new external_value(PARAM_TEXT, 'Name of the plan'),
                 'planid' => new external_value(PARAM_INT, 'ID of the plan'),
-                'enableek' => new external_value(PARAM_BOOL, 'Whether EK is enabled'),
                 'deadlines' => new external_multiple_structure(
                     new external_single_structure(
                         [

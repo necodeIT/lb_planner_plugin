@@ -64,7 +64,6 @@ class user_get_user extends \core_external\external_api {
             // Create empty plan for newly registered user.
             $plan = new \stdClass();
             $plan->name = 'Plan for ' . $USER->username;
-            $plan->enableek = PLAN_EK::ENABLED;
             $planid = $DB->insert_record(plan_helper::TABLE, $plan);
             $lbplanneruser->set_planid($planid);
 
