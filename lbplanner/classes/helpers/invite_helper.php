@@ -17,6 +17,7 @@
 namespace local_lbplanner\helpers;
 
 use core_external\{external_single_structure, external_value};
+use local_lbplanner\enums\PLAN_INVITE_STATE;
 
 /**
  * Helper class for plan invites
@@ -44,5 +45,17 @@ class invite_helper {
                 'timestamp' => new external_value(PARAM_INT, 'time when the invitation was send'),
             ]
         );
+    }
+
+    /**
+     * Throw error if the invite status isn't pending
+     * @param int $status the invite status
+     * @throws moodle_exception
+     */
+    public static function assert_invite_pending(int $status) {
+        if ($status !== PLAN_INVITE_STATE::PENDING) {
+            $name = PLAN_INVITE_STATE::name_from($status);
+            throw new \moodle_exception('Invite already '.$name);
+        }
     }
 }

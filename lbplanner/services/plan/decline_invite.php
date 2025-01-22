@@ -17,8 +17,7 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_value};
-use local_lbplanner\helpers\plan_helper;
-use local_lbplanner\helpers\notifications_helper;
+use local_lbplanner\helpers\{plan_helper, notifications_helper, invite_helper};
 use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_INVITE_STATE};
 
 /**
@@ -54,22 +53,15 @@ class plan_decline_invite extends external_api {
         'inviteid' => $inviteid,
         ]);
 
-        if (!$DB->record_exists(plan_helper::INVITES_TABLE, ['id' => $inviteid, 'inviteeid' => $USER->id])) {
-            throw new \moodle_exception('Invite not found');
-        }
-
-        $invite = $DB->get_record(plan_helper::INVITES_TABLE,
-        [
-            'id' => $inviteid,
-            'inviteeid' => $USER->id,
-        ],
-        '*',
-        MUST_EXIST
+        $invite = $DB->get_record(
+            plan_helper::INVITES_TABLE,
+            ['id' => $inviteid],
         );
 
-        if ($invite->status !== PLAN_INVITE_STATE::PENDING) {
-            throw new \moodle_exception('Invite already accepted or declined');
+        if ($invite === false) {
+            throw new \moodle_exception('Invite not found');
         }
+        invite_helper::assert_invite_pending($invite->status);
 
         // Notify the user that invite has been declined.
         notifications_helper::notify_user(
