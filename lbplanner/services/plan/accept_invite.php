@@ -20,6 +20,7 @@ use core_external\{external_api, external_function_parameters, external_value};
 use local_lbplanner\helpers\plan_helper;
 use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\enums\{PLAN_ACCESS_TYPE, PLAN_INVITE_STATE, NOTIF_TRIGGER};
+use local_lbplanner\helpers\invite_helper;
 
 /**
  * Accept an invite to the plan.
@@ -54,23 +55,15 @@ class plan_accept_invite extends external_api {
         'inviteid' => $inviteid,
         ]);
 
-        if (!$DB->record_exists(plan_helper::INVITES_TABLE, ['id' => $inviteid, 'inviteeid' => $USER->id])) {
+        $invite = $DB->get_record(
+            plan_helper::INVITES_TABLE,
+            ['id' => $inviteid],
+        );
+
+        if ($invite === false) {
             throw new \moodle_exception('Invite not found');
         }
-        if (!$DB->record_exists(plan_helper::INVITES_TABLE,
-        [ 'id' => $inviteid, 'inviteeid' => $USER->id, 'status' => PLAN_INVITE_STATE::PENDING])) {
-            throw new \moodle_exception('Invite already accepted or declined');
-        }
-
-        $invite = $DB->get_record(plan_helper::INVITES_TABLE,
-        [
-            'id' => $inviteid,
-            'inviteeid' => $USER->id,
-            'status' => PLAN_INVITE_STATE::PENDING,
-        ],
-        '*',
-        MUST_EXIST
-        );
+        invite_helper::assert_invite_pending($invite->status);
 
         // Notify the user that invite has been accepted.
         notifications_helper::notify_user(
