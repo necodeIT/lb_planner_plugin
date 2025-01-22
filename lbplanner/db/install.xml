@@ -101,7 +101,7 @@
 				<FIELD NAME="duration" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="The duration of the slot in school units"/>
 				<FIELD NAME="weekday" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="The day of the week, starting with monday at 1"/>
 				<FIELD NAME="room" TYPE="char" LENGTH="7" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the associated room"/>
-				<FIELD NAME="size" TYPE="int" LENGTH="3" SEQUENCE="false" COMMENT="The amount of students that can fitin this slot"/>
+				<FIELD NAME="size" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false" COMMENT="The amount of students that can fitin this slot"/>
 			</FIELDS>
 			<KEYS>
 				<KEY NAME="primary" TYPE="primary" FIELDS="id"/>
