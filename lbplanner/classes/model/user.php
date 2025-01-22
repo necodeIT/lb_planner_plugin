@@ -65,9 +65,9 @@ class user {
     public int $displaytaskcount;
 
     /**
-     * @var int $ekenabled Whether the user wants to see EK or not.
+     * @var bool $ekenabled Whether the user wants to see EK or not.
      */
-    public int $ekenabled;
+    public bool $ekenabled;
 
     /**
      * @var ?\stdClass $mdluser the cached moodle user
