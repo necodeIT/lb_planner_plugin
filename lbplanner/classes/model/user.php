@@ -283,6 +283,7 @@ class user {
             'firstname' => $mdluser->firstname,
             'lastname' => $mdluser->lastname,
             'profileimageurl' => $this->get_pfp(),
+            'capabilities' => $capabilitybm,
         ];
 
         if ($capabilitybm & CAPABILITY_FLAG::STUDENT && strlen($mdluser->address) > 0) {
@@ -306,6 +307,7 @@ class user {
                 'lastname' => new external_value(PARAM_TEXT, 'The lastname of the user'),
                 'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
                 'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_DEFAULT),
+                'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
             ]
         );
     }
@@ -324,7 +326,6 @@ class user {
                 'planid' => $this->get_planid(),
                 'colorblindness' => $this->colorblindness,
                 'displaytaskcount' => $this->displaytaskcount,
-                'capabilities' => $this->get_capabilitybitmask(),
                 'email' => $mdluser->email,
             ]
         );
