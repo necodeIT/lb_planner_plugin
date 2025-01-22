@@ -22,7 +22,7 @@ use core_external\{external_function_parameters, external_single_structure, exte
 use moodle_exception;
 
 use local_lbplanner\helpers\{user_helper, plan_helper, notifications_helper};
-use local_lbplanner\enums\{PLAN_EK, PLAN_ACCESS_TYPE, NOTIF_TRIGGER};
+use local_lbplanner\enums\{PLAN_ACCESS_TYPE, NOTIF_TRIGGER};
 use local_lbplanner\model\user;
 
 /**
