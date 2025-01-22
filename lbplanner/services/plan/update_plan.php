@@ -41,13 +41,6 @@ class plan_update_plan extends external_api {
                 null,
                 NULL_NOT_ALLOWED
             ),
-            'enableek' => new external_value(
-                PARAM_BOOL,
-                'Whether EK is enabled for the plan',
-                VALUE_REQUIRED,
-                null,
-                NULL_NOT_ALLOWED
-            ),
         ]);
     }
 
@@ -55,16 +48,15 @@ class plan_update_plan extends external_api {
      * Update the plan details.
      *
      * @param string $planname Name of the Plan
-     * @param bool $enableek Whether EK is enabled for the plan
      * @return void
      * @throws Exception when access denied
      */
-    public static function update_plan(string $planname, bool $enableek) {
+    public static function update_plan(string $planname) {
         global $DB, $USER;
 
         self::validate_parameters(
             self::update_plan_parameters(),
-            ['planname' => $planname, 'enableek' => $enableek]
+            ['planname' => $planname]
         );
 
         $planid = plan_helper::get_plan_id($USER->id);
@@ -75,7 +67,6 @@ class plan_update_plan extends external_api {
 
         $plan = $DB->get_record(plan_helper::TABLE, ['id' => $planid], '*', MUST_EXIST);
         $plan->name = $planname;
-        $plan->enableek = $enableek;
 
         $DB->update_record(plan_helper::TABLE, $plan);
     }

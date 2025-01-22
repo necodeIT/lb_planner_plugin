@@ -65,6 +65,11 @@ class user {
     public int $displaytaskcount;
 
     /**
+     * @var int $ekenabled Whether the user wants to see EK or not.
+     */
+    public int $ekenabled;
+
+    /**
      * @var ?\stdClass $mdluser the cached moodle user
      */
     private ?\stdClass $mdluser;
@@ -97,7 +102,8 @@ class user {
         int $mdlid,
         string $theme,
         string $colorblindness,
-        int $displaytaskcount
+        int $displaytaskcount,
+        bool $ekenabled = false
     ) {
         global $USER;
         $this->lbpid = $lbpid;
@@ -105,6 +111,7 @@ class user {
         $this->set_theme($theme);
         $this->set_colorblindness($colorblindness);
         $this->set_displaytaskcount($displaytaskcount);
+        $this->ekenabled = $ekenabled;
         $this->planid = null;
         $this->pfp = null;
         $this->capabilitybitmask = null;
@@ -123,7 +130,7 @@ class user {
      * @return user a representation of this user and its data
      */
     public static function from_db(object $obj): self {
-        return new self($obj->id, $obj->userid, $obj->theme, $obj->colorblindness, $obj->displaytaskcount);
+        return new self($obj->id, $obj->userid, $obj->theme, $obj->colorblindness, $obj->displaytaskcount, $obj->ekenabled);
     }
 
     /**
@@ -323,6 +330,7 @@ class user {
             $this->prepare_for_api_short(),
             [
                 'theme' => $this->theme,
+                'ekenabled' => $this->ekenabled,
                 'planid' => $this->get_planid(),
                 'colorblindness' => $this->colorblindness,
                 'displaytaskcount' => $this->displaytaskcount,
@@ -344,6 +352,7 @@ class user {
                 'firstname' => new external_value(PARAM_TEXT, 'The firstname of the user'),
                 'lastname' => new external_value(PARAM_TEXT, 'The lastname of the user'),
                 'theme' => new external_value(PARAM_TEXT, 'The theme the user has selected'),
+                'ekenabled' => new external_value(PARAM_BOOL, 'Whether the user wants to see EK modules'),
                 'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
                 'planid' => new external_value(PARAM_INT, 'The id of the plan the user is assigned to'),
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
