@@ -25,6 +25,7 @@
 
 namespace local_lbplanner\helpers;
 
+use coding_exception;
 use core_customfield\category_controller;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -191,13 +192,14 @@ class modules_helper {
         $modules = [];
 
         foreach ($assignments as $assign) {
+            if ($assign === null) {
+                throw new coding_exception("what the fuck? 1 {$courseid} {$ekenabled}");
+            }
             $module = module::from_assignobj($assign);
-            if (!$ekenabled && self::determine_type($module->get_assignid()) == MODULE_TYPE::EK) {
+            if ((!$ekenabled) && $module->get_type() === MODULE_TYPE::EK) {
                 continue;
             }
-            if ($module != null) {
-                $modules[] = $module;
-            }
+            array_push($modules, $module);
         }
 
         return $modules;
