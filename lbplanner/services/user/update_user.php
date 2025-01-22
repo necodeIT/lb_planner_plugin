@@ -60,16 +60,16 @@ class user_update_user extends external_api {
 
     /**
      * Updates the given user in the lbplanner DB
-     * @param string $theme The theme the user has selected
-     * @param string $colorblindness The colorblindness the user has selected
-     * @param bool $displaytaskcount The displaytaskcount the user has selected
-     * @param bool $ekenabled whether the user wants to see EK modules
+     * @param ?string $theme The theme the user has selected
+     * @param ?string $colorblindness The colorblindness the user has selected
+     * @param ?bool $displaytaskcount The displaytaskcount the user has selected
+     * @param ?bool $ekenabled whether the user wants to see EK modules
      * @return array The updated user
      * @throws moodle_exception
      * @throws dml_exception
      * @throws invalid_parameter_exception
      */
-    public static function update_user(string $theme, string $colorblindness, bool $displaytaskcount, bool $ekenabled): array {
+    public static function update_user(?string $theme, ?string $colorblindness, ?bool $displaytaskcount, ?bool $ekenabled): array {
         global $DB, $USER;
 
         self::validate_parameters(
