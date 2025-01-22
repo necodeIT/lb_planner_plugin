@@ -96,6 +96,7 @@ class user {
      * @param string $theme user-chosen theme
      * @param string $colorblindness user's colorblindness
      * @param int $displaytaskcount user's display task count
+     * @param bool $ekenabled whether the user wants to see EK modules
      */
     public function __construct(
         int $lbpid,
