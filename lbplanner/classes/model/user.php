@@ -103,7 +103,7 @@ class user {
         string $theme,
         string $colorblindness,
         bool $displaytaskcount,
-        bool $ekenabled = false
+        bool $ekenabled
     ) {
         global $USER;
         $this->lbpid = $lbpid;
