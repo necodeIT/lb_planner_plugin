@@ -59,7 +59,7 @@ class notifications_helper {
      * Notifies the given user about the given event, with the given info.
      *
      * @param int $userid The user to notify.
-     * @param int $info   Additional information as stringified json.
+     * @param int $info   Additional information as an integer.
      * @param int $type   The type of notification.
      *
      * @return integer The id of the notification.
