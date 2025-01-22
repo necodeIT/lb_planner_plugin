@@ -255,6 +255,7 @@ class user {
         $obj->theme = $this->theme;
         $obj->colorblindness = $this->colorblindness;
         $obj->displaytaskcount = $this->displaytaskcount;
+        $obj->ekenabled = $this->ekenabled;
 
         if ($this->lbpid !== 0) {
             $obj->id = $this->lbpid;
