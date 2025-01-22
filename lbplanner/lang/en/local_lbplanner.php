@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'LB Planner';
-$string['lb_planner:student'] = 'LB Planner Student';
-$string['lb_planner:teacher'] = 'LB Planner Teacher';
 $string['lb_planner:admin'] = 'LB Planner Admin';
 $string['lb_planner:manager'] = 'LB Planner Manager';
+$string['lb_planner:student'] = 'LB Planner Student';
+$string['lb_planner:teacher'] = 'LB Planner Teacher';
+$string['pluginname'] = 'LB Planner';
