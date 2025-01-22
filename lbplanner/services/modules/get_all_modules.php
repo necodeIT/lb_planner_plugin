@@ -47,7 +47,7 @@ class modules_get_all_modules extends external_api {
 
     /**
      * Returns all the modules for a user.
-     *
+     * @param bool $ekenabled Whether to include ek modules
      * @return array the modules
      */
     public static function get_all_modules(bool $ekenabled): array {
