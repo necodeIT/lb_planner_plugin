@@ -46,8 +46,8 @@ class user_update_user extends external_api {
                 VALUE_DEFAULT,
                 null),
             'displaytaskcount' => new external_value(
-                PARAM_INT,
-                'If the user has the taskcount-enabled 1-yes 0-no',
+                PARAM_BOOL,
+                'Whether the user has the taskcount enabled',
                 VALUE_DEFAULT,
                 null),
             'ekenabled' => new external_value(
@@ -62,14 +62,14 @@ class user_update_user extends external_api {
      * Updates the given user in the lbplanner DB
      * @param string $theme The theme the user has selected
      * @param string $colorblindness The colorblindness the user has selected
-     * @param int $displaytaskcount The displaytaskcount the user has selected
+     * @param bool $displaytaskcount The displaytaskcount the user has selected
      * @param bool $ekenabled whether the user wants to see EK modules
      * @return array The updated user
      * @throws moodle_exception
      * @throws dml_exception
      * @throws invalid_parameter_exception
      */
-    public static function update_user($theme, $colorblindness, $displaytaskcount, $ekenabled): array {
+    public static function update_user(string $theme, string $colorblindness, bool $displaytaskcount, bool $ekenabled): array {
         global $DB, $USER;
 
         self::validate_parameters(
@@ -94,9 +94,11 @@ class user_update_user extends external_api {
             $user->set_theme($theme);
         }
         if ($displaytaskcount !== null) {
-            $user->set_displaytaskcount($displaytaskcount);
+            $user->displaytaskcount = $displaytaskcount;
         }
-        $user->ekenabled = $ekenabled;
+        if ($ekenabled !== null) {
+            $user->ekenabled = $ekenabled;
+        }
 
         $DB->update_record(user_helper::LB_PLANNER_USER_TABLE, $user->prepare_for_db());
 

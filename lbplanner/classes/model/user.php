@@ -25,7 +25,6 @@
 
 namespace local_lbplanner\model;
 
-use coding_exception;
 use core\context\system as context_system;
 use core_external\{external_single_structure, external_value};
 use user_picture;
@@ -60,9 +59,9 @@ class user {
     public string $colorblindness;
 
     /**
-     * @var int $displaytaskcount The display task count the user has selected in the app.
+     * @var bool $displaytaskcount The display task count the user has selected in the app.
      */
-    public int $displaytaskcount;
+    public bool $displaytaskcount;
 
     /**
      * @var bool $ekenabled Whether the user wants to see EK or not.
@@ -103,7 +102,7 @@ class user {
         int $mdlid,
         string $theme,
         string $colorblindness,
-        int $displaytaskcount,
+        bool $displaytaskcount,
         bool $ekenabled = false
     ) {
         global $USER;
@@ -111,7 +110,7 @@ class user {
         $this->mdlid = $mdlid;
         $this->set_theme($theme);
         $this->set_colorblindness($colorblindness);
-        $this->set_displaytaskcount($displaytaskcount);
+        $this->displaytaskcount = $displaytaskcount;
         $this->ekenabled = $ekenabled;
         $this->planid = null;
         $this->pfp = null;
@@ -143,18 +142,6 @@ class user {
         assert($this->lbpid === 0);
         assert($lbpid !== 0);
         $this->lbpid = $lbpid;
-    }
-
-    /**
-     * Sets display task count
-     * @param int $count display task count
-     * @throws \coding_exception if $count <= 0
-     */
-    public function set_displaytaskcount(int $count): void {
-        if ($count <= 0) {
-            throw new \coding_exception('User\'s Display Task Count cannot be <= 0');
-        }
-        $this->displaytaskcount = $count;
     }
 
     /**
@@ -357,7 +344,7 @@ class user {
                 'profileimageurl' => new external_value(PARAM_URL, 'The url of the profile image'),
                 'planid' => new external_value(PARAM_INT, 'The id of the plan the user is assigned to'),
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
-                'displaytaskcount' => new external_value(PARAM_INT, 'If the user has the taskcount-enabled 1-yes 0-no'),
+                'displaytaskcount' => new external_value(PARAM_BOOL, 'Whether the user has the taskcount enabled'),
                 'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
                 'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_DEFAULT),
                 'email' => new external_value(PARAM_TEXT, 'The email address of the user'),
