@@ -120,8 +120,20 @@ class slot_filter {
             [
                 'id' => new external_value(PARAM_INT, 'filter ID'),
                 'slotid' => new external_value(PARAM_INT, 'ID of associated slot'),
-                'courseid' => new external_value(PARAM_INT, 'ID of course to filter for (or null if "any")'),
-                'vintage' => new external_value(PARAM_INT, 'class name to filter for (or null if "any")'),
+                'courseid' => new external_value(
+                    PARAM_INT,
+                    'ID of course to filter for (or null if "any")',
+                    VALUE_REQUIRED,
+                    null,
+                    NULL_ALLOWED
+                ),
+                'vintage' => new external_value(
+                    PARAM_INT,
+                    'class name to filter for (or null if "any")',
+                    VALUE_REQUIRED,
+                    null,
+                    NULL_ALLOWED
+                ),
             ]
         );
     }
