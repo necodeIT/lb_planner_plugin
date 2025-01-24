@@ -28,7 +28,7 @@ namespace local_lbplanner\model;
 use DateTimeImmutable;
 
 use core_external\{external_single_structure, external_value};
-
+use DateTimeZone;
 use local_lbplanner\model\slot;
 use local_lbplanner\helpers\slot_helper;
 
@@ -85,6 +85,19 @@ class reservation {
         $this->userid = $userid;
         $this->reserverid = $reserverid;
         $this->slot = null;
+        $this->datetime = null;
+        $this->datetimeend = null;
+    }
+
+    /**
+     * Initializes reservation object from a DB object
+     * @param array $obj the DB obj
+     * @return reservation the reservation obj
+     */
+    public static function from_obj(array $obj): self {
+        $utctz = new DateTimeZone('UTC');
+        $obj['date'] = new DateTimeImmutable($obj['date'], $utctz);
+        return new self(...$obj);
     }
 
     /**
@@ -149,6 +162,17 @@ class reservation {
         }
 
         return $this->datetimeend;
+    }
+
+    /**
+     * Calculates whether the reservation is outdated
+     *
+     * @return DateTimeImmutable
+     */
+    public function is_outdated(): bool {
+        $utctz = new DateTimeZone('UTC');
+        $yesterday = new DateTimeImmutable('yesterday', $utctz);
+        return $yesterday->diff($this->date)->invert;
     }
 
     /**

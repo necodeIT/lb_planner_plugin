@@ -307,7 +307,9 @@ class slot {
      */
     private function check_reservations(): void {
         global $USER;
+        
         $reservations = slot_helper::get_reservations_for_slot($this->id);
+        $reservations = slot_helper::filter_reservations_for_recency($reservations);
 
         $this->fullness = count($reservations);
 

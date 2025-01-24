@@ -31,6 +31,7 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTimeZone;
 use local_lbplanner\enums\CAPABILITY;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\model\{slot, reservation, slot_filter};
@@ -183,9 +184,7 @@ class slot_helper {
             throw new \moodle_exception('requested reservation does not exist');
         }
 
-        $reservation['date'] = new DateTimeImmutable($reservation['date']);
-
-        return new reservation(...$reservation);
+        return reservation::from_obj($reservation);
     }
 
     /**
@@ -213,8 +212,7 @@ class slot_helper {
 
         $reservationsobj = [];
         foreach ($reservations as $reservation) {
-            $reservation['date'] = new DateTimeImmutable($reservation['date']);
-            array_push($reservationsobj, new reservation(...$reservation));
+            array_push($reservationsobj, reservation::from_obj($reservation));
         }
 
         return self::filter_reservations_for_recency($reservationsobj);
@@ -232,11 +230,10 @@ class slot_helper {
 
         $reservationsobj = [];
         foreach ($reservations as $reservation) {
-            $reservation['date'] = new DateTimeImmutable($reservation['date']);
-            array_push($reservationsobj, new reservation(...$reservation));
+            array_push($reservationsobj, reservation::from_obj($reservation));
         }
 
-        return self::filter_reservations_for_recency($reservationsobj);
+        return $reservationsobj;
     }
 
     /**
@@ -246,21 +243,12 @@ class slot_helper {
      * @return reservation[] reservations that pass
      */
     public static function filter_reservations_for_recency(array $reservations): array {
-        global $DB;
-
-        $now = new DateTimeImmutable();
-
         $goodeggs = [];
-        $badeggs = [];
         foreach ($reservations as $reservation) {
-            if ($now->diff($reservation->get_datetime_end())->invert === 0) {
+            if (!$reservation->is_outdated()) {
                 array_push($goodeggs, $reservation);
-            } else {
-                array_push($badeggs, $reservation->id);
             }
         }
-
-        $DB->delete_records_list(self::TABLE_RESERVATIONS, 'id', $badeggs);
 
         return $goodeggs;
     }
@@ -326,7 +314,8 @@ class slot_helper {
      * @return slot[] the filtered slot array
      */
     public static function filter_slots_for_time(array $allslots, int $range): array {
-        $now = new DateTimeImmutable();
+        $utctz = new DateTimeZone('UTC');
+        $now = new DateTimeImmutable('now', $utctz);
         $slots = [];
         // Calculate date and time each slot happens next, and add it to the return list if within reach from today.
         foreach ($allslots as $slot) {
@@ -346,9 +335,10 @@ class slot_helper {
      * @return DateTimeImmutable the next time this slot will occur
      */
     public static function calculate_slot_datetime(slot $slot, DateTimeInterface $now): DateTimeImmutable {
+        $utctz = new DateTimeZone('UTC');
         $slotdaytime = self::SCHOOL_UNITS[$slot->startunit];
         // NOTE: format and fromFormat use different date formatting conventions.
-        $slotdatetime = DateTime::createFromFormat('YY-MM-DD tHH:MM', $now->format('Y-m-d ').$slotdaytime);
+        $slotdatetime = DateTime::createFromFormat('YY-MM-DD tHH:MM', $now->format('Y-m-d ').$slotdaytime, $utctz);
         // Move to next day this weekday occurs (doesn't move if it's the same as today).
         $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
 
@@ -357,7 +347,7 @@ class slot_helper {
             $slotdatetime->add(new DateInterval('P1W'));
         }
 
-        return new DateTimeImmutable($slotdatetime);
+        return new DateTimeImmutable($slotdatetime, $utctz);
     }
 
     /**
@@ -369,9 +359,10 @@ class slot_helper {
      * @link slot_helper::SCHOOL_UNITS
      */
     public static function amend_date_with_unit_time(int $unit, DateTimeInterface $date): DateTimeImmutable {
+        $utctz = new DateTimeZone('UTC');
         $daytime = self::SCHOOL_UNITS[$unit];
 
-        return DateTimeImmutable::createFromFormat('YY-MM-DD tHH:MM', $date->format('Y-m-d ').$daytime);
+        return DateTimeImmutable::createFromFormat('YY-MM-DD tHH:MM', $date->format('Y-m-d ').$daytime, $utctz);
     }
 
     /**
