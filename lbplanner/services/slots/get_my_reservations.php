@@ -45,6 +45,7 @@ class slots_get_my_reservations extends external_api {
         global $USER;
 
         $reservations = slot_helper::get_reservations_for_user($USER->id);
+        $reservations = slot_helper::filter_reservations_for_recency($reservations);
 
         return array_map(fn(reservation $reservation) => $reservation->prepare_for_api(), $reservations);
     }
