@@ -269,6 +269,15 @@ $functions = [
         'capabilities' => 'local/lb_planner:teacher',
         'ajax' => true,
     ],
+    'local_lbplanner_slots_get_all_slots' => [
+        'classname' => 'local_lbplanner_services\slots_get_all_slots',
+        'methodname' => 'get_all_slots',
+        'classpath' => 'local/lbplanner/services/slots/get_all_slots.php',
+        'description' => 'Get all slots.',
+        'type' => 'read',
+        'capabilities' => 'local/lb_planner:slotmaster',
+        'ajax' => true,
+    ],
     'local_lbplanner_slots_book_reservation' => [
         'classname' => 'local_lbplanner_services\slots_book_reservation',
         'methodname' => 'book_reservation',
@@ -413,6 +422,7 @@ $services = [
             'local_lbplanner_slots_create_slot',
             'local_lbplanner_slots_delete_slot',
             'local_lbplanner_slots_delete_slot_filter',
+            'local_lbplanner_slots_get_all_slots',
             'local_lbplanner_slots_get_my_slots',
             'local_lbplanner_slots_get_slot_filters',
             'local_lbplanner_slots_get_student_slots',
