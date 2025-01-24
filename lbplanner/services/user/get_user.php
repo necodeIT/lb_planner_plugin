@@ -57,7 +57,7 @@ class user_get_user extends \core_external\external_api {
         // Checks if the user is enrolled in LB Planner.
         if (!user_helper::check_user_exists($USER->id)) {
             // Register user if not found.
-            $lbplanneruser = new user(0, $USER->id, 'default', 'none', 1);
+            $lbplanneruser = new user(0, $USER->id, 'default', 'none', 1, false);
             $lbpid = $DB->insert_record(user_helper::LB_PLANNER_USER_TABLE, $lbplanneruser->prepare_for_db());
             $lbplanneruser->set_fresh($lbpid);
 
