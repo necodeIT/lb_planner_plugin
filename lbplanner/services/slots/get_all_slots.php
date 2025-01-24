@@ -17,33 +17,40 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_multiple_structure};
+use local_lbplanner\enums\CAPABILITY_FLAG;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
+use local_lbplanner\model\user;
 
 /**
- * Returns all slots a supervisor can see.
+ * Returns all slots.
+ * Throws exception if the current user is not a slotmaster.
  *
  * @package local_lbplanner
  * @subpackage services_slots
  * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
-class slots_get_supervisor_slots extends external_api {
+class slots_get_all_slots extends external_api {
     /**
-     * Parameters for get_supervisor_slots.
+     * Parameters for get_all_slots.
      * @return external_function_parameters
      */
-    public static function get_supervisor_slots_parameters(): external_function_parameters {
+    public static function get_all_slots_parameters(): external_function_parameters {
         return new external_function_parameters([]);
     }
 
     /**
-     * Returns all slots a supervisor controls.
+     * Returns all slots.
      */
-    public static function get_supervisor_slots(): array {
+    public static function get_all_slots(): array {
         global $USER;
+        $user = user::from_db($USER);
 
-        $slots = slot_helper::get_supervisor_slots($USER->id);
+        if (!($user->get_capabilitybitmask() & CAPABILITY_FLAG::SLOTMASTER)) {
+            throw new \moodle_exception('current user is not slotmaster');
+        }
+        $slots = slot_helper::get_all_slots();
 
         return array_map(fn(slot $slot) => $slot->prepare_for_api(), $slots);
     }
@@ -52,7 +59,7 @@ class slots_get_supervisor_slots extends external_api {
      * Returns the structure of the slot array
      * @return external_multiple_structure
      */
-    public static function get_supervisor_slots_returns(): external_multiple_structure {
+    public static function get_all_slots_returns(): external_multiple_structure {
         return new external_multiple_structure(
             slot::api_structure()
         );
