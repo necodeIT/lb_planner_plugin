@@ -134,6 +134,18 @@ class user {
     }
 
     /**
+     * Takes moodle user obj and makes new user obj out of it
+     *
+     * @param object $obj the moodleuser object to get data from
+     * @return user a representation of this user and its data
+     */
+    public static function from_mdlobj(object $obj): self {
+        $newobj = user_helper::get_user($obj->id);
+        $newobj->set_mdluser($obj);
+        return $newobj;
+    }
+
+    /**
      * Mark the object as freshly created and sets the new ID
      * @param int $lbpid the new ID after inserting into the DB
      * @throws \AssertionError
