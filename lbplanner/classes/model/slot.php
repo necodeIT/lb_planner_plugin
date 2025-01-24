@@ -314,7 +314,7 @@ class slot {
         $this->fullness = count($reservations);
 
         foreach ($reservations as $reservation) {
-            if ($reservation->userid === $USER['id']) {
+            if ($reservation->userid === intval($USER->id)) {
                 $this->forcuruser = true;
                 return;
             }
