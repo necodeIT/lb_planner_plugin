@@ -45,7 +45,7 @@ class slots_get_all_slots extends external_api {
      */
     public static function get_all_slots(): array {
         global $USER;
-        $user = user::from_db($USER);
+        $user = user::from_mdlobj($USER);
 
         if (!($user->get_capabilitybitmask() & CAPABILITY_FLAG::SLOTMASTER)) {
             throw new \moodle_exception('current user is not slotmaster');
