@@ -17,12 +17,14 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_multiple_structure};
-
+use local_lbplanner\enums\CAPABILITY_FLAG;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
+use local_lbplanner\model\user;
 
 /**
  * Returns all slots a supervisor can see.
+ * If current user is slotmaster, return *all* slots.
  *
  * @package local_lbplanner
  * @subpackage services_slots
@@ -43,8 +45,13 @@ class slots_get_supervisor_slots extends external_api {
      */
     public static function get_supervisor_slots(): array {
         global $USER;
+        $user = user::from_db($USER);
 
-        $slots = slot_helper::get_supervisor_slots($USER->id);
+        if ($user->get_capabilitybitmask() & CAPABILITY_FLAG::SLOTMASTER) {
+            $slots = slot_helper::get_all_slots();
+        } else {
+            $slots = slot_helper::get_supervisor_slots($USER->id);
+        }
 
         return array_map(fn(slot $slot) => $slot->prepare_for_api(), $slots);
     }
