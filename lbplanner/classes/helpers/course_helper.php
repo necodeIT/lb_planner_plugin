@@ -76,11 +76,15 @@ class course_helper {
      * Get all current courses.
      * @return course[] all courses of the current year
      */
-    public static function get_all_lbplanner_courses(): array {
+    public static function get_all_lbplanner_courses(bool $only_enrolled=true): array {
         global $DB, $USER;
         $userid = $USER->id;
 
-        $mdlcourses = enrol_get_my_courses();
+        if ($only_enrolled) {
+            $mdlcourses = enrol_get_my_courses();
+        } else {
+            $mdlcourses = get_courses();
+        }
         // Remove Duplicates.
         $mdlcourses = array_unique($mdlcourses, SORT_REGULAR);
         $results = [];
