@@ -200,11 +200,10 @@ class slot {
     public function get_supervisors(): array {
         global $DB;
         if (is_null($this->supervisors)) {
-            $this->supervisors = $DB->get_records(
+            $this->supervisors = $DB->get_fieldset(
                 slot_helper::TABLE_SUPERVISORS,
+                'userid',
                 ['slotid' => $this->id],
-                '',
-                ['userid']
             );
         }
 
