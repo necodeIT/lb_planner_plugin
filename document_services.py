@@ -703,7 +703,7 @@ def find_import(nr: PHPNameResolution, symbol: str) -> str | None:
         im_symbol = use.split('\\')[-1].replace(';', '')
         found = False
         if im_symbol.startswith('{'):
-            for subsymbol in im_symbol.split(','):
+            for subsymbol in im_symbol[1:-1].split(','):
                 if subsymbol.strip() == symbol:
                     found = True
                     break
