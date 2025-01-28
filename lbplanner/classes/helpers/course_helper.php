@@ -74,6 +74,7 @@ class course_helper {
 
     /**
      * Get all current courses.
+     * @param bool $onlyenrolled whether to include only courses in which the current user is enrolled in
      * @return course[] all courses of the current year
      */
     public static function get_all_lbplanner_courses(bool $onlyenrolled=true): array {
