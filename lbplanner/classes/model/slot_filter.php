@@ -68,6 +68,20 @@ class slot_filter {
     }
 
     /**
+     * Creates a slot_filter object from a DB result
+     * @param \stdClass $obj the DB object
+     * @return slot_filter the resulting slot_filter object
+     */
+    public static function from_db(\stdClass $obj): self {
+        return new slot_filter(
+            $obj->id,
+            $obj->slotid,
+            $obj->courseid,
+            $obj->vintage,
+        );
+    }
+
+    /**
      * Mark the object as freshly created and sets the new ID
      * @param int $id the new ID after inserting into the DB
      */

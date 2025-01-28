@@ -109,7 +109,7 @@ class slot_helper {
 
         $slotsobj = [];
         foreach ($slots as $slot) {
-            array_push($slotsobj, new slot(...$slot));
+            array_push($slotsobj, slot::from_db($slot));
         }
 
         return $slotsobj;
@@ -133,7 +133,7 @@ class slot_helper {
 
         $slotsobj = [];
         foreach ($slots as $slot) {
-            array_push($slotsobj, new slot(...$slot));
+            array_push($slotsobj, slot::from_db($slot));
         }
 
         return $slotsobj;
@@ -151,7 +151,7 @@ class slot_helper {
 
         $slotsobj = [];
         foreach ($slots as $slot) {
-            array_push($slotsobj, new slot(...$slot));
+            array_push($slotsobj, slot::from_db($slot));
         }
 
         return $slotsobj;
@@ -167,7 +167,7 @@ class slot_helper {
         global $DB;
         $slot = $DB->get_record(self::TABLE_SLOTS, ['id' => $slotid]);
 
-        return new slot(...$slot);
+        return slot::from_db($slot);
     }
 
     /**
@@ -197,7 +197,7 @@ class slot_helper {
         global $DB;
         $filter = $DB->get_record(self::TABLE_SLOT_FILTERS, ['id' => $filterid]);
 
-        return new slot_filter(...$filter);
+        return slot_filter::from_db($filter);
     }
 
     /**
@@ -265,7 +265,7 @@ class slot_helper {
 
         $filtersobj = [];
         foreach ($filters as $filter) {
-            array_push($filtersobj, new slot_filter(...$filter));
+            array_push($filtersobj, slot_filter::from_db($filter));
         }
 
         return $filtersobj;
