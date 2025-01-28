@@ -37,7 +37,7 @@ class slots_update_slot extends external_api {
     public static function update_slot_parameters(): external_function_parameters {
         // TODO: set hardcoded doc values with constants instead of hardcoded values.
         return new external_function_parameters([
-            'slotid' => new external_value(
+            'id' => new external_value(
                 PARAM_INT,
                 'ID of the slot to update',
                 VALUE_REQUIRED,
@@ -85,19 +85,19 @@ class slots_update_slot extends external_api {
 
     /**
      * Update a slot's values
-     * @param int $slotid ID of the slot to update
+     * @param int $id ID of the slot to update
      * @param int $startunit the unit this slot starts in
      * @param int $duration how long the unit lasts for
      * @param int $weekday which day of the week this slot is on
      * @param string $room which room this slot is for
      * @param int $size how many pupils this slot can fit
      */
-    public static function update_slot(int $slotid, int $startunit, int $duration, int $weekday, string $room, int $size): void {
+    public static function update_slot(int $id, int $startunit, int $duration, int $weekday, string $room, int $size): void {
         global $USER, $DB;
         self::validate_parameters(
             self::update_slot_parameters(),
             [
-                'slotid' => $slotid,
+                'id' => $id,
                 'startunit' => $startunit,
                 'duration' => $duration,
                 'weekday' => $weekday,
@@ -107,10 +107,10 @@ class slots_update_slot extends external_api {
         );
 
         // Check if user is supervisor for this slot, throw error if not.
-        slot_helper::assert_slot_supervisor($USER->id, $slotid);
+        slot_helper::assert_slot_supervisor($USER->id, $id);
 
         // Replace slot's values with new values if not null.
-        $slot = slot_helper::get_slot($slotid);
+        $slot = slot_helper::get_slot($id);
         $varnames = ['startunit', 'duration', 'weekday', 'room', 'size'];
         foreach ($varnames as $varname) {
             if (!is_null($$varname)) {

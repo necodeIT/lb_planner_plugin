@@ -37,7 +37,7 @@ class slots_delete_slot extends external_api {
      */
     public static function delete_slot_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'slotid' => new external_value(
+            'id' => new external_value(
                 PARAM_INT,
                 'ID of the slot to be deleted',
                 VALUE_REQUIRED,
@@ -49,44 +49,44 @@ class slots_delete_slot extends external_api {
 
     /**
      * Tries to request unbooking
-     * @param int $slotid which slot to delete
+     * @param int $id which slot to delete
      */
-    public static function delete_slot(int $slotid): void {
+    public static function delete_slot(int $id): void {
         global $USER, $DB;
         self::validate_parameters(
             self::delete_slot_parameters(),
             [
-                'slotid' => $slotid,
+                'slotid' => $id,
             ]
         );
 
         // Check if user is supervisor for this slot, throw error if not.
-        slot_helper::assert_slot_supervisor($USER->id, $slotid);
+        slot_helper::assert_slot_supervisor($USER->id, $id);
 
         // Notify affected users.
-        $reservations = slot_helper::get_reservations_for_slot($slotid);
+        $reservations = slot_helper::get_reservations_for_slot($id);
         foreach ($reservations as $res) {
             notifications_helper::notify_user($res->userid, $res->id, NOTIF_TRIGGER::UNBOOK_FORCED);
         }
         // Delete all reservations for this slot.
         $DB->delete_records(
             slot_helper::TABLE_RESERVATIONS,
-            ['slotid' => $slotid]
+            ['slotid' => $id]
         );
         // Delete Supervisors for this slot.
         $DB->delete_records(
             slot_helper::TABLE_SUPERVISORS,
-            ['slotid' => $slotid]
+            ['slotid' => $id]
         );
         // Delete Filters for this slot.
         $DB->delete_records(
             slot_helper::TABLE_SLOT_FILTERS,
-            ['slotid' => $slotid]
+            ['slotid' => $id]
         );
         // Finally, delete slot.
         $DB->delete_records(
             slot_helper::TABLE_SLOTS,
-            ['id' => $slotid]
+            ['id' => $id]
         );
     }
 
