@@ -17,13 +17,12 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_function_parameters, external_multiple_structure};
-use local_lbplanner\enums\CAPABILITY_FLAG;
+
 use local_lbplanner\helpers\course_helper;
 use local_lbplanner\model\course;
-use local_lbplanner\model\user;
 
 /**
- * Get ALL courses. Slotmaster only.
+ * Get all the courses of the current year.
  *
  * @package local_lbplanner
  * @subpackage services_courses
@@ -41,16 +40,10 @@ class courses_get_all_courses extends \core_external\external_api {
     }
 
     /**
-     * Get ALL courses.
+     * Get all the courses of the current year.
      */
     public static function get_all_courses(): array {
-        global $USER;
-        $user = user::from_mdlobj($USER);
-        if (!($user->get_capabilitybitmask() & CAPABILITY_FLAG::SLOTMASTER)) {
-            throw new \moodle_exception('access denied: must be slotmaster');
-        }
-
-        $courses = course_helper::get_all_lbplanner_courses(false);
+        $courses = course_helper::get_all_lbplanner_courses(true);
         $results = [];
         foreach ($courses as $course) {
             array_push($results, $course->prepare_for_api());
