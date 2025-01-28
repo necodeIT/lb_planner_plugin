@@ -17,11 +17,11 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
-use local_lbplanner\enums\CAPABILITY;
-use local_lbplanner\enums\WEEKDAY;
+use core\context\system as context_system;
+
+use local_lbplanner\enums\{CAPABILITY, WEEKDAY};
 use local_lbplanner\helpers\slot_helper;
-use local_lbplanner\model\slot;
-use local_lbplanner\model\supervisor;
+use local_lbplanner\model\{slot, supervisor};
 
 /**
  * Create a slot
@@ -97,6 +97,7 @@ class slots_create_slot extends external_api {
                 'size' => $size,
             ]
         );
+        $syscontext = context_system::instance();
 
         $slot = new slot(0, $startunit, $duration, $weekday, $room, $size);
         $slot->validate();
@@ -106,7 +107,7 @@ class slots_create_slot extends external_api {
         $slot->set_fresh($id);
 
         // Set current user as supervisor for this new slot if not supervisor.
-        if (!has_capability(CAPABILITY::SLOTMASTER, $USER->id)) {
+        if (!has_capability(CAPABILITY::SLOTMASTER, $syscontext, $USER->id)) {
             $DB->insert_record(
                 slot_helper::TABLE_SUPERVISORS,
                 (new supervisor(0, $slot->id, $USER->id))->prepare_for_db()
