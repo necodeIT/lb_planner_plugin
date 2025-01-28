@@ -333,7 +333,7 @@ $functions = [
         'ajax' => true,
     ],
     'local_lbplanner_slots_update_slot' => [
-        'classname' => 'update_slot\slots_update_slot',
+        'classname' => 'local_lbplanner_services\slots_update_slot',
         'methodname' => 'create_slot',
         'classpath' => 'local/lbplanner/services/slots/update_slot.php',
         'description' => 'Update a slot\'s values',
