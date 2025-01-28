@@ -42,11 +42,11 @@ class slot_filter {
     /**
      * @var ?int $id ID of linked course or null if any
      */
-    public ?int $courseid;
+    public int $courseid;
     /**
      * @var ?string $vintage linked class or null if any
      */
-    public ?string $vintage;
+    public string $vintage;
 
     /**
      * Constructs new slot_filter
@@ -55,11 +55,8 @@ class slot_filter {
      * @param ?int $courseid ID of linked course or null if any
      * @param ?string $vintage linked class or null if any
      */
-    public function __construct(int $id, int $slotid, ?int $courseid, ?string $vintage) {
-        assert(!(is_null($courseid) && is_null($vintage)));
-        if (!is_null($vintage)) {
-            assert(strlen($vintage) <= 7);
-        }
+    public function __construct(int $id, int $slotid, int $courseid, string $vintage) {
+        assert(strlen($vintage) <= 7);
 
         $this->id = $id;
         $this->slotid = $slotid;
@@ -137,16 +134,12 @@ class slot_filter {
                 'courseid' => new external_value(
                     PARAM_INT,
                     'ID of course to filter for (or null if "any")',
-                    VALUE_REQUIRED,
-                    null,
-                    NULL_ALLOWED
+                    VALUE_REQUIRED
                 ),
                 'vintage' => new external_value(
                     PARAM_TEXT,
                     'class name to filter for (or null if "any")',
-                    VALUE_REQUIRED,
-                    null,
-                    NULL_ALLOWED
+                    VALUE_REQUIRED
                 ),
             ]
         );
