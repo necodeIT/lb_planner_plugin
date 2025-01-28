@@ -40,6 +40,12 @@ class user_helper {
     const LB_PLANNER_USER_TABLE = 'local_lbplanner_users';
 
     /**
+     * Name of the moodle's database
+     * WARNING: DO NOT USE UNLESS ABSOLUTELY NECESSARY!
+     */
+    const MOODLE_USER_TABLE = 'user';
+
+    /**
      * Checks if the given user exists in the LB_PLANNER_USER database.
      *
      * @param int $userid The id of the user to check.
