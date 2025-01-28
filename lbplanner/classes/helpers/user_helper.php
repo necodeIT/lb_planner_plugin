@@ -16,13 +16,12 @@
 
 namespace local_lbplanner\helpers;
 
-use core\context\system as context_system;
 use dml_exception;
-use moodle_exception;
 use stdClass;
 use core_user;
 
-use local_lbplanner\enums\CAPABILITY;
+use local_lbplanner\enums\NOTIF_TRIGGER;
+use local_lbplanner\enums\PLAN_ACCESS_TYPE;
 use local_lbplanner\model\user;
 
 /**
@@ -55,6 +54,7 @@ class user_helper {
 
     /**
      * Retrieves the user with the given id.
+     * If user doesn't exist in the DB yet, it will be created.
      *
      * @param int $userid The id of the user to retrieve.
      *
@@ -63,7 +63,34 @@ class user_helper {
      */
     public static function get_user(int $userid): user {
         global $DB;
-        return user::from_db($DB->get_record(self::LB_PLANNER_USER_TABLE, ['userid' => $userid], '*', MUST_EXIST));
+        $dbuser = $DB->get_record(self::LB_PLANNER_USER_TABLE, ['userid' => $userid]);
+
+        if ($dbuser !== false) {
+            return user::from_db($dbuser);
+        }
+
+        // Register user if not found.
+        $lbplanneruser = new user(0, $userid, 'default', 'none', 1, false);
+        $lbpid = $DB->insert_record(user_helper::LB_PLANNER_USER_TABLE, $lbplanneruser->prepare_for_db());
+        $lbplanneruser->set_fresh($lbpid);
+
+        // Create empty plan for newly registered user.
+        $plan = new \stdClass();
+        $plan->name = 'Plan for ' . ($lbplanneruser->get_mdluser()->username);
+        $planid = $DB->insert_record(plan_helper::TABLE, $plan);
+        $lbplanneruser->set_planid($planid);
+
+        // Set user as owner of new plan.
+        $planaccess = new \stdClass();
+        $planaccess->userid = $userid;
+        $planaccess->accesstype = PLAN_ACCESS_TYPE::OWNER;
+        $planaccess->planid = $planid;
+        $DB->insert_record(plan_helper::ACCESS_TABLE, $planaccess);
+
+        // Notify the FE that this user likely hasn't used LBP before.
+        notifications_helper::notify_user($userid, -1, NOTIF_TRIGGER::USER_REGISTERED);
+
+        return $lbplanneruser;
     }
 
     /**
