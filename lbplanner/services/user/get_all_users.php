@@ -19,13 +19,15 @@ namespace local_lbplanner_services;
 use dml_exception;
 use core_external\{external_api, external_function_parameters, external_multiple_structure, external_value};
 use invalid_parameter_exception;
+use local_lbplanner\enums\CAPABILITY;
 use moodle_exception;
+use core\context\system as context_system;
 
 use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
 
 /**
- * Gets all users registered by the lbplanner app.
+ * Gets all users with one or several LBP capabilities.
  *
  * @package local_lbplanner
  * @subpackage services_user
@@ -44,7 +46,7 @@ class user_get_all_users extends external_api {
     }
 
     /**
-     * Gives back all users registered by the lbplanner app.
+     * Gives back all users.
      * @param ?string $vintage (optional) gives back all users with the given vintage
      * @throws moodle_exception
      * @throws dml_exception
@@ -55,12 +57,23 @@ class user_get_all_users extends external_api {
 
         self::validate_parameters(self::get_all_users_parameters(), ['vintage' => $vintage]);
 
-        $users = $DB->get_records(user_helper::LB_PLANNER_USER_TABLE);
+        $syscontext = context_system::instance();
+
+        $alluserids = $DB->get_fieldset(user_helper::MOODLE_USER_TABLE, 'id');
 
         $results = [];
 
-        foreach ($users as $userdata) {
-            $user = user::from_db($userdata);
+        foreach ($alluserids as $userid) {
+            $user = null;
+            foreach (CAPABILITY::cases() as $case) {
+                if (has_capability($case->value, $syscontext, $userid)) {
+                    $user = user_helper::get_user($userid);
+                    break;
+                }
+            }
+            if ($user === null) {
+                continue;
+            }
             if ($vintage === null || $vintage == $user->get_mdluser()->vintage) {
                 array_push($results, $user->prepare_for_api_short());
             }
