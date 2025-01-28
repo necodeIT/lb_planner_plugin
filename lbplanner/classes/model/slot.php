@@ -106,6 +106,22 @@ class slot {
     }
 
     /**
+     * Creates a slot object from a DB result
+     * @param \stdClass $obj the DB object
+     * @return slot the resulting slot object
+     */
+    public static function from_db(\stdClass $obj): self {
+        return new slot(
+            $obj->id,
+            $obj->startunit,
+            $obj->duration,
+            $obj->weekday,
+            $obj->room,
+            $obj->size,
+        );
+    }
+
+    /**
      * Mark the object as freshly created and sets the new ID
      * @param int $id the new ID after inserting into the DB
      */
