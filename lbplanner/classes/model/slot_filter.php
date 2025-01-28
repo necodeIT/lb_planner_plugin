@@ -142,7 +142,7 @@ class slot_filter {
                     NULL_ALLOWED
                 ),
                 'vintage' => new external_value(
-                    PARAM_INT,
+                    PARAM_TEXT,
                     'class name to filter for (or null if "any")',
                     VALUE_REQUIRED,
                     null,
