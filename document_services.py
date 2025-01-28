@@ -800,6 +800,8 @@ def main():
 
     if sys.argv[1] == "-":
         print(data)
+    elif sys.argv[1] == "/dev/null":
+        pass
     else:
         declaration = f"const funcs = {data}"
 
