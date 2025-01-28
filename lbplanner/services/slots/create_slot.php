@@ -17,6 +17,7 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
+use local_lbplanner\enums\CAPABILITY;
 use local_lbplanner\enums\WEEKDAY;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
@@ -104,11 +105,13 @@ class slots_create_slot extends external_api {
         $id = $DB->insert_record(slot_helper::TABLE_SLOTS, $slot->prepare_for_db());
         $slot->set_fresh($id);
 
-        // Set current user as supervisor for this new slot.
-        $DB->insert_record(
-            slot_helper::TABLE_SUPERVISORS,
-            (new supervisor(0, $slot->id, $USER->id))->prepare_for_db()
-        );
+        // Set current user as supervisor for this new slot if not supervisor.
+        if (!has_capability(CAPABILITY::SLOTMASTER, $USER->id)) {
+            $DB->insert_record(
+                slot_helper::TABLE_SUPERVISORS,
+                (new supervisor(0, $slot->id, $USER->id))->prepare_for_db()
+            );
+        }
 
         return $slot->prepare_for_api();
     }
