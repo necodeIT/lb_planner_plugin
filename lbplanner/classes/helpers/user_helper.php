@@ -77,7 +77,7 @@ class user_helper {
 
         // Register user if not found.
         $lbplanneruser = new user(0, $userid, 'default', 'none', 1, false);
-        $lbpid = $DB->insert_record(user_helper::LB_PLANNER_USER_TABLE, $lbplanneruser->prepare_for_db());
+        $lbpid = $DB->insert_record(self::LB_PLANNER_USER_TABLE, $lbplanneruser->prepare_for_db());
         $lbplanneruser->set_fresh($lbpid);
 
         // Create empty plan for newly registered user.
