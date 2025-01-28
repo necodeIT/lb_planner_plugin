@@ -438,6 +438,7 @@ $services = [
             'local_lbplanner_slots_get_student_slots',
             'local_lbplanner_slots_get_supervisor_slots',
             'local_lbplanner_slots_remove_slot_supervisor',
+            'local_lbplanner_slots_update_slot',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,
