@@ -29,20 +29,20 @@ use local_lbplanner\model\course;
  * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
-class courses_get_all_courses extends \core_external\external_api {
+class courses_get_my_courses extends \core_external\external_api {
 
     /**
      * Has no Parameters
      * @return external_function_parameters
      */
-    public static function get_all_courses_parameters(): external_function_parameters {
+    public static function get_my_courses_parameters(): external_function_parameters {
         return new external_function_parameters([]);
     }
 
     /**
      * Get all the courses of the current year.
      */
-    public static function get_all_courses(): array {
+    public static function get_my_courses(): array {
         $courses = course_helper::get_all_lbplanner_courses(true);
         $results = [];
         foreach ($courses as $course) {
@@ -55,7 +55,7 @@ class courses_get_all_courses extends \core_external\external_api {
      * Returns description of method result value
      * @return external_multiple_structure description of method result value
      */
-    public static function get_all_courses_returns(): external_multiple_structure {
+    public static function get_my_courses_returns(): external_multiple_structure {
         return new external_multiple_structure(
             course::api_structure()
         );
