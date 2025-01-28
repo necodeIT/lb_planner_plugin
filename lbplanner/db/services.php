@@ -334,7 +334,7 @@ $functions = [
     ],
     'local_lbplanner_slots_update_slot' => [
         'classname' => 'local_lbplanner_services\slots_update_slot',
-        'methodname' => 'create_slot',
+        'methodname' => 'update_slot',
         'classpath' => 'local/lbplanner/services/slots/update_slot.php',
         'description' => 'Update a slot\'s values',
         'type' => 'write',
