@@ -96,7 +96,7 @@ class slots_book_reservation extends external_api {
         $maxdays = null;
         $student = null;
 
-        if ($userid === $USER->id) {
+        if ($userid === intval($USER->id)) {
             // Student reserving slot for themself.
 
             $maxdays = slot_helper::RESERVATION_RANGE_USER;
