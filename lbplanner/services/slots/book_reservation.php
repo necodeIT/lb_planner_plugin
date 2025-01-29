@@ -87,7 +87,7 @@ class slots_book_reservation extends external_api {
         if ($dateobj === false) {
             throw new \moodle_exception("invalid date formatting: got '{$date}', must be YYYY-MM-DD");
         }
-        $td = $dateobj->diff($now);
+        $td = $now->diff($dateobj);
 
         if ($td->invert) {
             throw new \moodle_exception('Can\'t reserve date in the past');
