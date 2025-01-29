@@ -377,9 +377,7 @@ class slot_helper {
         global $DB;
 
         $context = context_system::instance();
-        if (
-            has_capability(CAPABILITY::SLOTMASTER, $context, $supervisorid)
-        ) {
+        if (has_capability(CAPABILITY::SLOTMASTER, $context, $supervisorid)) {
             return true;
         }
 
