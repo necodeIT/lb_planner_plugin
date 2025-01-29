@@ -91,13 +91,13 @@ class reservation {
 
     /**
      * Initializes reservation object from a DB object
-     * @param array $obj the DB obj
+     * @param \stdClass $obj the DB obj
      * @return reservation the reservation obj
      */
-    public static function from_obj(array $obj): self {
+    public static function from_obj(\stdClass $obj): self {
         $utctz = new DateTimeZone('UTC');
-        $obj['date'] = new DateTimeImmutable($obj['date'], $utctz);
-        return new self(...$obj);
+        $date = new DateTimeImmutable($obj->date, $utctz);
+        return new self($obj->id, $obj->slotid, $date, $obj->userid, $obj->reserverid);
     }
 
     /**
