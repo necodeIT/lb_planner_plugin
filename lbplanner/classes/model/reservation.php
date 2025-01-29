@@ -203,7 +203,7 @@ class reservation {
         $obj = new \stdClass();
 
         $obj->slotid = $this->slotid;
-        $obj->date = $this->date;
+        $obj->date = $this->date->format('Y-m-d');
         $obj->userid = $this->userid;
         $obj->reserverid = $this->reserverid;
 
