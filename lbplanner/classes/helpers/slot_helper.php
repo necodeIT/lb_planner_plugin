@@ -125,8 +125,8 @@ class slot_helper {
         global $DB;
 
         $slots = $DB->get_records_sql(
-            'SELECT slot.* FROM {'.self::TABLE_SLOTS.'} as slot'.
-            'INNER JOIN '.self::TABLE_SUPERVISORS.' as supervisor ON supervisor.slotid=slot.id'.
+            'SELECT slot.* FROM {'.self::TABLE_SLOTS.'} as slot '.
+            'INNER JOIN {'.self::TABLE_SUPERVISORS.'} as supervisor ON supervisor.slotid=slot.id '.
             'WHERE supervisor.userid=?',
             [$supervisorid]
         );
