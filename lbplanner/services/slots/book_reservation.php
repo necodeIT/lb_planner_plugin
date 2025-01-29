@@ -83,7 +83,10 @@ class slots_book_reservation extends external_api {
         );
 
         $now = new DateTimeImmutable();
-        $dateobj = DateTimeImmutable::createFromFormat("YY-MM-DD", $date);
+        $dateobj = DateTimeImmutable::createFromFormat("Y-m-d", $date);
+        if ($dateobj === false) {
+            throw new \moodle_exception("invalid date formatting: got '{$date}', must be YYYY-MM-DD");
+        }
         $td = $dateobj->diff($now);
 
         if ($td->invert) {
