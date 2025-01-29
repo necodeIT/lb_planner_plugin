@@ -362,7 +362,7 @@ class slot_helper {
         $utctz = new DateTimeZone('UTC');
         $daytime = self::SCHOOL_UNITS[$unit];
 
-        return DateTimeImmutable::createFromFormat('YY-MM-DD tHH:MM', $date->format('Y-m-d ').$daytime, $utctz);
+        return DateTimeImmutable::createFromFormat('Y-m-d G:i', $date->format('Y-m-d ').$daytime, $utctz);
     }
 
     /**
