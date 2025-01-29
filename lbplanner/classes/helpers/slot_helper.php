@@ -291,12 +291,12 @@ class slot_helper {
             $filters = $slot->get_filters();
             foreach ($filters as $filter) {
                 // Checking for course ID.
-                if (!is_null($filter->courseid) && !in_array($filter->courseid, $mycourseids)) {
+                if (!in_array($filter->courseid, $mycourseids)) {
                     continue;
                 }
                 // TODO: replace address with cohorts.
                 // Checking for vintage.
-                if (!is_null($filter->vintage) && $user->address !== $filter->vintage) {
+                if ($user->address !== $filter->vintage) {
                     continue;
                 }
                 // If all filters passed, add slot to my slots and break.
@@ -331,23 +331,23 @@ class slot_helper {
     /**
      * calculates when a slot is to happen next
      * @param slot $slot the slot
-     * @param DateTimeInterface $now the point in time representing now
+     * @param DateTimeImmutable $now the point in time representing now
      * @return DateTimeImmutable the next time this slot will occur
      */
-    public static function calculate_slot_datetime(slot $slot, DateTimeInterface $now): DateTimeImmutable {
-        $utctz = new DateTimeZone('UTC');
+    public static function calculate_slot_datetime(slot $slot, DateTimeImmutable $now): DateTimeImmutable {
         $slotdaytime = self::SCHOOL_UNITS[$slot->startunit];
-        // NOTE: format and fromFormat use different date formatting conventions.
-        $slotdatetime = DateTime::createFromFormat('YY-MM-DD tHH:MM', $now->format('Y-m-d ').$slotdaytime, $utctz);
         // Move to next day this weekday occurs (doesn't move if it's the same as today).
-        $slotdatetime->modify('this '.WEEKDAY::name_from($slot->weekday));
+        $slotdatetime = $now->modify('this '.WEEKDAY::name_from($slot->weekday)." {$slotdaytime}");
+        if ($slotdatetime === false) {
+            throw new \coding_exception('error while calculating slot datetime');
+        }
 
         // Check if slot is before now (because time of day and such) and move it a week into the future if so.
         if ($now->diff($slotdatetime)->invert === 1) {
-            $slotdatetime->add(new DateInterval('P1W'));
+            $slotdatetime = $slotdatetime->modify('+1 week');
         }
 
-        return new DateTimeImmutable($slotdatetime, $utctz);
+        return DateTimeImmutable::createFromInterface($slotdatetime);
     }
 
     /**
