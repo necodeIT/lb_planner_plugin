@@ -101,7 +101,9 @@ class slot {
         $this->duration = $duration;
         $this->weekday = WEEKDAY::from($weekday);
         if (strlen($room) <= 0 && strlen($room) > slot_helper::ROOM_MAXLENGTH) {
-            throw new \moodle_exception("room name's length must be >0 and <=".slot_helper::ROOM_MAXLENGTH.", but is ".strlen($room));
+            throw new \moodle_exception(
+                "room name's length must be >0 and <=".slot_helper::ROOM_MAXLENGTH.", but is ".strlen($room)
+            );
         }
         $this->room = $room;
         if ($size < 0) {
