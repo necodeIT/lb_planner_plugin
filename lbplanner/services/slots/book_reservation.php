@@ -82,14 +82,14 @@ class slots_book_reservation extends external_api {
             ]
         );
 
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable('today');
         $dateobj = DateTimeImmutable::createFromFormat("Y-m-d", $date);
         if ($dateobj === false) {
             throw new \moodle_exception("invalid date formatting: got '{$date}', must be YYYY-MM-DD");
         }
         $td = $now->diff($dateobj);
 
-        if ($td->invert) {
+        if ($td->invert === 1) {
             throw new \moodle_exception('Can\'t reserve date in the past');
         }
 
