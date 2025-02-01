@@ -435,6 +435,7 @@ $services = [
             'local_lbplanner_slots_get_all_slots',
             'local_lbplanner_slots_get_my_slots',
             'local_lbplanner_slots_get_slot_filters',
+            'local_lbplanner_slots_get_slot_reservations',
             'local_lbplanner_slots_get_student_slots',
             'local_lbplanner_slots_get_supervisor_slots',
             'local_lbplanner_slots_remove_slot_supervisor',
