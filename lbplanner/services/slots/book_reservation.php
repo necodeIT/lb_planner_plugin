@@ -20,6 +20,7 @@ use DateTimeImmutable;
 
 use core_user;
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
+use DateTimeZone;
 use local_lbplanner\enums\NOTIF_TRIGGER;
 use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\helpers\slot_helper;
@@ -82,8 +83,9 @@ class slots_book_reservation extends external_api {
             ]
         );
 
-        $now = new DateTimeImmutable('today');
-        $dateobj = DateTimeImmutable::createFromFormat("Y-m-d", $date);
+        $utctz = new DateTimeZone('UTC');
+        $now = new DateTimeImmutable('today', $utctz);
+        $dateobj = DateTimeImmutable::createFromFormat("Y-m-d", $date, $utctz);
         if ($dateobj === false) {
             throw new \moodle_exception("invalid date formatting: got '{$date}', must be YYYY-MM-DD");
         }
