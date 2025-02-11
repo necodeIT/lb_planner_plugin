@@ -18,7 +18,7 @@ namespace local_lbplanner\helpers;
 
 use core\context\course as context_course;
 use dml_exception;
-
+use dml_write_exception;
 use local_lbplanner\model\course;
 
 /**
@@ -107,12 +107,17 @@ class course_helper {
                     self::COLORS[array_rand(self::COLORS)],
                     false,
                 );
-                $fetchedcourse->set_fresh(
-                    $DB->insert_record(
-                        self::LBPLANNER_COURSE_TABLE,
-                        $fetchedcourse->prepare_for_db()
-                    )
-                );
+                try {
+                    $fetchedcourse->set_fresh(
+                        $DB->insert_record(
+                            self::LBPLANNER_COURSE_TABLE,
+                            $fetchedcourse->prepare_for_db()
+                        )
+                    );
+                } catch(dml_write_exception $e) {
+                    var_dump($fetchedcourse->prepare_for_db());
+                    throw $e;
+                }
             }
             // Add name to fetched Course.
             $fetchedcourse->set_fullname($mdlcourse->fullname);

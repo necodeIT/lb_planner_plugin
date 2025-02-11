@@ -28,7 +28,7 @@ $release = '1.0.0';
 
 $plugin->component = 'local_lbplanner';
 $plugin->release = 'Beta v.'.$release;
-$plugin->version = 202502110002;
+$plugin->version = 202502110003;
 $plugin->dependencies = [
     // Depend upon version 2023110600 of local_modcustomfields.
     'local_modcustomfields' => 2023110600,
