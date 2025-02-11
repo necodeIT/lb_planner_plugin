@@ -24,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$release = '0.0.0';
+$release = '1.0.0';
 
 $plugin->component = 'local_lbplanner';
-$plugin->release = 'Alpha v.'.$release;
-$plugin->version = 2025020700;
+$plugin->release = 'Beta v.'.$release;
+$plugin->version = 2025021100;
 $plugin->dependencies = [
     // Depend upon version 2023110600 of local_modcustomfields.
     'local_modcustomfields' => 2023110600,
