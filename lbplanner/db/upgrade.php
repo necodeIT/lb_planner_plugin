@@ -33,31 +33,6 @@ use local_lbplanner\helpers\config_helper;
  * @return bool true
  */
 function xmldb_local_lbplanner_upgrade($oldversion): bool {
-    global $DB;
-    $dbman = $DB->get_manager();
-
-    if ($oldversion < 2024022700) {
-        config_helper::add_customfield();
-    }
-    if ($oldversion < 20250117) {
-        unset_config('defaultactiveyear', 'local_lbplanner');
-    }
-    if ($oldversion < 2025012201) {
-        $usertable = new xmldb_table('local_lbplanner_users');
-        $plantable = new xmldb_table('local_lbplanner_plans');
-        $fieldlanguage = new xmldb_field('language');
-        $fieldenableek = new xmldb_field('enableek');
-        $dbman->drop_field($usertable, $fieldlanguage);
-        $dbman->drop_field($plantable, $fieldenableek);
-        $fieldekenabled = new xmldb_field(
-            name: 'ekenabled',
-            type: XMLDB_TYPE_INTEGER,
-            precision: '1',
-            notnull: XMLDB_NOTNULL,
-            default: 0,
-        );
-        $dbman->add_field($usertable, $fieldekenabled);
-    }
     return true;
 }
 
