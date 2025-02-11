@@ -145,7 +145,7 @@ class course {
      */
     public function set_shortname(string $shortname) {
         $length = strlen($shortname);
-        if($length <= 5 || $length > 0) {
+        if($length > 5 || $length < 0) {
             throw new \moodle_exception("shortname length must be <=5 and >0, but is {$length} instead");
         }
         $this->shortname = $shortname;
