@@ -144,8 +144,10 @@ class course {
      * @throws \AssertionError
      */
     public function set_shortname(string $shortname) {
-        assert(strlen($shortname) <= 5);
-        assert(strlen($shortname) > 0);
+        $length = strlen($shortname);
+        if($length <= 5 || $length > 0) {
+            throw new \moodle_exception("shortname length must be <=5 and >0, but is {$length} instead");
+        }
         $this->shortname = $shortname;
     }
 
