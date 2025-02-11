@@ -192,7 +192,7 @@ class course {
             $shortname = substr($shortname, 0, strpos($shortname, ' '));
         }
         if (strlen($shortname) >= 5) {
-            $shortname = substr($shortname, 0, 5);
+            $shortname = mb_convert_encoding(substr($shortname, 0, 5), 'UTF-8', 'UTF-8');
         }
         return strtoupper($shortname);
     }
