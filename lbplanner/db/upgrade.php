@@ -27,13 +27,12 @@ use local_lbplanner\helpers\config_helper;
 
 /**
  * Upgrades the DB version
- * right now it only sets the default active year
  *
- * @param mixed $oldversion (unused) the previous version to upgrade from
+ * @param mixed $oldversion the previous version to upgrade from
  * @return bool true
  */
 function xmldb_local_lbplanner_upgrade($oldversion): bool {
-    if ($oldversion < 202502110005) {
+    if ($oldversion < 202502110006) {
         config_helper::remove_customfield();
         config_helper::add_customfield();
     }
