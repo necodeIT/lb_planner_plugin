@@ -77,8 +77,11 @@ class config_helper {
      */
     public static function remove_customfield(): void {
         $handler = mod_handler::create();
-        $catcontroller = category_controller::create(self::get_category_id(), null, $handler);
-        $handler->delete_category($catcontroller);
+        $catid = self::get_category_id();
+        if ($catid === -1) {
+            $catcontroller = category_controller::create($catid, null, $handler);
+            $handler->delete_category($catcontroller);
+        }
     }
 
     /**
