@@ -116,7 +116,7 @@ class modules_helper {
         } else if (count($instancedata) > 1) {
             throw new \moodle_exception("found multiple data for module ID {$cmid} in category ID {$catid}");
         }
-        $type = intval($instancedata[1]->get_value()) - 1; // NOTE: why the hell is this on index one?
+        $type = intval($instancedata[array_key_last($instancedata)]->get_value()) - 1;
         if ($type === -1) {
             $type = MODULE_TYPE::GK; // Default is GK if nothing is selected.
         }
