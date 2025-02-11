@@ -322,7 +322,7 @@ class slot_helper {
             $slotdatetime = self::calculate_slot_datetime($slot, $now);
 
             // Compare only date difference, ignoring time.
-            if ($now->setTime(0, 0, 0)->diff($slotdatetime->setTime(0, 0, 0))->days <= $range) {
+            if ($now->setTime(0, 0, 0)->diff($slotdatetime->setTime(0, 0, 0))->days < $range) {
                 array_push($slots, $slot);
             }
         }
