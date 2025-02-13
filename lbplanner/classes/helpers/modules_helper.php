@@ -82,6 +82,10 @@ class modules_helper {
      * @return integer The enum value for the grade.
      */
     public static function determine_uinified_grade(int $grade, int $maxgrade, int $gradepass): int {
+        if ($maxgrade <= $gradepass) {
+            return ($grade >= $gradepass) ? MODULE_GRADE::GKV : MODULE_GRADE::RIP;
+        }
+
         $p = ($grade - $gradepass) / ($maxgrade - $gradepass);
 
         if ($p >= 0.75) {
