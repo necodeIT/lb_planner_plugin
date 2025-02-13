@@ -34,4 +34,4 @@ $plugin->dependencies = [
     'local_modcustomfields' => 2023110600,
 ];
 
-set_config('release', $release, 'local_lbplanner');
+set_config('release', $plugin->release, 'local_lbplanner');
