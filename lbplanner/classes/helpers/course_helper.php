@@ -114,7 +114,7 @@ class course_helper {
                             $fetchedcourse->prepare_for_db()
                         )
                     );
-                } catch(dml_write_exception $e) {
+                } catch (dml_write_exception $e) {
                     var_dump($fetchedcourse->prepare_for_db());
                     throw $e;
                 }
