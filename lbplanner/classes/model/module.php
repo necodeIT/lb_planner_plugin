@@ -156,21 +156,31 @@ class module {
         global $DB;
         if ($this->cmobj === null) {
             if ($this->cmid !== null) {
-                $this->cmobj = $DB->get_record(
+                $res = $DB->get_record(
                     modules_helper::COURSE_MODULES_TABLE,
                     ['id' => $this->cmid]
                 );
+                if ($res === false) {
+                    throw new \moodle_exception("couldn't get course module with cmid {$this->cmid}");
+                }
             } else {
-                assert($this->assignid !== null);
-                $this->cmobj = $DB->get_record(
+                if ($this->assignid === null) {
+                    throw new \coding_exception('tried to query cmid on a module object without assignid');
+                }
+                $courseid = $this->get_courseid();
+                $res = $DB->get_record(
                     modules_helper::COURSE_MODULES_TABLE,
                     [
-                        'course' => $this->get_courseid(),
+                        'course' => $courseid,
                         'instance' => $this->assignid,
                         'module' => 1,
                     ]
                 );
+                if ($res === false) {
+                    throw new \moodle_exception("couldn't get course module with assignid {$this->assignid} and courseid {$courseid}");
+                }
             }
+            $this->cmobj = $res;
         }
         return $this->cmobj;
     }
