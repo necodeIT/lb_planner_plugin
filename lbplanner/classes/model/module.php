@@ -177,7 +177,9 @@ class module {
                     ]
                 );
                 if ($res === false) {
-                    throw new \moodle_exception("couldn't get course module with assignid {$this->assignid} and courseid {$courseid}");
+                    throw new \moodle_exception(
+                        "couldn't get course module with assignid {$this->assignid} and courseid {$courseid}"
+                    );
                 }
             }
             $this->cmobj = $res;
