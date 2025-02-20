@@ -139,8 +139,9 @@ class modules_helper {
     public static function get_module_status(module $module, int $userid, ?int $planid = null): int {
         global $DB;
 
-        if ($planid === null) {
-            $planid = plan_helper::get_plan_id($userid);
+        $grade = $module->get_grade($userid);
+        if ($grade !== null && $grade !== MODULE_GRADE::RIP) {
+            return MODULE_STATUS::DONE;
         }
 
         // Getting some necessary data.
@@ -158,13 +159,12 @@ class modules_helper {
                 return MODULE_STATUS::UPLOADED;
             }
         }
-
-        $grade = $module->get_grade($userid);
-
-        if ($grade !== null && $grade !== MODULE_GRADE::RIP) {
-            return MODULE_STATUS::DONE;
-        }
+        
         // Check if the module is late.
+
+        if ($planid === null) {
+            $planid = plan_helper::get_plan_id($userid);
+        }
 
         $deadline = $module->get_deadline($planid);
 
