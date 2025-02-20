@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->requires = 2024042205.00; // Require Moodle >=4.4.5.
+$plugin->requires = 2024042200.00; // Require Moodle >=4.4.0.
 $plugin->maturity = MATURITY_BETA;
 $plugin->component = 'local_lbplanner';
 $plugin->release = '1.0.2';
