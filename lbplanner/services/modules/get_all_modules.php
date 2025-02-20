@@ -59,7 +59,7 @@ class modules_get_all_modules extends external_api {
 
         $modules = [];
 
-        $courses = course_helper::get_all_lbplanner_courses();
+        $courses = course_helper::get_all_eduplanner_courses();
         $planid = plan_helper::get_plan_id($USER->id);
 
         foreach ($courses as $course) {

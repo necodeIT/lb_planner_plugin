@@ -43,7 +43,7 @@ class courses_get_my_courses extends \core_external\external_api {
      * Get all the courses of the current year.
      */
     public static function get_my_courses(): array {
-        $courses = course_helper::get_all_lbplanner_courses(true);
+        $courses = course_helper::get_all_eduplanner_courses(true);
         $results = [];
         foreach ($courses as $course) {
             array_push($results, $course->prepare_for_api());

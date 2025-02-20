@@ -27,8 +27,6 @@ namespace local_lbplanner\helpers;
 
 use core\context\system as context_system;
 
-use DateInterval;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
@@ -280,7 +278,7 @@ class slot_helper {
      * @return slot[] the filtered slot array
      */
     public static function filter_slots_for_user(array $allslots, \stdClass $user): array {
-        $mycourses = course_helper::get_all_lbplanner_courses();
+        $mycourses = course_helper::get_all_eduplanner_courses();
         $mycourseids = [];
         foreach ($mycourses as $course) {
             array_push($mycourseids, $course->courseid);

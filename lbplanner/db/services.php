@@ -1,5 +1,5 @@
 <?php
-// This file is part of the LB Planner plugin.
+// This file is part of the local_lbplanner.
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -398,7 +398,7 @@ $functions = [
 ];
 
 $services = [
-    'LB Planner API' => [
+    'LB Planer API' => [
         'functions' => [
             'local_lbplanner_user_get_user',
             'local_lbplanner_user_get_all_users',

@@ -44,7 +44,7 @@ class notifications_get_all_notifications extends external_api {
     public static function get_all_notifications(): array {
         global $DB, $USER;
 
-        $dbnotifications = $DB->get_records(notifications_helper::LBPLANNER_NOTIFICATION_TABLE, ['userid' => $USER->id]);
+        $dbnotifications = $DB->get_records(notifications_helper::EDUPLANNER_NOTIFICATION_TABLE, ['userid' => $USER->id]);
 
         $notifications = [];
 

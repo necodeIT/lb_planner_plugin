@@ -17,7 +17,7 @@
 namespace local_lbplanner_services;
 
 use dml_exception;
-use core_external\{external_api, external_function_parameters, external_value};
+use core_external\{external_api, external_function_parameters};
 use local_lbplanner\helpers\{user_helper, plan_helper, course_helper, notifications_helper};
 use local_lbplanner\enums\{PLAN_INVITE_STATE, PLAN_ACCESS_TYPE};
 use moodle_exception;
@@ -51,8 +51,8 @@ class user_delete_user extends external_api {
         $userid = $USER->id;
 
         // Check if User is in user table.
-        if (!$DB->record_exists(user_helper::LB_PLANNER_USER_TABLE, ['userid' => $userid])) {
-            throw new moodle_exception('User is not registered in LB Planner');
+        if (!$DB->record_exists(user_helper::EDUPLANNER_USER_TABLE, ['userid' => $userid])) {
+            throw new moodle_exception('User is not registered in Eduplanner');
         }
 
         $planid = plan_helper::get_plan_id($userid);
@@ -68,8 +68,8 @@ class user_delete_user extends external_api {
         $DB->delete_records(plan_helper::TABLE, ['id' => $planid]);
 
         // Delete all Notifications.
-        if ($DB->record_exists(notifications_helper::LBPLANNER_NOTIFICATION_TABLE, ['userid' => $userid])) {
-            $DB->delete_records(notifications_helper::LBPLANNER_NOTIFICATION_TABLE, ['userid' => $userid]);
+        if ($DB->record_exists(notifications_helper::EDUPLANNER_NOTIFICATION_TABLE, ['userid' => $userid])) {
+            $DB->delete_records(notifications_helper::EDUPLANNER_NOTIFICATION_TABLE, ['userid' => $userid]);
         }
 
         $invites = plan_helper::get_invites_send($userid);
@@ -83,9 +83,9 @@ class user_delete_user extends external_api {
         $DB->delete_records(plan_helper::ACCESS_TABLE, ['userid' => $userid]);
 
         // Deleting all Courses associated with the User.
-        $DB->delete_records(course_helper::LBPLANNER_COURSE_TABLE, ['userid' => $userid]);
+        $DB->delete_records(course_helper::EDUPLANNER_COURSE_TABLE, ['userid' => $userid]);
         // Deleting User from User table.
-        $DB->delete_records(user_helper::LB_PLANNER_USER_TABLE, ['userid' => $userid]);
+        $DB->delete_records(user_helper::EDUPLANNER_USER_TABLE, ['userid' => $userid]);
     }
 
     /**

@@ -55,7 +55,7 @@ class config_get_version extends external_api {
     public static function get_version_returns(): external_single_structure {
         return new external_single_structure(
             [
-                'release' => new external_value(PARAM_TEXT, 'the current LBPlanner version'),
+                'release' => new external_value(PARAM_TEXT, 'the current Eduplanner version'),
             ]
         );
     }

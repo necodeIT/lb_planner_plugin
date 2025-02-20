@@ -90,7 +90,7 @@ class user {
 
     /**
      * Constructs a new course
-     * @param int $lbpid ID of the lb planner user
+     * @param int $lbpid ID of the Eduplanner user
      * @param int $mdlid ID of the moodle user
      * @param string $theme user-chosen theme
      * @param string $colorblindness user's colorblindness

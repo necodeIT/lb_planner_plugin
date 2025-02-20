@@ -35,7 +35,7 @@ class notifications_helper {
     /**
      * Name of the notifications table.
      */
-    const LBPLANNER_NOTIFICATION_TABLE = 'local_lbplanner_notification';
+    const EDUPLANNER_NOTIFICATION_TABLE = 'local_lbplanner_notification';
 
     /**
      * Returns the data structure of a notification
@@ -75,7 +75,7 @@ class notifications_helper {
         $notification->timestamp = time();
         $notification->timestamp_read = null;
 
-        $id = $DB->insert_record(self::LBPLANNER_NOTIFICATION_TABLE, $notification);
+        $id = $DB->insert_record(self::EDUPLANNER_NOTIFICATION_TABLE, $notification);
 
         return $id;
     }

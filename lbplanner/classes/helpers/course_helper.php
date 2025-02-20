@@ -34,7 +34,7 @@ class course_helper {
     /**
      * The course table used by the LP
      */
-    const LBPLANNER_COURSE_TABLE = 'local_lbplanner_courses';
+    const EDUPLANNER_COURSE_TABLE = 'local_lbplanner_courses';
 
     /**
      * A list of nice colors to choose from :)
@@ -61,15 +61,15 @@ class course_helper {
     /**
      * Get course from lbpanner DB
      *
-     * @param int $courseid id of the course in lbplanner
+     * @param int $courseid id of the course in Eduplanner
      * @param int $userid   id of the user
      *
-     * @return course course from lbplanner
+     * @return course course from Eduplanner
      * @throws dml_exception
      */
-    public static function get_lbplanner_course(int $courseid, int $userid): course {
+    public static function get_eduplanner_course(int $courseid, int $userid): course {
         global $DB;
-        return course::from_db($DB->get_record(self::LBPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid]));
+        return course::from_db($DB->get_record(self::EDUPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid]));
     }
 
     /**
@@ -77,7 +77,7 @@ class course_helper {
      * @param bool $onlyenrolled whether to include only courses in which the current user is enrolled in
      * @return course[] all courses of the current year
      */
-    public static function get_all_lbplanner_courses(bool $onlyenrolled=true): array {
+    public static function get_all_eduplanner_courses(bool $onlyenrolled=true): array {
         global $DB, $USER;
         $userid = $USER->id;
 
@@ -96,11 +96,11 @@ class course_helper {
             if (!course::check_year($mdlcourse)) {
                     continue;
             }
-            // Check if the course is already in the LB Planner database.
-            if ($DB->record_exists(self::LBPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid])) {
-                $fetchedcourse = self::get_lbplanner_course($courseid, $userid);
+            // Check if the course is already in the Eduplanner database.
+            if ($DB->record_exists(self::EDUPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid])) {
+                $fetchedcourse = self::get_eduplanner_course($courseid, $userid);
             } else {
-                // IF not create an Object to be put into the LB Planner database.
+                // IF not create an Object to be put into the Eduplanner database.
                 $fetchedcourse = new course(
                     0, $courseid, $userid,
                     course::prepare_shortname($mdlcourse->shortname),
@@ -110,7 +110,7 @@ class course_helper {
                 try {
                     $fetchedcourse->set_fresh(
                         $DB->insert_record(
-                            self::LBPLANNER_COURSE_TABLE,
+                            self::EDUPLANNER_COURSE_TABLE,
                             $fetchedcourse->prepare_for_db()
                         )
                     );

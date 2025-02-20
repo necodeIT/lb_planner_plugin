@@ -21,7 +21,7 @@ use core_external\{external_api, external_function_parameters, external_single_s
 use invalid_parameter_exception;
 use moodle_exception;
 
-use local_lbplanner\helpers\{plan_helper, user_helper};
+use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
 
 /**
@@ -59,7 +59,7 @@ class user_update_user extends external_api {
     }
 
     /**
-     * Updates the given user in the lbplanner DB
+     * Updates the given user in the eduplanner DB
      * @param ?string $theme The theme the user has selected
      * @param ?string $colorblindness The colorblindness the user has selected
      * @param ?bool $displaytaskcount The displaytaskcount the user has selected
@@ -100,7 +100,7 @@ class user_update_user extends external_api {
             $user->ekenabled = $ekenabled;
         }
 
-        $DB->update_record(user_helper::LB_PLANNER_USER_TABLE, $user->prepare_for_db());
+        $DB->update_record(user_helper::EDUPLANNER_USER_TABLE, $user->prepare_for_db());
 
         return $user->prepare_for_api();
     }

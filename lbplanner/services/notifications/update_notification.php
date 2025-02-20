@@ -64,12 +64,12 @@ class notifications_update_notification extends external_api {
             ['status' => $status, 'notificationid' => $notificationid]
         );
 
-        if (!$DB->record_exists(notifications_helper::LBPLANNER_NOTIFICATION_TABLE, ['id' => $notificationid])) {
+        if (!$DB->record_exists(notifications_helper::EDUPLANNER_NOTIFICATION_TABLE, ['id' => $notificationid])) {
             throw new \moodle_exception('Notification does not exist');
         }
 
         $notification = $DB->get_record(
-            notifications_helper::LBPLANNER_NOTIFICATION_TABLE,
+            notifications_helper::EDUPLANNER_NOTIFICATION_TABLE,
             ['id' => $notificationid],
             '*',
             MUST_EXIST
@@ -77,7 +77,7 @@ class notifications_update_notification extends external_api {
         $notification->status = $status;
         $notification->timestamp_read = time();
 
-        $DB->update_record(notifications_helper::LBPLANNER_NOTIFICATION_TABLE, $notification);
+        $DB->update_record(notifications_helper::EDUPLANNER_NOTIFICATION_TABLE, $notification);
     }
 
     /**

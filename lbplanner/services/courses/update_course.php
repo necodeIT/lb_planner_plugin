@@ -73,7 +73,7 @@ class courses_update_course extends external_api {
             throw new moodle_exception('Shortname is too long');
         }
 
-        $course = course_helper::get_lbplanner_course($courseid, $USER->id);
+        $course = course_helper::get_eduplanner_course($courseid, $USER->id);
 
         if ($color !== null) {
             $course->set_color($color);
@@ -85,7 +85,7 @@ class courses_update_course extends external_api {
             $course->set_enabled((bool) $enabled);
         }
 
-        $DB->update_record(course_helper::LBPLANNER_COURSE_TABLE, $course->prepare_for_db());
+        $DB->update_record(course_helper::EDUPLANNER_COURSE_TABLE, $course->prepare_for_db());
     }
 
     /**
