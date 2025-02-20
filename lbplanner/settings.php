@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    $settings = new admin_settingpage('local_lbplanner', 'LB Planner');
+    $settings = new admin_settingpage('local_lbplanner', 'LB Planer');
     $ADMIN->add('localplugins', $settings);
 
     $settings->add(new admin_setting_configtext('local_lbplanner/activeyear',

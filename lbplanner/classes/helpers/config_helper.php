@@ -42,7 +42,7 @@ class config_helper {
             if (array_key_exists('modcustomfields', core_component::get_plugin_list('local'))) {
 
                 $handler = mod_handler::create();
-                $categoryid = $handler->create_category('LB Planner');
+                $categoryid = $handler->create_category('LB Planer');
 
                 set_config('categoryid', $categoryid, 'local_lbplanner');
                 $categorycontroller = category_controller::create($categoryid, null, $handler);
@@ -64,7 +64,7 @@ class config_helper {
                     '{"required":"0","uniquevalues":"0","options":"GK\r\nEK\r\nTEST\r\nM",
                 "defaultvalue":"","locked":"0","visibility":"2"}'
                 );
-                $fieldcontroller->set('shortname', 'lb_planner_gk_ek');
+                $fieldcontroller->set('shortname', 'lb_planer_gk_ek');
                 $fieldcontroller->save();
             }
         }

@@ -37,7 +37,7 @@ class user_helper {
     /**
      * Name of the user database
      */
-    const LB_PLANNER_USER_TABLE = 'local_lbplanner_users';
+    const EDUPLANNER_USER_TABLE = 'local_lbplanner_users';
 
     /**
      * Name of the moodle's database
@@ -46,7 +46,7 @@ class user_helper {
     const MOODLE_USER_TABLE = 'user';
 
     /**
-     * Checks if the given user exists in the LB_PLANNER_USER database.
+     * Checks if the given user exists in the EDUPLANNER_USER database.
      *
      * @param int $userid The id of the user to check.
      *
@@ -55,7 +55,7 @@ class user_helper {
      */
     public static function check_user_exists(int $userid): bool {
         global $DB;
-        return $DB->record_exists(self::LB_PLANNER_USER_TABLE, ['userid' => $userid]);
+        return $DB->record_exists(self::EDUPLANNER_USER_TABLE, ['userid' => $userid]);
     }
 
     /**
@@ -69,22 +69,22 @@ class user_helper {
      */
     public static function get_user(int $userid): user {
         global $DB;
-        $dbuser = $DB->get_record(self::LB_PLANNER_USER_TABLE, ['userid' => $userid]);
+        $dbuser = $DB->get_record(self::EDUPLANNER_USER_TABLE, ['userid' => $userid]);
 
         if ($dbuser !== false) {
             return user::from_db($dbuser);
         }
 
         // Register user if not found.
-        $lbplanneruser = new user(0, $userid, 'default', 'none', 1, false);
-        $lbpid = $DB->insert_record(self::LB_PLANNER_USER_TABLE, $lbplanneruser->prepare_for_db());
-        $lbplanneruser->set_fresh($lbpid);
+        $eduplanneruser = new user(0, $userid, 'default', 'none', 1, false);
+        $epid = $DB->insert_record(self::EDUPLANNER_USER_TABLE, $eduplanneruser->prepare_for_db());
+        $eduplanneruser->set_fresh($epid);
 
         // Create empty plan for newly registered user.
         $plan = new \stdClass();
-        $plan->name = 'Plan for ' . ($lbplanneruser->get_mdluser()->username);
+        $plan->name = 'Plan for ' . ($eduplanneruser->get_mdluser()->username);
         $planid = $DB->insert_record(plan_helper::TABLE, $plan);
-        $lbplanneruser->set_planid($planid);
+        $eduplanneruser->set_planid($planid);
 
         // Set user as owner of new plan.
         $planaccess = new \stdClass();
@@ -96,7 +96,7 @@ class user_helper {
         // Notify the FE that this user likely hasn't used LBP before.
         notifications_helper::notify_user($userid, -1, NOTIF_TRIGGER::USER_REGISTERED);
 
-        return $lbplanneruser;
+        return $eduplanneruser;
     }
 
     /**

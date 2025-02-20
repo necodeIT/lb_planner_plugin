@@ -50,7 +50,7 @@ class courses_get_all_courses extends \core_external\external_api {
             throw new \moodle_exception('access denied: must be slotmaster');
         }
 
-        $courses = course_helper::get_all_lbplanner_courses(false);
+        $courses = course_helper::get_all_eduplanner_courses(false);
         $results = [];
         foreach ($courses as $course) {
             array_push($results, $course->prepare_for_api());
