@@ -159,7 +159,7 @@ class modules_helper {
                 return MODULE_STATUS::UPLOADED;
             }
         }
-        
+
         // Check if the module is late.
 
         if ($planid === null) {
