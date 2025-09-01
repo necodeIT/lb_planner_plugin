@@ -19,7 +19,7 @@
  *
  * @package local_lbplanner
  * @subpackage db
- * @copyright 2024 NecodeIT
+ * @copyright 2025 NecodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -48,7 +48,7 @@ $functions = [
         'classname' => 'local_lbplanner_services\user_update_user',
         'methodname' => 'update_user',
         'classpath' => 'local/lbplanner/services/user/update_user.php',
-        'description' => 'Update the data for a user',
+        'description' => 'Update the data for a user. null values or unset parameters are left unmodified',
         'type' => 'write',
         'capabilities' => 'local/lb_planner:student',
         'ajax' => true,

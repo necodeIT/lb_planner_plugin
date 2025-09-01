@@ -29,8 +29,7 @@ use core\context\system as context_system;
 use core_external\{external_single_structure, external_value};
 use user_picture;
 
-use local_lbplanner\enums\CAPABILITY;
-use local_lbplanner\enums\CAPABILITY_FLAG;
+use local_lbplanner\enums\{CAPABILITY, CAPABILITY_FLAG, KANBANCOL_TYPE, KANBANCOL_TYPE_ORNONE};
 use local_lbplanner\helpers\plan_helper;
 use local_lbplanner\helpers\user_helper;
 
@@ -69,6 +68,29 @@ class user {
     public bool $ekenabled;
 
     /**
+     * @var bool $show_column_colors Whether column colors should show in kanban board.
+     */
+    public bool $show_column_colors;
+
+    /**
+     * @var ?string $auto_move_completed_tasks what kanban column to move completed tasks to (null → don't move)
+     * @see KANBANCOL_TYPE
+     */
+    public ?string $auto_move_completed_tasks;
+
+    /**
+     * @var ?string $auto_move_submitted_tasks what kanban column to move submitted tasks to (null → don't move)
+     * @see KANBANCOL_TYPE
+     */
+    public ?string $auto_move_submitted_tasks;
+
+    /**
+     * @var ?string $auto_move_overdue_tasks what kanban column to move overdue tasks to (null → don't move)
+     * @see KANBANCOL_TYPE
+     */
+    public ?string $auto_move_overdue_tasks;
+
+    /**
      * @var ?\stdClass $mdluser the cached moodle user
      */
     private ?\stdClass $mdluser;
@@ -89,6 +111,20 @@ class user {
     private ?int $capabilitybitmask;
 
     /**
+     * @var string[] dbmirrorprops properties that are mirrored 1:1 between the DB and this object
+     */
+    private const dbmirrorprops = [
+        'theme',
+        'colorblindness',
+        'displaytaskcount',
+        'ekenabled',
+        'show_column_colors',
+        'auto_move_completed_tasks',
+        'auto_move_submitted_tasks',
+        'auto_move_overdue_tasks'
+    ];
+
+    /**
      * Constructs a new course
      * @param int $lbpid ID of the Eduplanner user
      * @param int $mdlid ID of the moodle user
@@ -103,15 +139,18 @@ class user {
         string $theme,
         string $colorblindness,
         bool $displaytaskcount,
-        bool $ekenabled
+        bool $ekenabled,
+        bool $show_column_colors,
+        ?string $auto_move_completed_tasks,
+        ?string $auto_move_submitted_tasks,
+        ?string $auto_move_overdue_tasks,
     ) {
         global $USER;
         $this->lbpid = $lbpid;
         $this->mdlid = $mdlid;
-        $this->set_theme($theme);
-        $this->set_colorblindness($colorblindness);
-        $this->displaytaskcount = $displaytaskcount;
-        $this->ekenabled = $ekenabled;
+        foreach (self::dbmirrorprops as $propname) {
+            $this->$propname = $$propname;
+        }
         $this->planid = null;
         $this->pfp = null;
         $this->capabilitybitmask = null;
@@ -130,7 +169,14 @@ class user {
      * @return user a representation of this user and its data
      */
     public static function from_db(object $obj): self {
-        return new self($obj->id, $obj->userid, $obj->theme, $obj->colorblindness, $obj->displaytaskcount, $obj->ekenabled);
+        $vars = get_object_vars($obj);
+        // Rename the two properties that are different in the DB from in this object.
+        $vars['lbpid'] = $vars['id'];
+        $vars['mdlid'] = $vars['userid'];
+        unset($vars['id']);
+        unset($vars['userid']);
+        // Just throw the whole assarr in the constructor. Surely nothing bad will happen.
+        return new self(...$vars);
     }
 
     /**
@@ -161,6 +207,7 @@ class user {
      * @param string $cbn colorblindness
      */
     public function set_colorblindness(string $cbn): void {
+        // TODO: remove in favour of setting member directly.
         $this->colorblindness = $cbn;
     }
 
@@ -169,6 +216,7 @@ class user {
      * @param string $theme theme
      */
     public function set_theme(string $theme): void {
+        // TODO: remove in favour of setting member directly.
         $this->theme = $theme;
     }
 
@@ -264,10 +312,10 @@ class user {
         $obj = new \stdClass();
 
         $obj->userid = $this->mdlid;
-        $obj->theme = $this->theme;
-        $obj->colorblindness = $this->colorblindness;
-        $obj->displaytaskcount = $this->displaytaskcount;
-        $obj->ekenabled = $this->ekenabled;
+
+        foreach (self::dbmirrorprops as $propname) {
+            $obj->$propname = $this->$propname;
+        }
 
         if ($this->lbpid !== 0) {
             $obj->id = $this->lbpid;
@@ -335,6 +383,10 @@ class user {
                 'planid' => $this->get_planid(),
                 'colorblindness' => $this->colorblindness,
                 'displaytaskcount' => $this->displaytaskcount,
+                'show_column_colors' => $this->show_column_colors,
+                'auto_move_completed_tasks' => $this->auto_move_completed_tasks ?? KANBANCOL_TYPE_ORNONE::NONE,
+                'auto_move_submitted_tasks' => $this->auto_move_submitted_tasks ?? KANBANCOL_TYPE_ORNONE::NONE,
+                'auto_move_overdue_tasks' => $this->auto_move_overdue_tasks ?? KANBANCOL_TYPE_ORNONE::NONE,
                 'email' => $mdluser->email,
             ]
         );
@@ -358,6 +410,10 @@ class user {
                 'planid' => new external_value(PARAM_INT, 'The id of the plan the user is assigned to'),
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
                 'displaytaskcount' => new external_value(PARAM_BOOL, 'Whether the user has the taskcount enabled'),
+                'show_column_colors' => new external_value(PARAM_BOOL, 'Whether column colors should show in kanban board'),
+                'auto_move_completed_tasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if completed '.KANBANCOL_TYPE_ORNONE::format()),
+                'auto_move_submitted_tasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if submitted '.KANBANCOL_TYPE_ORNONE::format()),
+                'auto_move_overdue_tasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if overdue '.KANBANCOL_TYPE_ORNONE::format()),
                 'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
                 'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_DEFAULT),
                 'email' => new external_value(PARAM_TEXT, 'The email address of the user'),
