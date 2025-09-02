@@ -202,30 +202,71 @@ class PHPClassMemberFunction(PHPExpression):
     def __str__(self) -> str:
         return f"{self.classname}::{self.funcname}()"
 
-class PHPEnumFormat(PHPClassMemberFunction, PHPString):
-    def resolve(self) -> PHPString:
+class PHPEnum():
+    @classmethod
+    def getcases(cls, classname: str) -> dict[str, str]:
         # https://regex101.com/r/p5FzCh
         casepattern = r"const (\w+) = (\d+|true|false|(['\"]).*?\3)"
 
-        fullbody_pattern = f"class {self.classname} extends Enum {{.*?}}"
-
-        fp = f"lbplanner/classes/enums/{self.classname}.php"
-        if not path.exists(fp):
-            warn(f"Couldn't find enum file {fp}")
-            return PHPStringLiteral("")
-        with open(fp, "r") as f:
-            matches: list[str] = re.findall(fullbody_pattern, f.read(), re.DOTALL)
-            if len(matches) == 1:
-                body = matches[0]
-            else:
-                warn(f"couldn't parse enum {self.classname}", matches)
+        fullbody_pattern = f"class {classname} extends (Enum|\\w+) {{(.*?)}}"
 
         cases = {}
-        matches = re.findall(casepattern, body)
-        for match in matches:
-            # capitalizing first letter, if exists
-            name = "".join([match[0][0].upper(), match[0][1:].lower()])
-            cases[name] = match[1].replace("'", '"')
+
+        fp = f"lbplanner/classes/enums/{classname}.php"
+        if not path.exists(fp):
+            warn(f"Couldn't find enum file {fp}")
+            return {}
+        with open(fp, "r") as f:
+            matches: list[list[str]] = re.findall(fullbody_pattern, f.read(), re.DOTALL)
+            if len(matches) == 1:
+                if matches[0][0] != 'Enum':
+                    cases = cls.getcases(matches[0][0])
+                body = matches[0][1]
+            else:
+                warn(f"couldn't parse enum {classname}", matches)
+
+        matches2: list[str] = re.findall(casepattern, body)
+        for match in matches2:
+            val = match[1].replace("'", '"')
+            cases[match[0]] = val
+
+        return cases
+
+class PHPEnumCase(PHPEnum, PHPString):
+    __slots__ = ('classname', 'casename', 'fp')
+    classname: str
+    casename: str
+    fp: str
+
+    def __init__(self, classname: str, casename: str, fp: str):
+        self.classname = classname
+        self.casename = casename
+        self.fp = fp
+
+    def resolve(self) -> PHPString:
+        cases = self.getcases(self.classname)
+        if self.casename not in cases.keys():
+            warn(f"enum member {self.classname}::{self.casename} not found", cases)
+            return PHPStringLiteral("?")
+
+        val = cases[self.casename]
+
+        if val.startswith('"') and val.endswith('"'):
+            val = val[1:-1]
+
+        return PHPStringLiteral(val)
+
+    def get_value(self) -> str:
+        return self.resolve().get_value()
+
+    def __str__(self) -> str:
+        return f"{self.classname}::{self.casename}"
+
+class PHPEnumFormat(PHPEnum, PHPClassMemberFunction, PHPString):
+    def resolve(self) -> PHPString:
+        cases = self.getcases(self.classname)
+        # capitalizing first letter of each key
+        cases = {"".join([name[0].upper(), name[1:].lower()]): case for name, case in cases.items()}
 
         return PHPStringLiteral("{ " + ", ".join([f"{name} = {value}" for name, value in cases.items()]) + " }")
 
@@ -506,22 +547,30 @@ def parse_expression(code: str, nr: PHPNameResolution) -> tuple[int, PHPExpressi
             assert len(buf) > 0
             assert expr is None
             i += 2
-            iplus = code[i:].index('(')
-            funcname = code[i:i + iplus]
+            iplus = 1
+            while 95 <= ord(code[i + iplus].lower()) <= 122: # until it hits non-word character
+                iplus += 1
+            is_func = code[i + iplus] == '('
+            membername = code[i:i + iplus]
             classname = "".join(buf)
             i += iplus
-            assert code[i:i + 2] == '()'
-            i += 2
-            C: type[PHPClassMemberFunction]
-            fp_import: str | None
-            if funcname == 'format':
-                C = PHPEnumFormat
-                fp_import = path.join(path.dirname(__file__), "lbplanner", "enums", f"{classname}.php")
+            if is_func:
+                assert code[i:i + 2] == '()'
+                i += 2
+                C: type[PHPClassMemberFunction]
+                fp_import: str | None
+                if membername == 'format':
+                    C = PHPEnumFormat
+                    fp_import = path.join(path.dirname(__file__), "lbplanner", "enums", f"{classname}.php")
+                else:
+                    C = PHPClassMemberFunction
+                    fp_import = find_import(nr, classname)
+                expr = C(classname, membername, fp_import).resolve()
+                buf = []
             else:
-                C = PHPClassMemberFunction
-                fp_import = find_import(nr, classname)
-            expr = C(classname, funcname, fp_import).resolve()
-            buf = []
+                fp_import = path.join(path.dirname(__file__), "lbplanner", "enums", f"{classname}.php")
+                expr = PHPEnumCase(classname, membername, fp_import).resolve()
+                buf = []
         else:
             # unkown character? simply bail
             if len(buf) > 0:
