@@ -23,13 +23,14 @@ use moodle_exception;
 
 use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
+use local_lbplanner\enums\KANBANCOL_TYPE_ORNONE;
 
 /**
- * Update the data for a user.
+ * Update the data for a user. null values or unset parameters are left unmodified.
  *
  * @package local_lbplanner
  * @subpackage services_user
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class user_update_user extends external_api {
@@ -55,6 +56,26 @@ class user_update_user extends external_api {
                 'Whether the user wants to see EK modules',
                 VALUE_DEFAULT,
                 null),
+            'showcolumncolors' => new external_value(
+                PARAM_BOOL,
+                'Whether column colors should show in kanban board',
+                VALUE_DEFAULT,
+                null),
+            'automovecompletedtasks' => new external_value(
+                PARAM_TEXT,
+                'The kanban column to move a task to if completed '.KANBANCOL_TYPE_ORNONE::format(),
+                VALUE_DEFAULT,
+                null),
+            'automovesubmittedtasks' => new external_value(
+                PARAM_TEXT,
+                'The kanban column to move a task to if submitted '.KANBANCOL_TYPE_ORNONE::format(),
+                VALUE_DEFAULT,
+                null),
+            'automoveoverduetasks' => new external_value(
+                PARAM_TEXT,
+                'The kanban column to move a task to if overdue '.KANBANCOL_TYPE_ORNONE::format(),
+                VALUE_DEFAULT,
+                null),
         ]);
     }
 
@@ -64,12 +85,25 @@ class user_update_user extends external_api {
      * @param ?string $colorblindness The colorblindness the user has selected
      * @param ?bool $displaytaskcount The displaytaskcount the user has selected
      * @param ?bool $ekenabled whether the user wants to see EK modules
+     * @param ?bool $showcolumncolors whether column colors should show in kanban board
+     * @param ?string $automovecompletedtasks what kanban column to move completed tasks to ("" → don't move)
+     * @param ?string $automovesubmittedtasks what kanban column to move submitted tasks to ("" → don't move)
+     * @param ?string $automoveoverduetasks what kanban column to move overdue tasks to ("" → don't move)
      * @return array The updated user
      * @throws moodle_exception
      * @throws dml_exception
      * @throws invalid_parameter_exception
      */
-    public static function update_user(?string $theme, ?string $colorblindness, ?bool $displaytaskcount, ?bool $ekenabled): array {
+    public static function update_user(
+        ?string $theme,
+        ?string $colorblindness,
+        ?bool $displaytaskcount,
+        ?bool $ekenabled,
+        ?bool $showcolumncolors,
+        ?string $automovecompletedtasks,
+        ?string $automovesubmittedtasks,
+        ?string $automoveoverduetasks,
+    ): array {
         global $DB, $USER;
 
         self::validate_parameters(
@@ -79,6 +113,10 @@ class user_update_user extends external_api {
                 'colorblindness' => $colorblindness,
                 'displaytaskcount' => $displaytaskcount,
                 'ekenabled' => $ekenabled,
+                'showcolumncolors' => $showcolumncolors,
+                'automovecompletedtasks' => $automovecompletedtasks,
+                'automovesubmittedtasks' => $automovesubmittedtasks,
+                'automoveoverduetasks' => $automoveoverduetasks,
             ]
         );
 
@@ -98,6 +136,18 @@ class user_update_user extends external_api {
         }
         if ($ekenabled !== null) {
             $user->ekenabled = $ekenabled;
+        }
+        if ($showcolumncolors !== null) {
+            $user->showcolumncolors = $showcolumncolors;
+        }
+        foreach (['automovecompletedtasks', 'automovesubmittedtasks', 'automoveoverduetasks'] as $propname) {
+            if ($$propname !== null) {
+                if ($$propname === KANBANCOL_TYPE_ORNONE::NONE) {
+                    $user->$propname = null;
+                } else {
+                    $user->$propname = $$propname;
+                }
+            }
         }
 
         $DB->update_record(user_helper::EDUPLANNER_USER_TABLE, $user->prepare_for_db());

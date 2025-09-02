@@ -27,6 +27,7 @@ namespace local_lbplanner\polyfill;
 
 use ReflectionClass;
 use local_lbplanner\polyfill\EnumCase;
+use moodle_exception;
 
 /**
  * Class which is meant to serve as a substitute for native enums.
@@ -157,7 +158,14 @@ class Enum {
     public static function format(): string {
         $result = "[";
         foreach (static::cases() as $case) {
-            $result .= "{$case->value}=>{$case->name},";
+            if (is_string($case->value)) {
+                $formattedval = "\"{$case->value}\"";
+            } else if (is_int($case->value)) {
+                $formattedval = $case->value;
+            } else {
+                throw new moodle_exception('unimplemented case value type for Enum::format()');
+            }
+            $result .= "{$formattedval}=>{$case->name},";
         }
         $result[-1] = ']';
         return $result;

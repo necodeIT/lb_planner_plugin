@@ -76,7 +76,7 @@ class user_helper {
         }
 
         // Register user if not found.
-        $eduplanneruser = new user(0, $userid, 'default', 'none', 1, false);
+        $eduplanneruser = new user(0, $userid, 'default', 'none', 1, false, true, null, null, null);
         $epid = $DB->insert_record(self::EDUPLANNER_USER_TABLE, $eduplanneruser->prepare_for_db());
         $eduplanneruser->set_fresh($epid);
 

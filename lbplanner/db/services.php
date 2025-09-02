@@ -19,7 +19,7 @@
  *
  * @package local_lbplanner
  * @subpackage db
- * @copyright 2024 NecodeIT
+ * @copyright 2025 NecodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -48,7 +48,7 @@ $functions = [
         'classname' => 'local_lbplanner_services\user_update_user',
         'methodname' => 'update_user',
         'classpath' => 'local/lbplanner/services/user/update_user.php',
-        'description' => 'Update the data for a user',
+        'description' => 'Update the data for a user. null values or unset parameters are left unmodified',
         'type' => 'write',
         'capabilities' => 'local/lb_planner:student',
         'ajax' => true,
@@ -395,6 +395,24 @@ $functions = [
         'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
+    'local_lbplanner_kanban_get_board' => [
+        'classname' => 'local_lbplanner_services\kanban_get_board',
+        'methodname' => 'get_board',
+        'classpath' => 'local/lbplanner/services/kanban/get_board.php',
+        'description' => 'Returns all entries in the kanban board for the current user',
+        'type' => 'read',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
+    'local_lbplanner_kanban_move_module' => [
+        'classname' => 'local_lbplanner_services\kanban_move_module',
+        'methodname' => 'move_module',
+        'classpath' => 'local/lbplanner/services/kanban/move_module.php',
+        'description' => 'Moves a module to a different column on the kanban board',
+        'type' => 'write',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
 ];
 
 $services = [
@@ -440,6 +458,8 @@ $services = [
             'local_lbplanner_slots_get_supervisor_slots',
             'local_lbplanner_slots_remove_slot_supervisor',
             'local_lbplanner_slots_update_slot',
+            'local_lbplanner_kanban_get_board',
+            'local_lbplanner_kanban_move_module',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,

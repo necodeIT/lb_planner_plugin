@@ -107,6 +107,17 @@ class module {
     }
 
     /**
+     * Creates a module object from the course-module ID.
+     * @param int $id the course-module ID
+     * @return module a module object
+     */
+    public static function from_cmid(int $id): self {
+        $obj = new self();
+        $obj->cmid = $id;
+        return $obj;
+    }
+
+    /**
      * Fetches the necessary caches and returns the assignment ID
      * @return int assign ID
      */
