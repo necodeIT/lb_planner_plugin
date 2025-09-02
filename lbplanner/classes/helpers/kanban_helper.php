@@ -69,10 +69,12 @@ class kanban_helper {
      * @param kanbanentry $entry the entry to set
      */
     public static function set_entry(kanbanentry $entry): void {
-        global $DB;
+        global $DB, $CFG;
 
         $DB->delete_records(self::TABLE, ['userid' => $entry->userid, 'cmid' => $entry->cmid]);
-        $newid = $DB->insert_record(self::TABLE, $entry->prepare_for_db());
+        $table = $CFG->prefix . self::TABLE;
+        // moodle is too stupid to compensate for 'column' being a keyword so I need to shit my own ass manually
+        $newid = $DB->execute("INSERT INTO {$table} VALUES (null,?,?,?)", [$entry->userid, $entry->cmid, $entry->column]);
         $entry->set_fresh($newid);
     }
 }

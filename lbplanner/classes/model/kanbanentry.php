@@ -84,26 +84,6 @@ class kanbanentry {
     }
 
     /**
-     * Prepares data for the DB endpoint.
-     * doesn't set ID if it's 0
-     *
-     * @return object a representation of this kbbe and its data
-     */
-    public function prepare_for_db(): object {
-        $obj = new \stdClass();
-
-        $obj->userid = $this->userid;
-        $obj->cmid = $this->cmid;
-        $obj->column = $this->column;
-
-        if ($this->id !== 0) {
-            $obj->id = $this->id;
-        }
-
-        return $obj;
-    }
-
-    /**
      * Prepares data for the API endpoint.
      *
      * @return array a representation of this kbbe and its data
