@@ -24,40 +24,16 @@
  */
 
 namespace local_lbplanner\enums;
+use local_lbplanner\enums\KANBANCOL_TYPE;
 
 // TODO: revert to native enums once we migrate to php8.
-
-use local_lbplanner\polyfill\Enum;
-use local_lbplanner\enums\KANBANCOL_TYPE_NUMERIC;
 
 /**
  * The types of columns in the kanban board
  */
-class KANBANCOL_TYPE extends Enum {
+class KANBANCOL_TYPE_ORNONE extends KANBANCOL_TYPE {
     /**
-     * column "backlog"
+     * nonexistant column - for user setting "don't move to any column"
      */
-    const BACKLOG = 'backlog';
-    /**
-     * column "in progress"
-     */
-    const INPROGRESS = 'inprogress';
-    /**
-     * column "todo"
-     */
-    const TODO = 'todo';
-    /**
-     * column "done"
-     */
-    const DONE = 'done';
-
-    /**
-     * Converts from column name to column ID
-     * @param string $str the column name
-     * @return int the column ID
-     * @link KANBANCOL_TYPE_NUMERIC
-     */
-    public static function to_numeric(string $str): int {
-        return KANBANCOL_TYPE_NUMERIC::get(self::name_from($str));
-    }
+    const NONE = '';
 }

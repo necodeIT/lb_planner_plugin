@@ -395,6 +395,15 @@ $functions = [
         'capabilities' => 'local/lb_planner:slotmaster',
         'ajax' => true,
     ],
+    'local_lbplanner_kanban_get_board' => [
+        'classname' => 'local_lbplanner_services\kanban_get_board',
+        'methodname' => 'get_board',
+        'classpath' => 'local/lbplanner/services/kanban/get_board.php',
+        'description' => 'Returns all entries in the kanban board for the current user',
+        'type' => 'read',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
 ];
 
 $services = [
@@ -440,6 +449,7 @@ $services = [
             'local_lbplanner_slots_get_supervisor_slots',
             'local_lbplanner_slots_remove_slot_supervisor',
             'local_lbplanner_slots_update_slot',
+            'local_lbplanner_kanban_get_board',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,

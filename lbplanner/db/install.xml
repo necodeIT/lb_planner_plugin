@@ -91,7 +91,7 @@
 				<FIELD NAME="planid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
 				<FIELD NAME="deadlinestart" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" />
 				<FIELD NAME="deadlineend" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" />
-				<FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+				<FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the assignment ID"/>
 			</FIELDS>
 			<KEYS>
 				<KEY NAME="id" TYPE="primary" FIELDS="id" />
@@ -149,6 +149,21 @@
 				<KEY NAME="slotid" TYPE="foreign" FIELDS="slotid" REFTABLE="local_lbplanner_slots" REFFIELDS="id"/>
 				<KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="local_lbplanner_users" REFFIELDS="userid"/>
 			</KEYS>
+		</TABLE>
+		<TABLE NAME="local_lbplanner_kanbanentries" COMMENT="entries for modules inside the kanban board">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+				<FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the course module ID"/>
+				<FIELD NAME="column" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"/>
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+				<KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="local_lbplanner_users" REFFIELDS="userid"/>
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="uniqueentry" UNIQUE="true" FIELDS="userid, cmid"/>
+			</INDEXES>
 		</TABLE>
 	</TABLES>
 </XMLDB>
