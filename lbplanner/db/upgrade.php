@@ -33,13 +33,12 @@ use local_lbplanner\helpers\config_helper;
  */
 function xmldb_local_lbplanner_upgrade($oldversion): bool {
     global $DB;
+    $dbman = $DB->get_manager();
     if ($oldversion < 202502110011) {
         config_helper::remove_customfield();
         config_helper::add_customfield();
     }
     if ($oldversion < 202509020000) {
-        $dbman = $DB->get_manager();
-
         $table = new xmldb_table('local_lbplanner_users');
         $f1 = new xmldb_field('showcolumncolors', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, false, 1, 'ekenabled');
         $f2 = new xmldb_field('automovecompletedtasks', XMLDB_TYPE_TEXT, null, null, null, null, null, 'showcolumncolors');
@@ -51,6 +50,25 @@ function xmldb_local_lbplanner_upgrade($oldversion): bool {
         $dbman->add_field($table, $f3);
         $dbman->add_field($table, $f4);
         upgrade_plugin_savepoint(true, 202509020000, 'local', 'lbplanner');
+    }
+    if ($oldversion < 202509020001) {
+        $table = new xmldb_table('local_lbplanner_kanbanentries');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('cmid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('column', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('userid', XMLDB_KEY_FOREIGN, ['userid'], 'local_lbplanner_users', ['userid']);
+
+        $table->add_index('uniqueentry', XMLDB_INDEX_UNIQUE, ['userid', 'cmid']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 202509020001, 'local', 'lbplanner');
     }
     return true;
 }
