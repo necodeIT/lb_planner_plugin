@@ -417,9 +417,18 @@ class user {
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
                 'displaytaskcount' => new external_value(PARAM_BOOL, 'Whether the user has the taskcount enabled'),
                 'showcolumncolors' => new external_value(PARAM_BOOL, 'Whether column colors should show in kanban board'),
-                'automovecompletedtasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if completed '.KANBANCOL_TYPE_ORNONE::format()),
-                'automovesubmittedtasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if submitted '.KANBANCOL_TYPE_ORNONE::format()),
-                'automoveoverduetasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if overdue '.KANBANCOL_TYPE_ORNONE::format()),
+                'automovecompletedtasks' => new external_value(
+                    PARAM_TEXT,
+                    'The kanban column to move a task to if completed '.KANBANCOL_TYPE_ORNONE::format()
+                ),
+                'automovesubmittedtasks' => new external_value(
+                    PARAM_TEXT,
+                    'The kanban column to move a task to if submitted '.KANBANCOL_TYPE_ORNONE::format()
+                ),
+                'automoveoverduetasks' => new external_value(
+                    PARAM_TEXT,
+                    'The kanban column to move a task to if overdue '.KANBANCOL_TYPE_ORNONE::format()
+                ),
                 'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
                 'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_DEFAULT),
                 'email' => new external_value(PARAM_TEXT, 'The email address of the user'),
