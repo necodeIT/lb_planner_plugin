@@ -23,9 +23,9 @@ use core_external\{
     external_single_structure,
     external_value,
 };
-use local_lbplanner\enums\{KANBANCOL_TYPE,KANBANCOL_TYPE_NUMERIC,MODULE_TYPE};
+use local_lbplanner\enums\{KANBANCOL_TYPE, KANBANCOL_TYPE_NUMERIC, MODULE_TYPE};
 use local_lbplanner\helpers\kanban_helper;
-use local_lbplanner\model\{module,user};
+use local_lbplanner\model\{module, user};
 
 /**
  * Returns all entries in the kanban board for the current user.
