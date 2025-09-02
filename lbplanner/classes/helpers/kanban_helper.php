@@ -49,4 +49,30 @@ class kanban_helper {
 
         return $entries;
     }
+
+    /**
+     * Gets specific kanban entry.
+     * @param int $userid ID of the user to look entries up for
+     * @param int $cmid ID of the content-module
+     * @return kanbanentry the kanban entry matching this selection or null if not found
+     */
+    public static function get_entry(int $userid, int $cmid): ?kanbanentry {
+        global $DB;
+
+        $res = $DB->get_record(self::TABLE, ['userid' => $userid, 'cmid' => $cmid]);
+
+        return $res !== false ? kanbanentry::from_obj($res) : null;
+    }
+
+    /**
+     * Sets specific kanban entry.
+     * @param kanbanentry $entry the entry to set
+     */
+    public static function set_entry(kanbanentry $entry): void {
+        global $DB;
+
+        $DB->delete_records(self::TABLE, ['userid' => $entry->userid, 'cmid' => $entry->cmid]);
+        $newid = $DB->insert_record(self::TABLE, $entry->prepare_for_db());
+        $entry->set_fresh($newid);
+    }
 }

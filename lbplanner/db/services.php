@@ -404,6 +404,15 @@ $functions = [
         'capabilities' => 'local/lb_planner:student',
         'ajax' => true,
     ],
+    'local_lbplanner_kanban_move_module' => [
+        'classname' => 'local_lbplanner_services\kanban_move_module',
+        'methodname' => 'move_module',
+        'classpath' => 'local/lbplanner/services/kanban/move_module.php',
+        'description' => 'Moves a module to a different column on the kanban board',
+        'type' => 'write',
+        'capabilities' => 'local/lb_planner:student',
+        'ajax' => true,
+    ],
 ];
 
 $services = [
@@ -450,6 +459,7 @@ $services = [
             'local_lbplanner_slots_remove_slot_supervisor',
             'local_lbplanner_slots_update_slot',
             'local_lbplanner_kanban_get_board',
+            'local_lbplanner_kanban_move_module',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,
