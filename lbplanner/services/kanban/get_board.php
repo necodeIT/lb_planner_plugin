@@ -67,7 +67,7 @@ class kanban_get_board extends external_api {
                     continue;
                 }
             }
-            $sorted[$entry->column] = $entry->cmid;
+            array_push($sorted[$entry->column], $entry->cmid);
         }
 
         return [
