@@ -41,7 +41,7 @@ class kanban_helper {
     public static function get_all_entries_by_user(int $userid): array {
         global $DB;
 
-        $res = $DB->get_records(self::TABLE, ['userid'=>$userid]);
+        $res = $DB->get_records(self::TABLE, ['userid' => $userid]);
         $entries = [];
         foreach ($res as $obj) {
             array_push($entries, kanbanentry::from_obj($obj));

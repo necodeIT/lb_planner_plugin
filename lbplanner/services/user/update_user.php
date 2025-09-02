@@ -56,22 +56,22 @@ class user_update_user extends external_api {
                 'Whether the user wants to see EK modules',
                 VALUE_DEFAULT,
                 null),
-            'show_column_colors' => new external_value(
+            'showcolumncolors' => new external_value(
                 PARAM_BOOL,
                 'Whether column colors should show in kanban board',
                 VALUE_DEFAULT,
                 null),
-            'auto_move_completed_tasks' => new external_value(
+            'automovecompletedtasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if completed '.KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
                 null),
-            'auto_move_submitted_tasks' => new external_value(
+            'automovesubmittedtasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if submitted '.KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
                 null),
-            'auto_move_overdue_tasks' => new external_value(
+            'automoveoverduetasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if overdue '.KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
@@ -85,6 +85,10 @@ class user_update_user extends external_api {
      * @param ?string $colorblindness The colorblindness the user has selected
      * @param ?bool $displaytaskcount The displaytaskcount the user has selected
      * @param ?bool $ekenabled whether the user wants to see EK modules
+     * @param ?bool $showcolumncolors whether column colors should show in kanban board
+     * @param ?string $automovecompletedtasks what kanban column to move completed tasks to ("" → don't move)
+     * @param ?string $automovesubmittedtasks what kanban column to move submitted tasks to ("" → don't move)
+     * @param ?string $automoveoverduetasks what kanban column to move overdue tasks to ("" → don't move)
      * @return array The updated user
      * @throws moodle_exception
      * @throws dml_exception
@@ -95,10 +99,10 @@ class user_update_user extends external_api {
         ?string $colorblindness,
         ?bool $displaytaskcount,
         ?bool $ekenabled,
-        ?bool $show_column_colors,
-        ?string $auto_move_completed_tasks,
-        ?string $auto_move_submitted_tasks,
-        ?string $auto_move_overdue_tasks,
+        ?bool $showcolumncolors,
+        ?string $automovecompletedtasks,
+        ?string $automovesubmittedtasks,
+        ?string $automoveoverduetasks,
     ): array {
         global $DB, $USER;
 
@@ -109,10 +113,10 @@ class user_update_user extends external_api {
                 'colorblindness' => $colorblindness,
                 'displaytaskcount' => $displaytaskcount,
                 'ekenabled' => $ekenabled,
-                'show_column_colors' => $show_column_colors,
-                'auto_move_completed_tasks' => $auto_move_completed_tasks,
-                'auto_move_submitted_tasks' => $auto_move_submitted_tasks,
-                'auto_move_overdue_tasks' => $auto_move_overdue_tasks,
+                'showcolumncolors' => $showcolumncolors,
+                'automovecompletedtasks' => $automovecompletedtasks,
+                'automovesubmittedtasks' => $automovesubmittedtasks,
+                'automoveoverduetasks' => $automoveoverduetasks,
             ]
         );
 
@@ -133,10 +137,10 @@ class user_update_user extends external_api {
         if ($ekenabled !== null) {
             $user->ekenabled = $ekenabled;
         }
-        if ($show_column_colors !== null) {
-            $user->show_column_colors = $show_column_colors;
+        if ($showcolumncolors !== null) {
+            $user->showcolumncolors = $showcolumncolors;
         }
-        foreach (['auto_move_completed_tasks', 'auto_move_submitted_tasks', 'auto_move_overdue_tasks'] as $propname) {
+        foreach (['automovecompletedtasks', 'automovesubmittedtasks', 'automoveoverduetasks'] as $propname) {
             if ($$propname !== null) {
                 if ($$propname === KANBANCOL_TYPE_ORNONE::NONE) {
                     $user->$propname = null;

@@ -68,27 +68,27 @@ class user {
     public bool $ekenabled;
 
     /**
-     * @var bool $show_column_colors Whether column colors should show in kanban board.
+     * @var bool $showcolumncolors Whether column colors should show in kanban board.
      */
-    public bool $show_column_colors;
+    public bool $showcolumncolors;
 
     /**
-     * @var ?string $auto_move_completed_tasks what kanban column to move completed tasks to (null → don't move)
+     * @var ?string $automovecompletedtasks what kanban column to move completed tasks to (null → don't move)
      * @see KANBANCOL_TYPE
      */
-    public ?string $auto_move_completed_tasks;
+    public ?string $automovecompletedtasks;
 
     /**
-     * @var ?string $auto_move_submitted_tasks what kanban column to move submitted tasks to (null → don't move)
+     * @var ?string $automovesubmittedtasks what kanban column to move submitted tasks to (null → don't move)
      * @see KANBANCOL_TYPE
      */
-    public ?string $auto_move_submitted_tasks;
+    public ?string $automovesubmittedtasks;
 
     /**
-     * @var ?string $auto_move_overdue_tasks what kanban column to move overdue tasks to (null → don't move)
+     * @var ?string $automoveoverduetasks what kanban column to move overdue tasks to (null → don't move)
      * @see KANBANCOL_TYPE
      */
-    public ?string $auto_move_overdue_tasks;
+    public ?string $automoveoverduetasks;
 
     /**
      * @var ?\stdClass $mdluser the cached moodle user
@@ -111,17 +111,17 @@ class user {
     private ?int $capabilitybitmask;
 
     /**
-     * @var string[] dbmirrorprops properties that are mirrored 1:1 between the DB and this object
+     * @var string[] DBMIRRORPROPS properties that are mirrored 1:1 between the DB and this object
      */
-    private const dbmirrorprops = [
+    private const DBMIRRORPROPS  = [
         'theme',
         'colorblindness',
         'displaytaskcount',
         'ekenabled',
-        'show_column_colors',
-        'auto_move_completed_tasks',
-        'auto_move_submitted_tasks',
-        'auto_move_overdue_tasks'
+        'showcolumncolors',
+        'automovecompletedtasks',
+        'automovesubmittedtasks',
+        'automoveoverduetasks',
     ];
 
     /**
@@ -132,6 +132,10 @@ class user {
      * @param string $colorblindness user's colorblindness
      * @param bool $displaytaskcount user's display task count
      * @param bool $ekenabled whether the user wants to see EK modules
+     * @param bool $showcolumncolors whether column colors should show in kanban board
+     * @param ?string $automovecompletedtasks what kanban column to move completed tasks to (null → don't move)
+     * @param ?string $automovesubmittedtasks what kanban column to move submitted tasks to (null → don't move)
+     * @param ?string $automoveoverduetasks what kanban column to move overdue tasks to (null → don't move)
      */
     public function __construct(
         int $lbpid,
@@ -140,15 +144,16 @@ class user {
         string $colorblindness,
         bool $displaytaskcount,
         bool $ekenabled,
-        bool $show_column_colors,
-        ?string $auto_move_completed_tasks,
-        ?string $auto_move_submitted_tasks,
-        ?string $auto_move_overdue_tasks,
+        bool $showcolumncolors,
+        ?string $automovecompletedtasks,
+        ?string $automovesubmittedtasks,
+        ?string $automoveoverduetasks,
     ) {
         global $USER;
         $this->lbpid = $lbpid;
         $this->mdlid = $mdlid;
-        foreach (self::dbmirrorprops as $propname) {
+        foreach (self::DBMIRRORPROPS as $propname) {
+            $propname = str_replace('_', '', $propname);
             $this->$propname = $$propname;
         }
         $this->planid = null;
@@ -313,8 +318,9 @@ class user {
 
         $obj->userid = $this->mdlid;
 
-        foreach (self::dbmirrorprops as $propname) {
-            $obj->$propname = $this->$propname;
+        foreach (self::DBMIRRORPROPS as $propname) {
+            $phppropname = str_replace('_', '', $propname);
+            $obj->$propname = $this->$phppropname;
         }
 
         if ($this->lbpid !== 0) {
@@ -383,10 +389,10 @@ class user {
                 'planid' => $this->get_planid(),
                 'colorblindness' => $this->colorblindness,
                 'displaytaskcount' => $this->displaytaskcount,
-                'show_column_colors' => $this->show_column_colors,
-                'auto_move_completed_tasks' => $this->auto_move_completed_tasks ?? KANBANCOL_TYPE_ORNONE::NONE,
-                'auto_move_submitted_tasks' => $this->auto_move_submitted_tasks ?? KANBANCOL_TYPE_ORNONE::NONE,
-                'auto_move_overdue_tasks' => $this->auto_move_overdue_tasks ?? KANBANCOL_TYPE_ORNONE::NONE,
+                'showcolumncolors' => $this->showcolumncolors,
+                'automovecompletedtasks' => $this->automovecompletedtasks ?? KANBANCOL_TYPE_ORNONE::NONE,
+                'automovesubmittedtasks' => $this->automovesubmittedtasks ?? KANBANCOL_TYPE_ORNONE::NONE,
+                'automoveoverduetasks' => $this->automoveoverduetasks ?? KANBANCOL_TYPE_ORNONE::NONE,
                 'email' => $mdluser->email,
             ]
         );
@@ -410,10 +416,10 @@ class user {
                 'planid' => new external_value(PARAM_INT, 'The id of the plan the user is assigned to'),
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
                 'displaytaskcount' => new external_value(PARAM_BOOL, 'Whether the user has the taskcount enabled'),
-                'show_column_colors' => new external_value(PARAM_BOOL, 'Whether column colors should show in kanban board'),
-                'auto_move_completed_tasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if completed '.KANBANCOL_TYPE_ORNONE::format()),
-                'auto_move_submitted_tasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if submitted '.KANBANCOL_TYPE_ORNONE::format()),
-                'auto_move_overdue_tasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if overdue '.KANBANCOL_TYPE_ORNONE::format()),
+                'showcolumncolors' => new external_value(PARAM_BOOL, 'Whether column colors should show in kanban board'),
+                'automovecompletedtasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if completed '.KANBANCOL_TYPE_ORNONE::format()),
+                'automovesubmittedtasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if submitted '.KANBANCOL_TYPE_ORNONE::format()),
+                'automoveoverduetasks' => new external_value(PARAM_TEXT, 'The kanban column to move a task to if overdue '.KANBANCOL_TYPE_ORNONE::format()),
                 'capabilities' => new external_value(PARAM_INT, 'The capabilities of the user represented as a bitmask value'),
                 'vintage' => new external_value(PARAM_TEXT, 'The vintage of the user', VALUE_DEFAULT),
                 'email' => new external_value(PARAM_TEXT, 'The email address of the user'),

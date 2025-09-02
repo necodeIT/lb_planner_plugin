@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Model for a reservation
+ * Model for a kanban entry
  *
  * @package local_lbplanner
  * @subpackage model
@@ -34,7 +34,7 @@ use local_lbplanner\enums\{KANBANCOL_TYPE, KANBANCOL_TYPE_NUMERIC};
  */
 class kanbanentry {
     /**
-     * @var int $id ID of reservation
+     * @var int $id ID of kbbe
      */
     public int $id;
     /**
@@ -52,7 +52,7 @@ class kanbanentry {
 
     /**
      * Constructs a kbbe
-     * @param int $id ID of reservation
+     * @param int $id ID of kbbe
      * @param int $userid ID of user
      * @param int $cmid ID of course-module
      * @param int $column column number
@@ -87,7 +87,7 @@ class kanbanentry {
      * Prepares data for the DB endpoint.
      * doesn't set ID if it's 0
      *
-     * @return object a representation of this reservation and its data
+     * @return object a representation of this kbbe and its data
      */
     public function prepare_for_db(): object {
         $obj = new \stdClass();
@@ -106,7 +106,7 @@ class kanbanentry {
     /**
      * Prepares data for the API endpoint.
      *
-     * @return array a representation of this reservation and its data
+     * @return array a representation of this kbbe and its data
      */
     public function prepare_for_api(): array {
         return [

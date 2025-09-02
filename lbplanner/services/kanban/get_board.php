@@ -60,7 +60,7 @@ class kanban_get_board extends external_api {
         foreach ($entries as $entry) {
             if (!$ekenabled) {
                 $module = module::from_cmid($entry->cmid);
-                if($module->get_type() === MODULE_TYPE::EK) {
+                if ($module->get_type() === MODULE_TYPE::EK) {
                     continue;
                 }
             }
