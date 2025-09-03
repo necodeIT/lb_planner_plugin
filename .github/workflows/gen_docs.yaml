@@ -47,5 +47,6 @@ jobs:
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.REPO_DOCS_TOKEN }}
+          repository: 'necodeIT/lb_planner_docs'
           branch: main
           directory: docs
