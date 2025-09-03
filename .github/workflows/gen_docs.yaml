@@ -36,11 +36,16 @@ jobs:
         working-directory: moodle
         run: python document_services.py ../docs/moodle
 
+      - name: Commit changes
+        working-directory: docs
+        run: |
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git commit -a -m "GitHub Actions - Update Web Service Documentation"
+
       - name: Push new documentation to docs repo
-        uses: actions-js/push@v1.5
+        uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.REPO_DOCS_TOKEN }}
-          repository: 'necodeIT/lb_planner_docs'
           branch: main
-          message: "GitHub Actions - Update Web Service Documentation to ${{ github.sha }}"
           directory: docs
