@@ -91,9 +91,9 @@ class course_helper {
 
         $lbptag = core_tag_tag::get_by_name(core_tag_collection::get_default(), self::EDUPLANNER_TAG, strictness:MUST_EXIST);
 
-        // NOTE: we could use enrol_get_my_courses() and get_courses() here.
-        //       But their perf is so abysmal that we have to roll our own function.
-        //       The code is largely leaned on how these functions work internally, optimized for our purposes.
+        /* NOTE: We could use enrol_get_my_courses() and get_courses() here.
+                 But their perf is so abysmal that we have to roll our own function.
+                 The code is largely leaned on how these functions work internally, optimized for our purposes. */
         if ($onlyenrolled) {
             $mdlcourses = $DB->get_records_sql("
                 SELECT c.* FROM {course} c
@@ -108,12 +108,12 @@ class course_helper {
                 AND ti.tagid = :lbptagid
                 AND ti.itemtype = \"course\"",
                 [
-                    "userid"=>$userid,
-                    "active"=>ENROL_USER_ACTIVE,
-                    "enabled"=>ENROL_INSTANCE_ENABLED,
-                    "now"=>time(),
-                    "ayearago"=>(new DateTimeImmutable('1 year ago'))->getTimestamp(),
-                    "lbptagid"=>$lbptag->id,
+                    "userid" => $userid,
+                    "active" => ENROL_USER_ACTIVE,
+                    "enabled" => ENROL_INSTANCE_ENABLED,
+                    "now" => time(),
+                    "ayearago" => (new DateTimeImmutable('1 year ago'))->getTimestamp(),
+                    "lbptagid" => $lbptag->id,
                 ]
             );
         } else {
@@ -122,9 +122,9 @@ class course_helper {
                 INNER JOIN {tag_instance} ti ON (ti.itemid = c.id)
                 WHERE c.enddate > :ayearago AND ti.tagid = :lbptagid AND ti.itemtype = \"course\"",
                 [
-                    "now"=>time(),
-                    "ayearago"=>(new DateTimeImmutable('1 year ago'))->getTimestamp(),
-                    "lbptagid"=>$lbptag->id,
+                    "now" => time(),
+                    "ayearago" => (new DateTimeImmutable('1 year ago'))->getTimestamp(),
+                    "lbptagid" => $lbptag->id,
                 ]
             );
         }
