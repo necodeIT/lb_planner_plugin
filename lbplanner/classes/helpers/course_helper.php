@@ -17,6 +17,8 @@
 namespace local_lbplanner\helpers;
 
 use core\context\course as context_course;
+use core_tag_collection;
+use core_tag_tag;
 use DateTimeImmutable;
 use dml_exception;
 use dml_write_exception;
@@ -36,6 +38,11 @@ class course_helper {
      * The course table used by the LP
      */
     const EDUPLANNER_COURSE_TABLE = 'local_lbplanner_courses';
+
+    /**
+     * The tag name to identify courses as "should show up in eduplanner"
+     */
+    const EDUPLANNER_TAG = 'eduplanner';
 
     /**
      * A list of nice colors to choose from :)
@@ -82,6 +89,8 @@ class course_helper {
         global $DB, $USER;
         $userid = $USER->id;
 
+        $lbptag = core_tag_tag::get_by_name(core_tag_collection::get_default(), self::EDUPLANNER_TAG, strictness:MUST_EXIST);
+
         // NOTE: we could use enrol_get_my_courses() and get_courses() here.
         //       But their perf is so abysmal that we have to roll our own function.
         //       The code is largely leaned on how these functions work internally, optimized for our purposes.
@@ -90,22 +99,32 @@ class course_helper {
                 SELECT c.* FROM {course} c
                 INNER JOIN {enrol} e ON e.courseid = c.id
                 INNER JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :userid)
-                WHERE ue.status = :active AND e.status = :enabled AND ue.timestart <= :now AND c.enddate > :ayearago",
+                INNER JOIN {tag_instance} ti ON (ti.itemid = c.id)
+                WHERE
+                    ue.status = :active
+                AND e.status = :enabled
+                AND ue.timestart <= :now
+                AND c.enddate > :ayearago
+                AND ti.tagid = :lbptagid
+                AND ti.itemtype = \"course\"",
                 [
                     "userid"=>$userid,
                     "active"=>ENROL_USER_ACTIVE,
                     "enabled"=>ENROL_INSTANCE_ENABLED,
                     "now"=>time(),
                     "ayearago"=>(new DateTimeImmutable('1 year ago'))->getTimestamp(),
+                    "lbptagid"=>$lbptag->id,
                 ]
             );
         } else {
             $mdlcourses = $DB->get_records_sql("
                 SELECT c.* FROM {course} c
-                WHERE c.enddate > :ayearago",
+                INNER JOIN {tag_instance} ti ON (ti.itemid = c.id)
+                WHERE c.enddate > :ayearago AND ti.tagid = :lbptagid AND ti.itemtype = \"course\"",
                 [
                     "now"=>time(),
                     "ayearago"=>(new DateTimeImmutable('1 year ago'))->getTimestamp(),
+                    "lbptagid"=>$lbptag->id,
                 ]
             );
         }
