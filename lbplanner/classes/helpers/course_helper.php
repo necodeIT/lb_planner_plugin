@@ -17,6 +17,7 @@
 namespace local_lbplanner\helpers;
 
 use core\context\course as context_course;
+use DateTimeImmutable;
 use dml_exception;
 use dml_write_exception;
 use local_lbplanner\model\course;
@@ -81,10 +82,32 @@ class course_helper {
         global $DB, $USER;
         $userid = $USER->id;
 
+        // NOTE: we could use enrol_get_my_courses() and get_courses() here.
+        //       But their perf is so abysmal that we have to roll our own function.
+        //       The code is largely leaned on how these functions work internally, optimized for our purposes.
         if ($onlyenrolled) {
-            $mdlcourses = enrol_get_my_courses();
+            $mdlcourses = $DB->get_records_sql("
+                SELECT c.* FROM {course} c
+                INNER JOIN {enrol} e ON e.courseid = c.id
+                INNER JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :userid)
+                WHERE ue.status = :active AND e.status = :enabled AND ue.timestart <= :now AND c.enddate > :ayearago",
+                [
+                    "userid"=>$userid,
+                    "active"=>ENROL_USER_ACTIVE,
+                    "enabled"=>ENROL_INSTANCE_ENABLED,
+                    "now"=>time(),
+                    "ayearago"=>(new DateTimeImmutable('1 year ago'))->getTimestamp(),
+                ]
+            );
         } else {
-            $mdlcourses = get_courses();
+            $mdlcourses = $DB->get_records_sql("
+                SELECT c.* FROM {course} c
+                WHERE c.enddate > :ayearago",
+                [
+                    "now"=>time(),
+                    "ayearago"=>(new DateTimeImmutable('1 year ago'))->getTimestamp(),
+                ]
+            );
         }
         // Remove Duplicates.
         $mdlcourses = array_unique($mdlcourses, SORT_REGULAR);
@@ -92,10 +115,6 @@ class course_helper {
 
         foreach ($mdlcourses as $mdlcourse) {
             $courseid = $mdlcourse->id;
-            // Check if the course is outdated.
-            if (!course::check_year($mdlcourse)) {
-                    continue;
-            }
             // Check if the course is already in the Eduplanner database.
             if ($DB->record_exists(self::EDUPLANNER_COURSE_TABLE, ['courseid' => $courseid, 'userid' => $userid])) {
                 $fetchedcourse = self::get_eduplanner_course($courseid, $userid);
