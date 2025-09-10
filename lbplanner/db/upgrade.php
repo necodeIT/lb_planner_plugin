@@ -23,7 +23,9 @@
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
-use local_lbplanner\helpers\config_helper;
+use core\context\course as context_course;
+
+use local_lbplanner\helpers\{config_helper, course_helper};
 
 /**
  * Upgrades the DB version
@@ -69,6 +71,20 @@ function xmldb_local_lbplanner_upgrade($oldversion): bool {
         }
 
         upgrade_plugin_savepoint(true, 202509020001, 'local', 'lbplanner');
+    }
+    if ($oldversion < 202509060000) {
+        // Adds the eduplanner tag to the default collection.
+        core_tag_tag::create_if_missing(core_tag_collection::get_default(), [course_helper::EDUPLANNER_TAG], true);
+    }
+    if ($oldversion < 202509060001) {
+        // Adds eduplanner tag to all courses that are already in the eduplanner courses table, to make managers' lives easier.
+        $defaulttagcoll = core_tag_collection::get_default();
+        $tag = core_tag_tag::get_by_name($defaulttagcoll, course_helper::EDUPLANNER_TAG, strictness:MUST_EXIST);
+        $courseids = $DB->get_fieldset(course_helper::EDUPLANNER_COURSE_TABLE, 'courseid');
+        $courseids = array_unique($courseids, SORT_REGULAR); // Dedupe.
+        foreach ($courseids as $courseid) {
+            core_tag_tag::add_item_tag('core', 'course', $courseid, context_course::instance($courseid), $tag->rawname);
+        }
     }
     return true;
 }
