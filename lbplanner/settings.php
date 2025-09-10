@@ -18,16 +18,14 @@
  * Defines some settings
  *
  * @package local_lbplanner
- * @copyright 2024 NecodeIT
+ * @copyright 2025 NecodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    $settings = new admin_settingpage('local_lbplanner', 'LB Planer');
+    $settings = new admin_settingpage('local_lbplanner', 'Eduplanner');
     $ADMIN->add('localplugins', $settings);
 
-    $settings->add(new admin_setting_configtext('local_lbplanner/activeyear',
-        'Active year', 'Current year  e.g.:"20/21" ', null, PARAM_TEXT));
 }
