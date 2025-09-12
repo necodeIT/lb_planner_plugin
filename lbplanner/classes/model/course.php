@@ -26,8 +26,6 @@
 namespace local_lbplanner\model;
 
 use core_external\{external_single_structure, external_value};
-use DateTimeImmutable;
-use local_lbplanner\helpers\course_helper;
 
 /**
  * Model class for course

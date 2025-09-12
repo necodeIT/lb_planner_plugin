@@ -21,6 +21,8 @@ use core_customfield\category_controller;
 use customfield_select\field_controller;
 use local_modcustomfields\customfield\mod_handler;
 
+use local_lbplanner\enums\SETTINGS;
+
 /**
  * Helper class for config
  *
@@ -96,5 +98,21 @@ class config_helper {
         } else {
             return intval($catid);
         }
+    }
+
+    /**
+     * Get the setting for how far into the future students should be able to reserve slots.
+     * @return int futuresight in number of days (0-6)
+     */
+    public static function get_slot_futuresight(): int {
+        return get_config('local_lbplanner', SETTINGS::SLOT_FUTURESIGHT);
+    }
+
+    /**
+     * Get the setting for how long after a course ends it should start being hidden in Eduplanner.
+     * @return int outdated range in number of seconds (>=0)
+     */
+    public static function get_course_outdatedrange(): int {
+        return get_config('local_lbplanner', SETTINGS::COURSE_OUTDATERANGE);
     }
 }
