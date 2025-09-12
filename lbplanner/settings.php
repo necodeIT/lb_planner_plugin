@@ -56,4 +56,5 @@ if ($hassiteconfig) {
         86400, // In days.
     );
     $outdaterangesett->set_min_duration(0);
+    $settings->add($outdaterangesett);
 }
