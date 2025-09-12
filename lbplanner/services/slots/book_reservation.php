@@ -22,6 +22,7 @@ use core_user;
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
 use DateTimeZone;
 use local_lbplanner\enums\NOTIF_TRIGGER;
+use local_lbplanner\helpers\config_helper;
 use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\reservation;
@@ -101,13 +102,13 @@ class slots_book_reservation extends external_api {
         if ($userid === intval($USER->id)) {
             // Student reserving slot for themself.
 
-            $maxdays = slot_helper::RESERVATION_RANGE_USER;
+            $maxdays = config_helper::get_slot_futuresight();
             $student = $USER;
         } else {
             // Supervisor reserving slot for student.
             slot_helper::assert_slot_supervisor($USER->id, $slotid);
 
-            $maxdays = slot_helper::RESERVATION_RANGE_USER;
+            $maxdays = slot_helper::RESERVATION_RANGE_SUPERVISOR;
             $student = core_user::get_user($userid, '*', MUST_EXIST);
         }
 

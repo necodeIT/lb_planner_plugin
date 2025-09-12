@@ -39,10 +39,6 @@ use local_lbplanner\model\{slot, reservation, slot_filter};
  */
 class slot_helper {
     /**
-     * how far into the future a user can reserve a slot
-     */
-    const RESERVATION_RANGE_USER = 3;
-    /**
      * how far into the future a supervisor can reserve a slot for a user
      */
     const RESERVATION_RANGE_SUPERVISOR = 7;
