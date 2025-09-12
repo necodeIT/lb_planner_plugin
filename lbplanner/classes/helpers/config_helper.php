@@ -26,7 +26,7 @@ use local_modcustomfields\customfield\mod_handler;
  *
  * @package local_lbplanner
  * @subpackage helpers
- * @copyright 2024 NecodeIT
+ * @copyright 2025 NecodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class config_helper {

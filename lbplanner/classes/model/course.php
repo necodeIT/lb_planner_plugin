@@ -51,10 +51,6 @@ class course {
      */
     public string $shortname;
     /**
-     * @var string $fullname the full name of this course
-     */
-    private ?string $fullname;
-    /**
      * @var string $color the color for this course as #RRGGBB
      */
     public string $color;
@@ -83,7 +79,6 @@ class course {
         $this->set_shortname($shortname);
         $this->set_color($color);
         $this->enabled = $enabled;
-        $this->fullname = null;
         $this->mdlcourse = null;
     }
 
@@ -160,29 +155,6 @@ class course {
     }
 
     /**
-     * sets the cached fullname (mainly for deduplicating DB requests)
-     * TODO: remove in favour of cached mdluser
-     * @param string $fullname the cached fullname
-     */
-    public function set_fullname(string $fullname) {
-        // If we already have a fullname stored and it's different, then we've found data inconsistency.
-        assert($this->fullname === null || $this->fullname === $fullname);
-        $this->fullname = $fullname;
-    }
-
-    /**
-     * get the cached fullname
-     * @return string the cached fullname
-     */
-    public function get_fullname(): string {
-        if ($this->fullname === null) {
-            $this->fullname = course_helper::get_fullname($this->courseid);
-        }
-
-        return $this->fullname;
-    }
-
-    /**
      * Prepares a string to be eligible for shortname
      * @param string $shortname the shortname to be prepared
      * @return string the prepared shortname
@@ -195,18 +167,6 @@ class course {
             $shortname = mb_convert_encoding(substr($shortname, 0, 5), 'UTF-8', 'UTF-8');
         }
         return strtoupper($shortname);
-    }
-
-    /**
-     * Check if the course is outdated
-     * @param \stdClass $mdlcourse the moodle course object to check
-     * @return bool false if the course's end is one year or longer ago, true otherwise
-     */
-    public static function check_year(\stdClass $mdlcourse): bool {
-        $enddate = $mdlcourse->enddate;
-        $now = new DateTimeImmutable();
-        $dti = $now->setTimestamp($enddate);
-        return $now->diff($dti)->y >= 0;
     }
 
     /**
@@ -226,7 +186,7 @@ class course {
      */
     public function get_mdlcourse(): \stdClass {
         if ($this->mdlcourse === null) {
-            $this->mdlcourse = get_course($this->id);
+            $this->mdlcourse = get_course($this->courseid);
         }
 
         return $this->mdlcourse;
@@ -264,7 +224,7 @@ class course {
             'id' => $this->id,
             'courseid' => $this->courseid,
             'userid' => $this->userid,
-            'name' => $this->get_fullname(),
+            'name' => $this->get_mdlcourse()->fullname,
             'shortname' => $this->shortname,
             'color' => $this->color,
             'enabled' => $this->enabled ? 1 : 0, // Moodle's API uses int instead of bool.

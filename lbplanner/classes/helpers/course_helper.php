@@ -157,8 +157,7 @@ class course_helper {
                     throw $e;
                 }
             }
-            // Add name to fetched Course.
-            $fetchedcourse->set_fullname($mdlcourse->fullname);
+            // Add mdlcourse to fetched Course.
             $fetchedcourse->set_mdlcourse($mdlcourse);
             array_push($results, $fetchedcourse);
         }
@@ -179,17 +178,5 @@ class course_helper {
             return false;
         }
         return is_enrolled($context, $userid, '', true);
-    }
-
-    /**
-     * gets the fullname from a course
-     *
-     * @param int $courseid the course id
-     *
-     * @return string the fullname of the course
-     * @throws dml_exception
-     */
-    public static function get_fullname(int $courseid): string {
-        return get_course($courseid)->fullname;
     }
 }
