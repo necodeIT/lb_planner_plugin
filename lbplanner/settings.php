@@ -27,7 +27,7 @@ use local_lbplanner\enums\SETTINGS;
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    $settings = new admin_settingpage('local_lbplanner', 'Eduplanner');
+    $settings = new admin_settingpage('local_lbplanner', 'EduPlanner');
     $ADMIN->add('localplugins', $settings);
 
     $futuresightsett = new admin_setting_configselect(
