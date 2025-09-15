@@ -32,7 +32,7 @@ if ($hassiteconfig) {
 
     $futuresightsett = new admin_setting_configselect(
         'local_lbplanner/'.SETTINGS::SLOT_FUTURESIGHT,
-        'Slot Futuresight',
+        'Advance reservation limit',
         'How many days into the future students can reserve slots',
         3,
         [
