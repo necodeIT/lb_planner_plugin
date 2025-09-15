@@ -33,7 +33,7 @@ if ($hassiteconfig) {
     $futuresightsett = new admin_setting_configselect(
         'local_lbplanner/'.SETTINGS::SLOT_FUTURESIGHT,
         'Advance reservation limit',
-        'How many days into the future students can reserve slots',
+        'Maximum number of days in advance students can reserve slots (0 = same day only).',
         3,
         [
             0 => "0 Days",
