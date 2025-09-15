@@ -51,7 +51,7 @@ if ($hassiteconfig) {
     $outdaterangesett = new admin_setting_configduration(
         'local_lbplanner/'.SETTINGS::COURSE_OUTDATERANGE,
         'Mark courses as outdated after',
-        'How long after a course ends should it start being hidden in Eduplanner?',
+        'The maximum duration a course remains visible in EduPlanner after it ends.',
         31536000, // 1 non-leap year.
         86400, // In days.
     );
