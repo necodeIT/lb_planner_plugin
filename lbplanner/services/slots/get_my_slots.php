@@ -17,7 +17,7 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_multiple_structure};
-use local_lbplanner\helpers\slot_helper;
+use local_lbplanner\helpers\{config_helper, slot_helper};
 use local_lbplanner\model\slot;
 
 /**
@@ -48,7 +48,7 @@ class slots_get_my_slots extends external_api {
 
         $myslots = slot_helper::filter_slots_for_user($allslots, $USER);
 
-        $returnslots = slot_helper::filter_slots_for_time($myslots, slot_helper::RESERVATION_RANGE_USER);
+        $returnslots = slot_helper::filter_slots_for_time($myslots, config_helper::get_slot_futuresight());
 
         return array_map(fn(slot $slot) => $slot->prepare_for_api(), $returnslots);
     }

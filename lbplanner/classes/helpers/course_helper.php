@@ -22,6 +22,7 @@ use core_tag_tag;
 use DateTimeImmutable;
 use dml_exception;
 use dml_write_exception;
+
 use local_lbplanner\model\course;
 
 /**
@@ -90,6 +91,8 @@ class course_helper {
         $userid = $USER->id;
 
         $lbptag = core_tag_tag::get_by_name(core_tag_collection::get_default(), self::EDUPLANNER_TAG, strictness:MUST_EXIST);
+        $courseexpireseconds = config_helper::get_course_outdatedrange();
+        $courseexpiredate = (new DateTimeImmutable("{$courseexpireseconds} seconds ago"))->getTimestamp();
 
         /* NOTE: We could use enrol_get_my_courses() and get_courses() here.
                  But their perf is so abysmal that we have to roll our own function.
@@ -104,7 +107,7 @@ class course_helper {
                     ue.status = :active
                 AND e.status = :enabled
                 AND ue.timestart <= :now
-                AND c.enddate > :ayearago
+                AND c.enddate > :courseexpiredate
                 AND ti.tagid = :lbptagid
                 AND ti.itemtype = \"course\"",
                 [
@@ -112,7 +115,7 @@ class course_helper {
                     "active" => ENROL_USER_ACTIVE,
                     "enabled" => ENROL_INSTANCE_ENABLED,
                     "now" => time(),
-                    "ayearago" => (new DateTimeImmutable('1 year ago'))->getTimestamp(),
+                    "courseexpiredate" => $courseexpiredate,
                     "lbptagid" => $lbptag->id,
                 ]
             );
@@ -120,10 +123,10 @@ class course_helper {
             $mdlcourses = $DB->get_records_sql("
                 SELECT c.* FROM {course} c
                 INNER JOIN {tag_instance} ti ON (ti.itemid = c.id)
-                WHERE c.enddate > :ayearago AND ti.tagid = :lbptagid AND ti.itemtype = \"course\"",
+                WHERE c.enddate > :courseexpiredate AND ti.tagid = :lbptagid AND ti.itemtype = \"course\"",
                 [
                     "now" => time(),
-                    "ayearago" => (new DateTimeImmutable('1 year ago'))->getTimestamp(),
+                    "courseexpiredate" => $courseexpiredate,
                     "lbptagid" => $lbptag->id,
                 ]
             );
@@ -157,8 +160,7 @@ class course_helper {
                     throw $e;
                 }
             }
-            // Add name to fetched Course.
-            $fetchedcourse->set_fullname($mdlcourse->fullname);
+            // Add mdlcourse to fetched Course.
             $fetchedcourse->set_mdlcourse($mdlcourse);
             array_push($results, $fetchedcourse);
         }
@@ -179,17 +181,5 @@ class course_helper {
             return false;
         }
         return is_enrolled($context, $userid, '', true);
-    }
-
-    /**
-     * gets the fullname from a course
-     *
-     * @param int $courseid the course id
-     *
-     * @return string the fullname of the course
-     * @throws dml_exception
-     */
-    public static function get_fullname(int $courseid): string {
-        return get_course($courseid)->fullname;
     }
 }
