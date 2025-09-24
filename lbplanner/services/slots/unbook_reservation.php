@@ -94,8 +94,6 @@ class slots_unbook_reservation extends external_api {
                 }
                 notifications_helper::notify_user($reservation->userid, $reservation->id, NOTIF_TRIGGER::UNBOOK_REQUESTED);
                 return;
-            } else {
-                notifications_helper::notify_user($reservation->userid, $reservation->id, NOTIF_TRIGGER::UNBOOK_FORCED);
             }
         } else {
             throw new \moodle_exception('insufficient permission to unbook this reservation');
