@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.1](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.0...1.1.1) (2025-09-24)
+
+
+### Bug Fixes
+
+* Gen docs hopefully ([#76](https://github.com/necodeIT/lb_planner_plugin/issues/76)) ([3b060ca](https://github.com/necodeIT/lb_planner_plugin/commit/3b060cae8f36abc416fae8ac10e0db04ade6e09f))
+* Remove notifs of types yet unsupported by our structure ([#77](https://github.com/necodeIT/lb_planner_plugin/issues/77)) ([1cd849e](https://github.com/necodeIT/lb_planner_plugin/commit/1cd849ec76ef2478cb824c98858aa4a53cbe06c6))
+
 ## [1.1.0](https://github.com/necodeIT/lb_planner_plugin/compare/1.0.2...1.1.0) (2025-09-23)
 
 
