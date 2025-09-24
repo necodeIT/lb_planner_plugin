@@ -19,8 +19,6 @@ namespace local_lbplanner_services;
 use core_external\{external_api, external_function_parameters, external_value};
 
 use local_lbplanner\helpers\slot_helper;
-use local_lbplanner\helpers\notifications_helper;
-use local_lbplanner\enums\NOTIF_TRIGGER;
 
 /**
  * Deletes slot
@@ -63,11 +61,6 @@ class slots_delete_slot extends external_api {
         // Check if user is supervisor for this slot, throw error if not.
         slot_helper::assert_slot_supervisor($USER->id, $id);
 
-        // Notify affected users.
-        $reservations = slot_helper::get_reservations_for_slot($id);
-        foreach ($reservations as $res) {
-            notifications_helper::notify_user($res->userid, $res->id, NOTIF_TRIGGER::UNBOOK_FORCED);
-        }
         // Delete all reservations for this slot.
         $DB->delete_records(
             slot_helper::TABLE_RESERVATIONS,

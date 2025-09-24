@@ -165,7 +165,6 @@ class slots_book_reservation extends external_api {
                     slot_helper::TABLE_RESERVATIONS,
                     ['id' => $overlapres->id]
                 );
-                notifications_helper::notify_user($userid, $overlapres->id, NOTIF_TRIGGER::UNBOOK_FORCED);
             }
         }
 
