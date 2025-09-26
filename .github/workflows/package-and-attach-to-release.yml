@@ -1,18 +1,16 @@
-name: Package and Upload
+name: Package and attach to release
 
 on: 
   release: 
     types: [published]
-  workflow_dispatch:
-
 env:
   MOODLE_INSTALL_DIR: "local"
   PACKAGE_NAME: "lbplanner"
   TARGET_FOLDER: "lbplanner"
 
 jobs:
-  package-and-upload:
-    name: Package and Upload
+  package-and-attach-to-release:
+    name: Package and attach to release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,7 +32,7 @@ jobs:
           VERSION: ${{steps.version.outputs.version}}
 
 
-      - name: Upload to release
+      - name: Attach to release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: svenstaro/upload-release-action@v2
