@@ -72,7 +72,7 @@ class config_helper {
         }
     }
     /**
-     * Adds a customfield to moodle for each activity where teachers can select GK EK or both.
+     * Removes a customfield from moodle for each activity where teachers can select GK EK or both.
      *
      * @throws \coding_exception
      * @throws \moodle_exception
