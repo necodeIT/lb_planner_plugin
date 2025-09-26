@@ -1,0 +1,44 @@
+name: Package and Upload
+
+on: 
+  release: 
+    types: [published]
+  workflow_dispatch:
+
+env:
+  MOODLE_INSTALL_DIR: "local"
+  PACKAGE_NAME: "lbplanner"
+  TARGET_FOLDER: "lbplanner"
+
+jobs:
+  package-and-upload:
+    name: Package and Upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+
+      - name: Extract version
+        id: version
+        run: |
+          version=$(grep -oP '\$plugin->version\s*=\s*\K[0-9]+' "$TARGET_FOLDER/version.php")
+          
+          echo "version=$version" >> $GITHUB_OUTPUT
+                  
+      - name: Create ZIP file
+        run: |
+          ZIP_NAME="${MOODLE_INSTALL_DIR}_${PACKAGE_NAME}_${VERSION}.zip"
+          zip -qq -r "$ZIP_NAME" "$TARGET_FOLDER"
+          ls
+        env:
+          VERSION: ${{steps.version.outputs.version}}
+
+
+      - name: Upload to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: "${{ env.MOODLE_INSTALL_DIR }}_${{ env.PACKAGE_NAME }}_${{ steps.version.outputs.version }}.zip"
+          asset_name: "${{ env.MOODLE_INSTALL_DIR }}_${{ env.PACKAGE_NAME }}_${{ steps.version.outputs.version }}.zip"
