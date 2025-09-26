@@ -95,7 +95,7 @@ function xmldb_local_lbplanner_upgrade($oldversion): bool {
             }
             core_tag_tag::add_item_tag('core', 'course', $courseid, context_course::instance($courseid), $tag->rawname);
         }
-        
+
         upgrade_plugin_savepoint(true, 202509060001, 'local', 'lbplanner');
     }
     return true;

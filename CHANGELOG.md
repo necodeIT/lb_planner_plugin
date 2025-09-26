@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.3](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.2...1.1.3) (2025-09-26)
+
+
+### Bug Fixes
+
+* Hotfix for postgres problems ([#79](https://github.com/necodeIT/lb_planner_plugin/issues/79)) ([e15a3ec](https://github.com/necodeIT/lb_planner_plugin/commit/e15a3ec19540b6dbf20d428bbe0b1ab737d73624))
+
 ## [1.1.2](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.1...1.1.2) (2025-09-26)
 
 

@@ -99,14 +99,16 @@ class slots_book_reservation extends external_api {
         $maxdays = null;
         $student = null;
 
-        if ($userid === intval($USER->id)) {
+        $curuserid = intval($USER->id);
+
+        if ($userid === $curuserid) {
             // Student reserving slot for themself.
 
             $maxdays = config_helper::get_slot_futuresight();
             $student = $USER;
         } else {
             // Supervisor reserving slot for student.
-            slot_helper::assert_slot_supervisor($USER->id, $slotid);
+            slot_helper::assert_slot_supervisor($curuserid, $slotid);
 
             $maxdays = slot_helper::RESERVATION_RANGE_SUPERVISOR;
             $student = core_user::get_user($userid, '*', MUST_EXIST);
@@ -135,7 +137,7 @@ class slots_book_reservation extends external_api {
             throw new \moodle_exception('Slot is already full');
         }
 
-        $reservation = new reservation(0, $slotid, $dateobj, $userid, $USER->id);
+        $reservation = new reservation(0, $slotid, $dateobj, $userid, $curuserid);
         $reservation->set_slot($slot);
 
         // Check if user is already in a different slot at the same time.
@@ -148,7 +150,7 @@ class slots_book_reservation extends external_api {
         }
 
         // If this is not a supervisor doing supervising, we throw an error if the user is in an oevrlapping reservation.
-        if ($userid === $USER->id && count($overlapreservations) > 0) {
+        if ($userid === $curuserid && count($overlapreservations) > 0) {
             throw new \moodle_exception('you\'re already in another reservation at this date and time…');
         }
 
@@ -156,7 +158,7 @@ class slots_book_reservation extends external_api {
         $reservation->set_fresh($id, $slot);
 
         // If this is a supervisor reserving for a student, notify the student.
-        if ($userid !== $USER->id) {
+        if ($userid !== $curuserid) {
             notifications_helper::notify_user($userid, $reservation->id, NOTIF_TRIGGER::BOOK_FORCED);
 
             // Remove user from each overlapping reservation and notify them about it.
