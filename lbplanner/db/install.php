@@ -23,12 +23,12 @@
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
-use local_lbplanner\helpers\config_helper;
-
+use local_lbplanner\helpers\{config_helper, course_helper};
 
 /**
  * Runs when plugin is first installed
  */
 function xmldb_local_lbplanner_install() {
     config_helper::add_customfield();
+    core_tag_tag::create_if_missing(core_tag_collection::get_default(), [course_helper::EDUPLANNER_TAG], true);
 }

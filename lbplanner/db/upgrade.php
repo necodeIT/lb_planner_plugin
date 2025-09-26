@@ -83,8 +83,20 @@ function xmldb_local_lbplanner_upgrade($oldversion): bool {
         $courseids = $DB->get_fieldset(course_helper::EDUPLANNER_COURSE_TABLE, 'courseid');
         $courseids = array_unique($courseids, SORT_REGULAR); // Dedupe.
         foreach ($courseids as $courseid) {
+            try {
+                get_course($courseid);
+            } catch (dml_exception) {
+                /* This means the course doesn't actually exist - meaning it got deleted and not yet cleaned up in the
+                 * DB. normally I would clean it up here, but this upgrade function has to do as little as possible, so
+                 * we can as ensure it actually works as expected under all circumstances. This part of the code is very
+                 * hard to debug and thus uncomfortably fragile.
+                 */
+                continue;
+            }
             core_tag_tag::add_item_tag('core', 'course', $courseid, context_course::instance($courseid), $tag->rawname);
         }
+        
+        upgrade_plugin_savepoint(true, 202509060001, 'local', 'lbplanner');
     }
     return true;
 }
