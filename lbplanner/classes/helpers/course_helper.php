@@ -108,7 +108,10 @@ class course_helper {
                     ue.status = :active
                 AND e.status = :enabled
                 AND ue.timestart <= :nowa
-                AND ue.timeend >= :nowb
+                AND (
+                       ue.timeend >= :nowb
+                    OR ue.timeend = 0
+                )
                 AND (
                        c.enddate > :courseexpiredate
                     OR c.enddate = 0
