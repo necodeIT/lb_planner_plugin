@@ -20,11 +20,11 @@
  *
  * @package local_lbplanner
  * @subpackage db
- * @copyright 2024 NecodeIT
+ * @copyright 2025 NecodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
-use local_lbplanner\helpers\{config_helper,course_helper};
+use local_lbplanner\helpers\{config_helper, course_helper};
 
 /**
  * Runs when plugin is uninstalled
