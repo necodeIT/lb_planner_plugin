@@ -107,7 +107,11 @@ class course_helper {
                     ue.status = :active
                 AND e.status = :enabled
                 AND ue.timestart <= :now
-                AND c.enddate > :courseexpiredate
+                AND ue.timeend >= :now
+                AND (
+                       c.enddate > :courseexpiredate
+                    OR c.enddate = 0
+                )
                 AND ti.tagid = :lbptagid
                 AND ti.itemtype = 'course'",
                 [
@@ -123,7 +127,12 @@ class course_helper {
             $mdlcourses = $DB->get_records_sql("
                 SELECT c.* FROM {course} c
                 INNER JOIN {tag_instance} ti ON (ti.itemid = c.id)
-                WHERE c.enddate > :courseexpiredate AND ti.tagid = :lbptagid AND ti.itemtype = 'course'",
+                WHERE (
+                       c.enddate > :courseexpiredate
+                    OR c.enddate = 0
+                )
+                AND ti.tagid = :lbptagid
+                AND ti.itemtype = 'course'",
                 [
                     "courseexpiredate" => $courseexpiredate,
                     "lbptagid" => $lbptag->id,
