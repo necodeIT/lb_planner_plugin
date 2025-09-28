@@ -274,7 +274,7 @@ class slot_helper {
      * @return slot[] the filtered slot array
      */
     public static function filter_slots_for_user(array $allslots, \stdClass $user): array {
-        $mycourses = course_helper::get_all_eduplanner_courses();
+        $mycourses = course_helper::get_eduplanner_courses(true);
         $mycourseids = [];
         foreach ($mycourses as $course) {
             array_push($mycourseids, $course->courseid);
