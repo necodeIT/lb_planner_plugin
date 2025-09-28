@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.4](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.3...1.1.4) (2025-09-28)
+
+
+### Bug Fixes
+
+* Unhide courses without enddate + various minor fixes ([#82](https://github.com/necodeIT/lb_planner_plugin/issues/82)) ([ad4fb10](https://github.com/necodeIT/lb_planner_plugin/commit/ad4fb107b40e794f1cd5421a3758e81ea625f393))
+
 ## [1.1.3](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.2...1.1.3) (2025-09-26)
 
 
