@@ -93,6 +93,7 @@ class course_helper {
         $lbptag = core_tag_tag::get_by_name(core_tag_collection::get_default(), self::EDUPLANNER_TAG, strictness:MUST_EXIST);
         $courseexpireseconds = config_helper::get_course_outdatedrange();
         $courseexpiredate = (new DateTimeImmutable("{$courseexpireseconds} seconds ago"))->getTimestamp();
+        $now = time();
 
         /* NOTE: We could use enrol_get_my_courses() and get_courses() here.
                  But their perf is so abysmal that we have to roll our own function.
@@ -106,8 +107,8 @@ class course_helper {
                 WHERE
                     ue.status = :active
                 AND e.status = :enabled
-                AND ue.timestart <= :now
-                AND ue.timeend >= :now
+                AND ue.timestart <= :nowa
+                AND ue.timeend >= :nowb
                 AND (
                        c.enddate > :courseexpiredate
                     OR c.enddate = 0
@@ -118,7 +119,8 @@ class course_helper {
                     "userid" => $userid,
                     "active" => ENROL_USER_ACTIVE,
                     "enabled" => ENROL_INSTANCE_ENABLED,
-                    "now" => time(),
+                    "nowa" => $now,
+                    "nowb" => $now,
                     "courseexpiredate" => $courseexpiredate,
                     "lbptagid" => $lbptag->id,
                 ]
