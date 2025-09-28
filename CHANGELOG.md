@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.5](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.4...1.1.5) (2025-09-28)
+
+
+### Bug Fixes
+
+* Fix UB in get_eduplanner_courses ([#83](https://github.com/necodeIT/lb_planner_plugin/issues/83)) ([6c3f7db](https://github.com/necodeIT/lb_planner_plugin/commit/6c3f7db5c30d912985f4eaa8721e40a59972e4c5))
+
 ## [1.1.4](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.3...1.1.4) (2025-09-28)
 
 
