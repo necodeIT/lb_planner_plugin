@@ -82,11 +82,11 @@ class course_helper {
     }
 
     /**
-     * Get all current courses.
+     * Get current eduplanner-enabled courses.
      * @param bool $onlyenrolled whether to include only courses in which the current user is enrolled in
      * @return course[] all courses of the current year
      */
-    public static function get_all_eduplanner_courses(bool $onlyenrolled=true): array {
+    public static function get_eduplanner_courses(bool $onlyenrolled): array {
         global $DB, $USER;
         $userid = $USER->id;
 
