@@ -158,7 +158,7 @@ class slots_book_reservation extends external_api {
         if ($userid !== $curuserid) {
             notifications_helper::notify_user($userid, $reservation->id, NOTIF_TRIGGER::BOOK_FORCED);
 
-            // Remove user from each overlapping reservation
+            // Remove user from each overlapping reservation.
             foreach ($overlapreservations as $overlapres) {
                 $DB->delete_records(
                     slot_helper::TABLE_RESERVATIONS,
