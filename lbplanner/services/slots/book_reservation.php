@@ -28,7 +28,8 @@ use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\reservation;
 
 /**
- * Books a reservation for the user
+ * Books a reservation for the user.
+ * Will unbook any overlapping reservations the user may already have.
  *
  * @package local_lbplanner
  * @subpackage services_slots
@@ -149,11 +150,7 @@ class slots_book_reservation extends external_api {
             }
         }
 
-        // If this is not a supervisor doing supervising, we throw an error if the user is in an oevrlapping reservation.
-        if ($userid === $curuserid && count($overlapreservations) > 0) {
-            throw new \moodle_exception('you\'re already in another reservation at this date and time…');
-        }
-
+        // Save new reservation.
         $id = $DB->insert_record(slot_helper::TABLE_RESERVATIONS, $reservation->prepare_for_db());
         $reservation->set_fresh($id, $slot);
 
@@ -161,7 +158,7 @@ class slots_book_reservation extends external_api {
         if ($userid !== $curuserid) {
             notifications_helper::notify_user($userid, $reservation->id, NOTIF_TRIGGER::BOOK_FORCED);
 
-            // Remove user from each overlapping reservation and notify them about it.
+            // Remove user from each overlapping reservation
             foreach ($overlapreservations as $overlapres) {
                 $DB->delete_records(
                     slot_helper::TABLE_RESERVATIONS,
