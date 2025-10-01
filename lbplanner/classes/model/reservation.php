@@ -188,8 +188,8 @@ class reservation {
         }
         // Now we only need to check whether the exact day is the same.
         static $format = 'Y-m-d';
-        $thisdate = $this->get_datetime()->format($format);
-        $otherdate = $other->get_datetime()->format($format);
+        $thisdate = $this->date->format($format);
+        $otherdate = $other->date->format($format);
         return $thisdate === $otherdate;
     }
 

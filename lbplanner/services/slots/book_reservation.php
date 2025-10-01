@@ -28,7 +28,8 @@ use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\reservation;
 
 /**
- * Books a reservation for the user
+ * Books a reservation for the user.
+ * Will unbook any overlapping reservations the user may already have.
  *
  * @package local_lbplanner
  * @subpackage services_slots
@@ -145,30 +146,25 @@ class slots_book_reservation extends external_api {
         $existingreservations = slot_helper::get_reservations_for_user($userid);
         foreach ($existingreservations as $exres) {
             if ($reservation->check_overlaps($exres)) {
-                array_push($overlapreservations, $exres);
+                array_push($overlapreservations, $exres->id);
             }
         }
 
-        // If this is not a supervisor doing supervising, we throw an error if the user is in an oevrlapping reservation.
-        if ($userid === $curuserid && count($overlapreservations) > 0) {
-            throw new \moodle_exception('you\'re already in another reservation at this date and time…');
-        }
-
+        // Save new reservation.
         $id = $DB->insert_record(slot_helper::TABLE_RESERVATIONS, $reservation->prepare_for_db());
         $reservation->set_fresh($id, $slot);
 
         // If this is a supervisor reserving for a student, notify the student.
         if ($userid !== $curuserid) {
             notifications_helper::notify_user($userid, $reservation->id, NOTIF_TRIGGER::BOOK_FORCED);
-
-            // Remove user from each overlapping reservation and notify them about it.
-            foreach ($overlapreservations as $overlapres) {
-                $DB->delete_records(
-                    slot_helper::TABLE_RESERVATIONS,
-                    ['id' => $overlapres->id]
-                );
-            }
         }
+
+        // Remove user from each overlapping reservation.
+        $DB->delete_records_list(
+            slot_helper::TABLE_RESERVATIONS,
+            'id',
+            $overlapreservations
+        );
 
         return $reservation->prepare_for_api();
     }
