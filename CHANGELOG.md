@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.6](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.5...1.1.6) (2025-10-01)
+
+
+### Bug Fixes
+
+* Automatically unreserve overlapping slots on book_reservation ([#86](https://github.com/necodeIT/lb_planner_plugin/issues/86)) ([e536faf](https://github.com/necodeIT/lb_planner_plugin/commit/e536fafcb787d9f244c400731cda4a59bf263edf))
+* Missing functions declarations ([#84](https://github.com/necodeIT/lb_planner_plugin/issues/84)) ([91b7e06](https://github.com/necodeIT/lb_planner_plugin/commit/91b7e06232cf40ca14710364220335d51aabd61d))
+* User ID check in unbook_reservation ([#85](https://github.com/necodeIT/lb_planner_plugin/issues/85)) ([ec14167](https://github.com/necodeIT/lb_planner_plugin/commit/ec141676be984899fa8e5b83a8c8b451a33752ba))
+
 ## [1.1.5](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.4...1.1.5) (2025-09-28)
 
 
