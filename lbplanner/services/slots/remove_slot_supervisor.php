@@ -68,11 +68,11 @@ class slots_remove_slot_supervisor extends external_api {
         );
 
         // Check if current user is supervisor for this slot, throw error if not.
-        slot_helper::assert_slot_supervisor($USER->id, $slotid);
+        slot_helper::assert_slot_supervisor(intval($USER->id), $slotid);
 
         $DB->delete_records(
             slot_helper::TABLE_SUPERVISORS,
-            ['id' => $userid, 'slotid' => $slotid]
+            ['userid' => $userid, 'slotid' => $slotid]
         );
     }
 
