@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.7](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.6...1.1.7) (2025-10-02)
+
+
+### Bug Fixes
+
+* Removing supervisor from slot ([#87](https://github.com/necodeIT/lb_planner_plugin/issues/87)) ([337474a](https://github.com/necodeIT/lb_planner_plugin/commit/337474ac95dd0edf59c3623656014ca1fcaef5c8))
+
 ## [1.1.6](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.5...1.1.6) (2025-10-01)
 
 
