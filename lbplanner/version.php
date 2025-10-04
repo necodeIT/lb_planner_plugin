@@ -27,8 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->requires = 2024042200.00; // Require Moodle >=4.4.0.
 $plugin->maturity = MATURITY_BETA;
 $plugin->component = 'local_lbplanner';
-$plugin->release = '1.1.7';
-$plugin->version = 202510020000;
+$plugin->release = '1.1.8';
+$plugin->version = 202510040000;
 $plugin->dependencies = [
     // Depend upon version 2023110600 of local_modcustomfields.
     'local_modcustomfields' => 2023110600,
