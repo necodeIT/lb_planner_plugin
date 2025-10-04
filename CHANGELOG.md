@@ -9,13 +9,6 @@ All notable changes to this project will be documented in this file. See [commit
 
 * Add some debug statements in case of exceptions ([#88](https://github.com/necodeIT/lb_planner_plugin/issues/88)) ([4543395](https://github.com/necodeIT/lb_planner_plugin/commit/45433950866add2200e626fab7e9f517484770a3))
 
-## [1.1.8](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.7...1.1.8) (2025-10-04)
-
-
-### Bug Fixes
-
-* Add some debug statements in case of exceptions ([#88](https://github.com/necodeIT/lb_planner_plugin/issues/88)) ([4543395](https://github.com/necodeIT/lb_planner_plugin/commit/45433950866add2200e626fab7e9f517484770a3))
-
 ## [1.1.7](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.6...1.1.7) (2025-10-02)
 
 
