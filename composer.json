@@ -1,0 +1,16 @@
+{
+	"require": {
+		"sentry/sentry": "^4.16",
+		"php": ">=8.1"
+	},
+    "replace": {
+        "symfony/deprecation-contracts": "*",
+        "guzzlehttp/psr7": "*",
+        "psr/http-factory": "*",
+        "psr/http-message": "*",
+        "ralouphie/getallheaders": "*"
+    },
+    "config": {
+		"vendor-dir": "lbplanner/vendor"
+    }
+}
