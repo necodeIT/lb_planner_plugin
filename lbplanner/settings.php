@@ -60,7 +60,8 @@ if ($hassiteconfig) {
 
     $sentrydsnsett = new admin_setting_configtext(
         'local_lbplanner/'.SETTINGS::SENTRY_DSN,
-        'Sentry DSN (data source name), for where to send error debugging info to.',
+        'Sentry DSN',
+        'for where to send error debugging info to.',
         '',
         PARAM_TEXT
     );
