@@ -98,5 +98,12 @@ function xmldb_local_lbplanner_upgrade($oldversion): bool {
 
         upgrade_plugin_savepoint(true, 202509060001, 'local', 'lbplanner');
     }
+    if ($oldversion < 202510090000) {
+        $table = new xmldb_table('local_lbplanner_kanbanentries');
+        $field = new xmldb_field('column', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, null, 'cmid');
+        $dbman->rename_field($table, $field, 'selectedcolumn');
+
+        upgrade_plugin_savepoint(true, 202510090000, 'local', 'lbplanner');
+    }
     return true;
 }

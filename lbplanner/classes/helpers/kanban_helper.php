@@ -81,16 +81,7 @@ class kanban_helper {
             throw $e;
         }
         if ($entry->column !== KANBANCOL_TYPE_NUMERIC::BACKLOG) {
-            $table = $CFG->prefix . self::TABLE;
-            try {
-                // Moodle is too stupid to compensate for 'column' being a keyword so I need to shit my own ass manually.
-                $newid = $DB->execute("INSERT INTO {$table} VALUES (null,?,?,?)", [$entry->userid, $entry->cmid, $entry->column]);
-            } catch (\dml_exception $e) {
-                // Needed for low-reporting contexts such as a prod server.
-                echo 'error while trying to insert new kanban entry: '.$e->getMessage()."\nFurther info:\n".$e->debuginfo;
-                var_dump($entry);
-                throw $e;
-            }
+            $newid = $DB->insert_record(self::TABLE, $entry->prepare_for_db(), true);
             $entry->set_fresh($newid);
         }
     }
