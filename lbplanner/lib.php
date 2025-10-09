@@ -27,7 +27,7 @@ use local_lbplanner\helpers\sentry_helper;
 /**
  * Callback for any webservices that get called by external actors.
  * We use this to catch whenever anything from us is being called, and do sentry setup and error reporting.
- * @param stdClass $externalfunctioninfo external function info { @see external_api::external_function_info() }
+ * @param stdClass $externalfunctioninfo external function info {@see external_api::external_function_info()}
  * @param array $params the raw(ish) parameters that are going to get passed to the function implementing the API call
  * @return mixed Either whatever the API call returned, or false if we don't wish to override anything.
  */
