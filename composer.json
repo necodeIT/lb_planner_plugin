@@ -11,6 +11,9 @@
         "ralouphie/getallheaders": "*"
     },
     "config": {
-		"vendor-dir": "lbplanner/vendor"
+		"vendor-dir": "lbplanner/vendor",
+		"platform": {
+			"php": "8.1.0"
+		}
     }
 }
