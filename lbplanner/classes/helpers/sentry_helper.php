@@ -20,6 +20,8 @@ use Throwable;
 
 use local_lbplanner\helpers\config_helper;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot.'/local/lbplanner/vendor/autoload.php');
 
 /**
@@ -43,7 +45,7 @@ class sentry_helper {
      */
     public static function init(): void {
         if (self::enabled()) {
-            $cfg = [ // TODO: look at all the config options
+            $cfg = [ // TODO: look at all the config options.
                 "dsn" => config_helper::get_sentry_dsn(),
                 "enable_tracing" => true,
                 "attach_stacktrace" => true,

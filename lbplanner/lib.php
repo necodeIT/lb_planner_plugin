@@ -24,8 +24,6 @@
 
 use local_lbplanner\helpers\sentry_helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Callback for any webservices that get called by external actors.
  * We use this to catch whenever anything from us is being called, and do sentry setup and error reporting.
@@ -44,10 +42,10 @@ function local_lbplanner_override_webservice_execution(stdClass $externalfunctio
 
             // Report if call_user_func_array itself had some kind of issue.
             if ($result === false) {
-                $params_s = var_export($params, true);
+                $paramsstring = var_export($params, true);
                 throw new \coding_exception(
                     "webservice override: call_user_func_array returned with false at "
-                    .$externalfunctioninfo->classname."::".$externalfunctioninfo->methodname."(".$params_s.");"
+                    .$externalfunctioninfo->classname."::".$externalfunctioninfo->methodname."(".$paramsstring.");"
                 );
             }
 
