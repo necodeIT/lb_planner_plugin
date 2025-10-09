@@ -115,4 +115,12 @@ class config_helper {
     public static function get_course_outdatedrange(): int {
         return get_config('local_lbplanner', SETTINGS::COURSE_OUTDATERANGE);
     }
+
+    /**
+     * Get the Sentry DSN - for where to send error debugging info to.
+     * @return string the sentry DSN
+     */
+    public static function get_sentry_dsn(): string {
+        return get_config('local_lbplanner', SETTINGS::SENTRY_DSN);
+    }
 }

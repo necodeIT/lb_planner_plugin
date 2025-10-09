@@ -41,4 +41,8 @@ class SETTINGS extends Enum {
      * Key for the setting for how long a course should be expired for until it counts as outdated and gets culled.
      */
     const COURSE_OUTDATERANGE = 'course_outdaterange';
+    /**
+     * Key for the setting for where sentry events should be sent to.
+     */
+    const SENTRY_DSN = 'sentry_dsn';
 }
