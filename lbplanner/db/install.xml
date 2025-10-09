@@ -155,7 +155,7 @@
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
 				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
 				<FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the course module ID"/>
-				<FIELD NAME="column" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"/>
+				<FIELD NAME="selectedcolumn" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"/>
 			</FIELDS>
 			<KEYS>
 				<KEY NAME="primary" TYPE="primary" FIELDS="id"/>
