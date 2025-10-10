@@ -1064,7 +1064,7 @@ def main() -> None:
             f.write(script)
 
     if WARNCOUNT > 0:
-        print(f"printed {WARNCOUNT} warnings in total ({WARNCOUNT / len(infos):.2f} per API function)")
+        print(f"printed {WARNCOUNT} warnings in total ({WARNCOUNT / len(infos):.2f} per API function)", file=sys.stderr)
         sys.exit(1)
 
 
