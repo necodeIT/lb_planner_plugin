@@ -727,6 +727,9 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
     # https://regex101.com/r/qyzYks
     functions = re.findall(r"'(local_lbplanner_(\w+?)_(\w+))' => \[(.*?)\],", clean_content, re.DOTALL)
 
+    # to make sure we never accidentally duplicate descriptions
+    existing_descriptions = []
+
     for function in functions:
         func_dict = {}
 
@@ -753,7 +756,13 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
 
         # Only adding to the list if all information is present
         if all(value is not None for value in func_dict.values()):
-            function_infos.append(FunctionInfo(**func_dict))
+            finfo = FunctionInfo(**func_dict)
+            function_infos.append(finfo)
+
+            if finfo.description in existing_descriptions:
+                warn("duplicated API function description", finfo.description)
+            else:
+                existing_descriptions.append(finfo.description)
         else:
             warn(f"Could not gather all info for {func_dict["name"]}", func_dict)
 
