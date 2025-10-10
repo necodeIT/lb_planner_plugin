@@ -20,7 +20,7 @@ use core_external\{external_function_parameters, external_single_structure};
 use local_lbplanner\helpers\plan_helper;
 
 /**
- * Get the plan of the given user.
+ * Returns the plan of the current user.
  *
  * @package local_lbplanner
  * @subpackage services_plan

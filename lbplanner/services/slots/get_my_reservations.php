@@ -21,8 +21,7 @@ use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\reservation;
 
 /**
- * Returns all slots a supervisor can theoretically reserve for a user.
- * This does not include times the user has already reserved a slot for.
+ * Returns all reservations for this user.
  *
  * @package local_lbplanner
  * @subpackage services_slots

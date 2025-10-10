@@ -69,7 +69,9 @@ class slots_book_reservation extends external_api {
     }
 
     /**
-     * Books a reservation
+     * Books a reservation for the user.
+     * Will unbook any overlapping reservations the user may already have.
+     *
      * @param int $slotid the slot to book a reservation for
      * @param string $date the day this reservation should take place
      * @param int $userid the user to reserve for

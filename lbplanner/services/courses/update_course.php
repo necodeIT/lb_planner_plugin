@@ -21,7 +21,7 @@ use local_lbplanner\helpers\course_helper;
 use moodle_exception;
 
 /**
- * Update the data for a course.
+ * Update the user-specific data for a course.
  *
  * @package local_lbplanner
  * @subpackage services_courses
@@ -48,7 +48,7 @@ class courses_update_course extends external_api {
     }
 
     /**
-     * Update the User-data for a course.
+     * Update the user-specific data for a course.
      * @param int $courseid The id of the course
      * @param string $color The color of the course
      * @param string $shortname The shortname of the course

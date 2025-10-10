@@ -20,7 +20,7 @@ use core_external\{external_api, external_function_parameters};
 use local_lbplanner\helpers\plan_helper;
 
 /**
- * Clear the plan for the given user.
+ * Clears your current plan.
  *
  * @package local_lbplanner
  * @subpackage services_plan
@@ -37,7 +37,7 @@ class plan_clear_plan extends external_api {
     }
 
     /**
-     * Clear the plan.
+     * Clears your current plan.
      *
      * @return void
      * @throws Exception when access denied

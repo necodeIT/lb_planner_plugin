@@ -27,7 +27,7 @@ use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
 
 /**
- * Gets all users with one or several LBP capabilities.
+ * Returns all users, optionally filtered by vintage.
  *
  * @package local_lbplanner
  * @subpackage services_user
@@ -46,7 +46,7 @@ class user_get_all_users extends external_api {
     }
 
     /**
-     * Gives back all users.
+     * Returns all users, optionally filtered by vintage.
      * @param ?string $vintage (optional) gives back all users with the given vintage
      * @throws moodle_exception
      * @throws dml_exception

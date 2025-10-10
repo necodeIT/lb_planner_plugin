@@ -26,7 +26,7 @@ use local_lbplanner\model\user;
 use local_lbplanner\enums\KANBANCOL_TYPE_ORNONE;
 
 /**
- * Update the data for a user. null values or unset parameters are left unmodified.
+ * Update current user settings. null values or unset parameters are left unmodified.
  *
  * @package local_lbplanner
  * @subpackage services_user
@@ -80,7 +80,7 @@ class user_update_user extends external_api {
     }
 
     /**
-     * Updates the given user in the eduplanner DB
+     * Update current user settings. null values or unset parameters are left unmodified.
      * @param ?string $theme The theme the user has selected
      * @param ?string $colorblindness The colorblindness the user has selected
      * @param ?bool $displaytaskcount The displaytaskcount the user has selected

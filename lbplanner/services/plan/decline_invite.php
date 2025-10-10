@@ -21,7 +21,7 @@ use local_lbplanner\helpers\{plan_helper, notifications_helper, invite_helper};
 use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_INVITE_STATE};
 
 /**
- * Decline an invite from the plan.
+ * Decline an invite.
  *
  * @package local_lbplanner
  * @subpackage services_plan

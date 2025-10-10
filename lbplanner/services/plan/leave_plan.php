@@ -22,9 +22,8 @@ use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_ACCESS_TYPE, PLAN_INVITE_STATE};
 
 /**
- * Leave your plan
- *
- * if no other user exists in the plan, the user can't leave
+ * Leave current plan.
+ * If no other user exists in the plan, the user can't leave.
  *
  * @package local_lbplanner
  * @subpackage services_plan
@@ -41,7 +40,8 @@ class plan_leave_plan extends external_api {
     }
 
     /**
-     * Leave your plan
+     * Leave current plan.
+     * If no other user exists in the plan, the user can't leave.
      *
      * @return void
      * @throws \moodle_exception when user is only member left in plan

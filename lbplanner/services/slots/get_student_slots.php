@@ -23,8 +23,7 @@ use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\slot;
 
 /**
- * Returns all slots a supervisor can theoretically reserve for a user.
- * This does not include times the user has already reserved a slot for.
+ * Returns all slots a supervisor can reserve for a user, not including already-reserved ones.
  *
  * @package local_lbplanner
  * @subpackage services_slots
@@ -43,7 +42,7 @@ class slots_get_student_slots extends external_api {
     }
 
     /**
-     * Returns slots of a user the supervisor can see.
+     * Returns all slots a supervisor can reserve for a user, not including already-reserved ones.
      * @param int $userid ID of the user in question (NOT the supervisor)
      */
     public static function get_student_slots(int $userid): array {
