@@ -45,7 +45,7 @@ class kanban_get_board extends external_api {
     }
 
     /**
-     * Gets all the entries on this user's board.
+     * Returns all entries in the kanban board for the current user.
      */
     public static function get_board(): array {
         global $USER;

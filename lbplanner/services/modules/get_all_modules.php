@@ -21,7 +21,7 @@ use local_lbplanner\helpers\{modules_helper, plan_helper, course_helper};
 use local_lbplanner\model\module;
 
 /**
- * Get all the modules of the current year.
+ * Returns all the modules for a user.
  *
  * @package local_lbplanner
  * @subpackage services_modules

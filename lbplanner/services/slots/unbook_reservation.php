@@ -25,7 +25,7 @@ use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\enums\NOTIF_TRIGGER;
 
 /**
- * Unbooks reservation
+ * Tries to request unbooking a reservation.
  *
  * @package local_lbplanner
  * @subpackage services_slots
@@ -57,7 +57,7 @@ class slots_unbook_reservation extends external_api {
     }
 
     /**
-     * Tries to request unbooking
+     * Tries to request unbooking a reservation.
      * @param int $reservationid which reservation to unbook
      * @param bool $nice whether to ask the student to unbook themself, or force-unbook
      */

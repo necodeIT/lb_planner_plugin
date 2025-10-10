@@ -46,7 +46,7 @@ class slots_delete_slot extends external_api {
     }
 
     /**
-     * Tries to request unbooking
+     * Deletes slot
      * @param int $id which slot to delete
      */
     public static function delete_slot(int $id): void {

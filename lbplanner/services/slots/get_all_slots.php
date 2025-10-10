@@ -24,7 +24,6 @@ use local_lbplanner\model\user;
 
 /**
  * Returns all slots.
- * Throws exception if the current user is not a slotmaster.
  *
  * @package local_lbplanner
  * @subpackage services_slots

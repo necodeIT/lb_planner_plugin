@@ -22,7 +22,7 @@ use local_lbplanner\helpers\plan_helper;
 use local_lbplanner\model\module;
 
 /**
- * Get all the modules of the given course.
+ * Returns all modules belonging to a course.
  *
  * @package local_lbplanner
  * @subpackage services_modules
@@ -48,7 +48,7 @@ class modules_get_all_course_modules extends external_api {
     }
 
     /**
-     * Returns all the modules inside a course.
+     * Returns all modules belonging to a course.
      *
      * @param int $courseid The ID of the course
      * @param bool $ekenabled whether or not to include ek modules

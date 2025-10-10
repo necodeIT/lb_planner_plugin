@@ -21,7 +21,7 @@ use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\slot;
 
 /**
- * Returns all slots a supervisor can see.
+ * Returns all slots belonging to the supervisor.
  *
  * @package local_lbplanner
  * @subpackage services_slots
@@ -38,7 +38,7 @@ class slots_get_supervisor_slots extends external_api {
     }
 
     /**
-     * Returns all slots a supervisor controls.
+     * Returns all slots belonging to the supervisor.
      */
     public static function get_supervisor_slots(): array {
         global $USER;

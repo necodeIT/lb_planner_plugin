@@ -22,7 +22,7 @@ use local_lbplanner\helpers\course_helper;
 use local_lbplanner\model\course;
 
 /**
- * Get all the courses of the current year.
+ * Returns courses visible to this user.
  *
  * @package local_lbplanner
  * @subpackage services_courses
@@ -40,7 +40,7 @@ class courses_get_my_courses extends \core_external\external_api {
     }
 
     /**
-     * Get all the courses of the current year.
+     * Returns courses visible to this user.
      */
     public static function get_my_courses(): array {
         $courses = course_helper::get_eduplanner_courses(true);

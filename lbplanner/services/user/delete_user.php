@@ -25,8 +25,6 @@ use moodle_exception;
 /**
  * Removes all user data stored by the lbplanner app.
  *
- * Admins can pass a userid to delete the user with the given id
- *
  * @package local_lbplanner
  * @subpackage services_user
  * @copyright 2024 necodeIT
