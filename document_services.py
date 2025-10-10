@@ -386,12 +386,15 @@ class PHPConstant(PHPExpression):
 class SlotsDict:
     @property
     def __dict__(self):
-        slots = tuple()
+        return {name: self.__getattribute__(name) for name in self.get_slots()}
 
+    def get_slots(self):
+        slots = tuple()
         for cls in self.__class__.__mro__:
             if cls != SlotsDict and issubclass(cls, SlotsDict):
                 slots = cls.__slots__ + slots
-        return {name: self.__getattribute__(name) for name in slots}
+
+        return slots
 
 class FunctionInfo(SlotsDict):
     __slots__ = ('name', 'group', 'capabilities', 'description', 'path')
@@ -414,6 +417,41 @@ class FunctionInfoEx(FunctionInfo):
 
         self.parameters = parameters
         self.returns = returns
+
+class DocString_TypeDescPair(SlotsDict):
+    __slots__ = ('typ', 'description')
+    typ: str
+    description: str
+
+    def __init__(self, typ: str, description: str):
+        self.typ = typ
+        self.description = description
+
+class DocString(SlotsDict):
+    __slots__ = ('description', 'params', 'returns')
+    description: str
+    params: dict[str, DocString_TypeDescPair]
+    returns: DocString_TypeDescPair
+
+    def __init__(self, desc: str, params: dict[str, DocString_TypeDescPair], returns: DocString_TypeDescPair):
+        self.desc = desc
+        self.params = params
+        self.returns = returns
+
+class ExtractedAPIFunction(SlotsDict):
+    __slots__ = ('docstring', 'name', 'params', 'returns', 'body')
+    docstring: DocString
+    name: str
+    params: str
+    returns: str
+    body: str
+
+    def __init__(self, docstring: DocString, name: str, params: str, returns: str, body: str):
+        self.docstring = docstring
+        self.name = name
+        self.params = params
+        self.returns = returns
+        self.body = body
 
 class IRElement(SlotsDict, ABC):
     __slots__ = ('description', 'required', 'type')
@@ -766,32 +804,83 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
     return function_infos
 
 
-def extract_php_functions(php_code: str, name: str) -> tuple[str | None, str | None]:
+def extract_api_functions(php_code: str, name: str) -> tuple[ExtractedAPIFunction | None, ExtractedAPIFunction | None, ExtractedAPIFunction | None]:
     # Regular expression to match the function names and bodies
     # https://regex101.com/r/9GtIMA
-    pattern = re.compile(r"(public static function (\w+_(?:returns|parameters))\W[^{}]*?{[^{}]+?})", re.DOTALL)
+    # TODO: params
+    pattern = re.compile(
+        r"(?P<docstring>    /\*\*\n(?:     \*[^\n]*\n)*?     \*/)\s*public static function (?P<name>\w+(?:_returns|_parameters|))\(\s*(?P<params>(?:\??(?:int|string|bool) \$[a-z]*(?:,\s+)?)*)\)(?:: (?P<returns>[a-z_]+))? (?P<body>{.+?^    }$)",
+        re.DOTALL | re.MULTILINE
+    )
 
     # Find all matches in the PHP code
     matches: list[tuple[str, str]] = pattern.findall(php_code)
 
     parameters_function = None
     returns_function = None
+    main_function = None
 
     for match in matches:
         # Extract function name
-        function_name = match[1]
+        if len(match) == 4:
+            func_docstring, func_name, func_params, func_body = match
+            func_returns = None
+        elif len(match) == 5:
+            func_docstring, func_name, func_params, func_returns, func_body = match
+        else:
+            raise Exception("unreachable")
 
-        if function_name.endswith("_parameters"):
-            parameters_function = match[0]
-        elif function_name.endswith("_returns"):
-            returns_function = match[0]
+        function_packed = ExtractedAPIFunction(
+            parse_docstring(func_docstring),
+            func_name,
+            func_params,
+            func_returns,
+            func_body
+        )
+
+        if func_name.endswith("_parameters"):
+            parameters_function = function_packed
+        elif func_name.endswith("_returns"):
+            returns_function = function_packed
+        else:
+            main_function = function_packed
 
     if parameters_function is None:
-        warn(f"Couldn't find parameters function in {name}")
+        warn(f"Couldn't find parameters function in {name}", php_code)
     if returns_function is None:
-        warn(f"Couldn't find returns function in {name}")
+        warn(f"Couldn't find returns function in {name}", php_code)
+    if main_function is None:
+        warn(f"Couldn't find main function in {name}", php_code)
 
-    return parameters_function, returns_function
+    return parameters_function, main_function, returns_function
+
+def parse_docstring(inpot: str) -> DocString:
+    desc = ""
+    params: dict[str, DocString_TypeDescPair] = {}
+    returns: DocString_TypeDescPair = None
+    isdesc = True
+    for line in inpot.splitlines():
+        strippedline = line[line.find('*') + 1:].strip()
+        if strippedline.startswith('@'):
+            isdec = False
+            splitline = strippedline.split(' ')
+            match splitline[0]:
+                case '@param':
+                    if splitline[2] in params:
+                        warn(f"specified @param {splitline[2]} twice in docstring")
+                    params[splitline[2]] = DocString_TypeDescPair(splitline[1], " ".join(splitline[3:]))
+                case '@return':
+                    if returns is not None:
+                        warn("specified @returns twice in docstring")
+                    returns = DocString_TypeDescPair(splitline[1], " ".join(splitline[2:]))
+                case '@throws' | '@see' | '@link':
+                    pass
+                case unknown:
+                    warn(f"unknown @-rule: {unknown}", line)
+        elif isdesc:
+            desc += " " + strippedline
+
+    return DocString(desc, params, returns)
 
 def find_import(nr: PHPNameResolution, symbol: str) -> str | None:
 
@@ -887,20 +976,21 @@ def main():
         with open(info.path, "r") as func_file:
             func_content = func_file.read()
             imports = extract_imports(func_content)
-            params_func, returns_func = extract_php_functions(func_content, info.path)
+            params_func, main_func, returns_func = extract_api_functions(func_content, info.path)
 
             if returns_func is None or params_func is None:
                 continue
 
-            returns = parse_function(returns_func, imports)
+            returns = parse_function(returns_func.body, imports)
 
-            params = parse_function(params_func, imports)
+            params = parse_function(params_func.body, imports)
 
             complete_info.append(FunctionInfoEx(info, params, returns))
 
-    CURRENT_SERVICE = None
+            if main_func is not None:
+                pass # TODO: compare docstring of main to params and returns functions
 
-    # TODO: intermediary step
+    CURRENT_SERVICE = None
 
     data = json.dumps(complete_info, default=lambda x: x.__dict__)
 
