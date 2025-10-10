@@ -7,20 +7,21 @@ import traceback as tb
 
 from typing import Any, Iterable
 
-HAS_WARNED = False
+WARNCOUNT = 0
 CURRENT_SERVICE: str | None = None
 
 def warn(msg: str, *context: Any):
-    """Prints a warning message to the console and sets the global HAS_WARNED variable to True.
+    """Prints a warning message to the console and increments the global WARNCOUNT variable.
 
     :param str msg: The warning message to print.
+    :param Any *context: Any contextual info to be passed along.
     """
-    global HAS_WARNED
+    global WARNCOUNT
     WARN = "\033[0m\033[43m\033[30mWARN:\033[0m "
     WARN_TAB = "\033[0m    \033[43m\033[33m|\033[0m "
     WARN_TAB_LAST = "\033[0m    \033[43m\033[33m\033[58;5;0m\033[4m|\033[0m "
 
-    HAS_WARNED = True
+    WARNCOUNT += 1
 
     stack = tb.extract_stack()
     stack_str = " -> ".join([f"\033[34m{frame.name}\033[0m" for frame in stack if frame != stack[-1]])
@@ -1015,7 +1016,8 @@ def main():
         with open(f"{sys.argv[1]}/script.js", "w") as f:
             f.write(script)
 
-    if HAS_WARNED:
+    if WARNCOUNT > 0:
+        print(f"printed {WARNCOUNT} warnings in total")
         sys.exit(1)
 
 
