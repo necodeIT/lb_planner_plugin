@@ -431,9 +431,9 @@ class DocString(SlotsDict):
     __slots__ = ('description', 'params', 'returns')
     description: str
     params: dict[str, DocString_TypeDescPair]
-    returns: DocString_TypeDescPair
+    returns: DocString_TypeDescPair | None
 
-    def __init__(self, desc: str, params: dict[str, DocString_TypeDescPair], returns: DocString_TypeDescPair):
+    def __init__(self, desc: str, params: dict[str, DocString_TypeDescPair], returns: DocString_TypeDescPair | None):
         self.desc = desc
         self.params = params
         self.returns = returns
@@ -807,7 +807,6 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
 def extract_api_functions(php_code: str, name: str) -> tuple[ExtractedAPIFunction | None, ExtractedAPIFunction | None, ExtractedAPIFunction | None]:
     # Regular expression to match the function names and bodies
     # https://regex101.com/r/9GtIMA
-    # TODO: params
     pattern = re.compile(
         r"(?P<docstring>    /\*\*\n(?:     \*[^\n]*\n)*?     \*/)\s*public static function (?P<name>\w+(?:_returns|_parameters|))\(\s*(?P<params>(?:\??(?:int|string|bool) \$[a-z]*(?:,\s+)?)*)\)(?:: (?P<returns>[a-z_]+))? (?P<body>{.+?^    }$)",
         re.DOTALL | re.MULTILINE
@@ -857,12 +856,11 @@ def extract_api_functions(php_code: str, name: str) -> tuple[ExtractedAPIFunctio
 def parse_docstring(inpot: str) -> DocString:
     desc = ""
     params: dict[str, DocString_TypeDescPair] = {}
-    returns: DocString_TypeDescPair = None
+    returns: DocString_TypeDescPair | None = None
     isdesc = True
     for line in inpot.splitlines():
         strippedline = line[line.find('*') + 1:].strip()
         if strippedline.startswith('@'):
-            isdec = False
             splitline = strippedline.split(' ')
             match splitline[0]:
                 case '@param':
