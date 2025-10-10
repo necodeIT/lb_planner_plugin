@@ -16,8 +16,9 @@ def warn(msg: str, *context: Any):
     :param str msg: The warning message to print.
     """
     global HAS_WARNED
-    WARN = "\033[43m\033[30mWARN:\033[0m "
-    WARN_TAB = "    \033[43m\033[33m|\033[0m "
+    WARN = "\033[0m\033[43m\033[30mWARN:\033[0m "
+    WARN_TAB = "\033[0m    \033[43m\033[33m|\033[0m "
+    WARN_TAB_LAST = "\033[0m    \033[43m\033[33m\033[58;5;0m\033[4m|\033[0m "
 
     HAS_WARNED = True
 
@@ -30,10 +31,13 @@ def warn(msg: str, *context: Any):
     else:
         service_msg = f"in service \033[36m{CURRENT_SERVICE}\033[0m "
 
+    context = tuple(f"{c}".strip() for c in context)
+    context_formatted = [f"\n{c}\033[0m".replace('\n', f"\n\033[0m{WARN_TAB}  \033[2m") for c in context]
+    context_formatted[-1] = context_formatted[-1].replace(WARN_TAB, WARN_TAB_LAST)
+
     print(
         f"{WARN}\033[31m{msg}\033[0m {service_msg}({stack_str})",
-        f"\n{WARN_TAB}  " if len(context) > 0 else "",
-        *[f"\033[2m{c}\033[0m".replace('\n', '\n\033[0m' + WARN_TAB + "  \033[2m") for c in context],
+        *context_formatted,
         file=sys.stderr,
         sep=""
     )
