@@ -744,8 +744,8 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
             func_dict["capabilities"] = [cap.strip() for cap in capabilities.group(1).split(',') if len(cap) > 0]
 
         # Extracting description
-        description = re.search(r"'description' => '(.*?)'", function[3])
-        func_dict["description"] = description.group(1) if description else None
+        description = re.search(r"'description' => '([^\n]*)'", function[3])
+        func_dict["description"] = description.group(1).replace('\\\'', '\'') if description else None
 
         # Extracting and adjusting path
         classpath = re.search(r"'classpath' => 'local/(.*?)'", function[3])
