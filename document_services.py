@@ -1,7 +1,7 @@
 import json
 import re
 import sys
-from os import path
+from os import path, listdir
 from abc import ABC, abstractmethod
 import traceback as tb
 
@@ -26,12 +26,12 @@ def warn(msg: str, *context: Any):
 
     service_msg: str
     if CURRENT_SERVICE is None:
-        service_msg = "outside any service"
+        service_msg = ""
     else:
-        service_msg = f"in service \033[36m{CURRENT_SERVICE}\033[0m"
+        service_msg = f"in service \033[36m{CURRENT_SERVICE}\033[0m "
 
     print(
-        f"{WARN}\033[31m{msg}\033[0m {service_msg} ({stack_str})",
+        f"{WARN}\033[31m{msg}\033[0m {service_msg}({stack_str})",
         f"\n{WARN_TAB}  " if len(context) > 0 else "",
         *[f"\033[2m{c}\033[0m".replace('\n', '\n\033[0m' + WARN_TAB + "  \033[2m") for c in context],
         file=sys.stderr,
@@ -712,7 +712,6 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
         warn("Couldn't find $services")
     else:
         services_functions = re.findall(r"'local_lbplanner_([a-z]+)_([a-z_]+)'", services_function_block[1])
-        exit()
 
         function_infos_copy = function_infos.copy()
         for function in services_functions:
@@ -720,16 +719,49 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
             func_name = function[1]
             func_group = function[0]
 
+            found = False
             for functioninfo in function_infos_copy:
                 if functioninfo.name == func_name and functioninfo.group == func_group:
                     function_infos_copy.remove(functioninfo)
-                    continue # found the function
+                    found = True
+                    break
 
-            warn(f"Couldn't find service function {func_group}_{func_name} in $functions")
+            if not found:
+                warn(f"Couldn't find service function {func_group}_{func_name} in $functions")
 
         for functioninfo in function_infos_copy:
             # The ones left here are not in services_function.
             warn(f"Couldn't find service function {functioninfo.group}_{functioninfo.name} in $services")
+
+    # double-checking using existing files
+    function_infos_copy = function_infos.copy()
+    searchdir = './lbplanner/services'
+    for subdir in listdir(searchdir):
+        dirpath = path.join(searchdir, subdir)
+        if not path.isdir(dirpath):
+            warn(f'found file {subdir} in services folder')
+            continue
+
+        for filename in listdir('lbplanner/services/' + subdir):
+            if path.isdir(filename):
+                warn(f'found directory "{filename}" in folder "{dirpath}"')
+                continue
+            if not filename.endswith('.php'):
+                warn(f'found non-php file "{filename}" in folder "{dirpath}"')
+                continue
+
+            for functioninfo in function_infos_copy:
+                if functioninfo.name == filename[:-4] and functioninfo.group == subdir:
+                    function_infos_copy.remove(functioninfo)
+                    found = True
+                    break
+
+            if not found:
+                warn(f"Couldn't find service function {func_group}_{func_name} in $function")
+
+    for functioninfo in function_infos_copy:
+        # The ones left here are not in the dirs.
+        warn(f"Couldn't find file {functioninfo.group}/{functioninfo.name}.php in services folder")
 
     return function_infos
 
