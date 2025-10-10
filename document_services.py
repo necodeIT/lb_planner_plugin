@@ -664,9 +664,9 @@ def parse_string(code: str) -> tuple[int, PHPStringLiteral]:
                 result.append(c)
 
 def extract_function_info(file_content: str) -> list[FunctionInfo]:
-    function_info = []
+    function_infos = []
 
-    # Removing comments, PHP tags, and definitions
+    # Removing line comments, PHP tags, and definitions
     clean_content = re.sub(r"//.*|<\?php|defined\(.*\)\s*\|\|\s*die\(\);", "", file_content)
 
     # Splitting the content based on function definition blocks
@@ -699,14 +699,39 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
 
         # Only adding to the list if all information is present
         if all(value is not None for value in func_dict.values()):
-            function_info.append(FunctionInfo(**func_dict))
+            function_infos.append(FunctionInfo(**func_dict))
         else:
             warn(f"Could not gather all info for {func_dict["name"]}", func_dict)
 
-    if len(function_info) == 0:
+    if len(function_infos) == 0:
         warn("Couldn't find any functions!")
 
-    return function_info
+    # double-checking using the services list below
+    services_function_block = re.search(r"\$services = \[.*?'functions' => \[(['a-z_,\s]+)\]", clean_content, re.DOTALL)
+    if services_function_block is None:
+        warn("Couldn't find $services")
+    else:
+        services_functions = re.findall(r"'local_lbplanner_([a-z]+)_([a-z_]+)'", services_function_block[1])
+        exit()
+
+        function_infos_copy = function_infos.copy()
+        for function in services_functions:
+            # Extracting function name and group
+            func_name = function[1]
+            func_group = function[0]
+
+            for functioninfo in function_infos_copy:
+                if functioninfo.name == func_name and functioninfo.group == func_group:
+                    function_infos_copy.remove(functioninfo)
+                    continue # found the function
+
+            warn(f"Couldn't find service function {func_group}_{func_name} in $functions")
+
+        for functioninfo in function_infos_copy:
+            # The ones left here are not in services_function.
+            warn(f"Couldn't find service function {functioninfo.group}_{functioninfo.name} in $services")
+
+    return function_infos
 
 
 def extract_php_functions(php_code: str, name: str) -> tuple[str | None, str | None]:
