@@ -433,15 +433,26 @@ class DocString_TypeDescPair(SlotsDict):
         self.description = description
 
 class DocString(SlotsDict):
-    __slots__ = ('description', 'params', 'returns')
+    __slots__ = ('description', 'params', 'returns', 'subpackage', 'copyright')
     description: str
     params: dict[str, DocString_TypeDescPair]
     returns: DocString_TypeDescPair | None
+    subpackage: str
+    copyright: tuple[int, str]
 
-    def __init__(self, desc: str, params: dict[str, DocString_TypeDescPair], returns: DocString_TypeDescPair | None):
-        self.desc = desc
+    def __init__(
+        self,
+        desc: str,
+        params: dict[str, DocString_TypeDescPair],
+        returns: DocString_TypeDescPair | None,
+        subpackage: str | None,
+        copyright: tuple[int, str] | None,
+    ):
+        self.description = desc
         self.params = params
         self.returns = returns
+        self.subpackage = subpackage
+        self.copyright = copyright
 
 class ExtractedAPIFunction(SlotsDict):
     __slots__ = ('docstring', 'name', 'params', 'returns', 'body')
@@ -858,14 +869,27 @@ def extract_api_functions(php_code: str, name: str) -> tuple[ExtractedAPIFunctio
 
     return parameters_function, main_function, returns_function
 
+def extract_main_api_docstring(inpot: str) -> DocString:
+    return parse_docstring(inpot[inpot.find('/**'):inpot.find('*/')])
+
 def parse_docstring(inpot: str) -> DocString:
-    desc = ""
+    desc_a = []
     params: dict[str, DocString_TypeDescPair] = {}
     returns: DocString_TypeDescPair | None = None
+    subpackage: str | None = None
+    copyright: tuple[int, str] | None = None
     isdesc = True
     for line in inpot.splitlines():
         strippedline = line[line.find('*') + 1:].strip()
-        if strippedline.startswith('@'):
+        if strippedline in ('*', ' ', ''):
+            continue # empty line, ignore
+        elif strippedline == '/':
+            break # last line, ignore
+        elif strippedline.startswith('NOTE:'):
+            isdesc = False
+            continue # internal notes, ignore
+        elif strippedline.startswith('@'):
+            isdesc = False
             splitline = strippedline.split(' ')
             match splitline[0]:
                 case '@param':
@@ -876,14 +900,27 @@ def parse_docstring(inpot: str) -> DocString:
                     if returns is not None:
                         warn("specified @returns twice in docstring")
                     returns = DocString_TypeDescPair(splitline[1], " ".join(splitline[2:]))
-                case '@throws' | '@see' | '@link':
+                case '@package':
+                    if splitline[1] != "local_lbplanner":
+                        warn(f"found @package with value {splitline[1]} instead of local_lbplanner")
+                case '@subpackage':
+                    subpackage = " ".join(splitline[1:])
+                case '@copyright':
+                    copyright = int(splitline[1]), " ".join(splitline[2:])
+                case '@throws' | '@see' | '@link' | '@license':
                     pass
                 case unknown:
                     warn(f"unknown @-rule: {unknown}", line)
         elif isdesc:
-            desc += " " + strippedline
+            desc_a.append(strippedline)
 
-    return DocString(desc, params, returns)
+    desc = " ".join(desc_a)
+
+    # remove trailing period
+    if desc.endswith('.'):
+        desc = desc[:-1]
+
+    return DocString(desc, params, returns, subpackage, copyright)
 
 def find_import(nr: PHPNameResolution, symbol: str) -> str | None:
 
@@ -963,7 +1000,7 @@ def parse_function(input_text: str, nr: PHPNameResolution) -> IRElement | None:
         return topelement
 
 
-def main():
+def main() -> None:
     global CURRENT_SERVICE
     with open("lbplanner/db/services.php", "r") as file:
         content = file.read()
@@ -980,6 +1017,7 @@ def main():
             func_content = func_file.read()
             imports = extract_imports(func_content)
             params_func, main_func, returns_func = extract_api_functions(func_content, info.path)
+            main_docstring = extract_main_api_docstring(func_content)
 
             if returns_func is None or params_func is None:
                 continue
@@ -991,7 +1029,16 @@ def main():
             complete_info.append(FunctionInfoEx(info, params, returns))
 
             if main_func is not None:
-                pass # TODO: compare docstring of main to params and returns functions
+                if main_func.docstring.description != info.description or main_docstring.description != info.description:
+                    warn(
+                        "non-matching API function descriptions",
+                        f"func docstring:      {main_func.docstring.description}",
+                        f"class docstring:     {main_docstring.description}",
+                        f"service description: {info.description}",
+                    )
+                # TODO: check params
+            # TODO: check subpackage
+            # TODO: check copyright
 
     CURRENT_SERVICE = None
 
