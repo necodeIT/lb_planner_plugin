@@ -55,7 +55,7 @@ class invite_helper {
     public static function assert_invite_pending(int $status) {
         if ($status !== PLAN_INVITE_STATE::PENDING) {
             $name = PLAN_INVITE_STATE::name_from($status);
-            throw new \moodle_exception('Invite already '.$name);
+            throw new \moodle_exception("Invite already {$name}");
         }
     }
 }

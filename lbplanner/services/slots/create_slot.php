@@ -55,7 +55,7 @@ class slots_create_slot extends external_api {
             ),
             'weekday' => new external_value(
                 PARAM_INT,
-                'The weekday this slot happens on. '.WEEKDAY::format(),
+                'The weekday this slot happens on. ' . WEEKDAY::format(),
                 VALUE_REQUIRED,
                 null,
                 NULL_NOT_ALLOWED

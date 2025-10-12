@@ -60,7 +60,7 @@ class slots_update_slot extends external_api {
             ),
             'weekday' => new external_value(
                 PARAM_INT,
-                'The weekday this slot happens on. '.WEEKDAY::format().' (null to ignore)',
+                'The weekday this slot happens on. ' . WEEKDAY::format() . ' (null to ignore)',
                 VALUE_DEFAULT,
                 null,
                 NULL_ALLOWED

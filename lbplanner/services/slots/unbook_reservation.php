@@ -91,7 +91,7 @@ class slots_unbook_reservation extends external_api {
                 if ($startpast) {
                     throw new \moodle_exception(
                         'Students can\'t unbook reservations that have already started.'
-                        .' If you want to unbook this reservation regardless, force it.'
+                        . ' If you want to unbook this reservation regardless, force it.'
                     );
                 }
                 notifications_helper::notify_user($reservation->userid, $reservation->id, NOTIF_TRIGGER::UNBOOK_REQUESTED);

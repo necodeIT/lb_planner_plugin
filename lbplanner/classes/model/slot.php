@@ -90,11 +90,17 @@ class slot {
     public function __construct(int $id, int $startunit, int $duration, int $weekday, string $room, int $size) {
         $this->id = $id;
         if ($startunit <= 0 || $startunit > slot_helper::SCHOOL_UNIT_MAX) {
-            throw new \moodle_exception("slot's startunit must be >0 and <=".slot_helper::SCHOOL_UNIT_MAX.", but is {$startunit}");
+            throw new \moodle_exception(
+                "slot's startunit must be >0 and <="
+                . slot_helper::SCHOOL_UNIT_MAX
+                . ", but is {$startunit}"
+            );
         }
         if ($duration <= 0 || ($startunit + $duration - 1) > slot_helper::SCHOOL_UNIT_MAX) {
             throw new \moodle_exception(
-                "slot's duration must be >0 and can't exceed ".slot_helper::SCHOOL_UNIT_MAX." with startunit, but is {$duration}"
+                "slot's duration must be >0 and can't exceed "
+                . slot_helper::SCHOOL_UNIT_MAX
+                . " with startunit, but is {$duration}"
             );
         }
         $this->startunit = $startunit;
@@ -102,7 +108,10 @@ class slot {
         $this->weekday = WEEKDAY::from($weekday);
         if (strlen($room) <= 0 && strlen($room) > slot_helper::ROOM_MAXLENGTH) {
             throw new \moodle_exception(
-                "room name's length must be >0 and <=".slot_helper::ROOM_MAXLENGTH.", but is ".strlen($room)
+                "room name's length must be >0 and <="
+                . slot_helper::ROOM_MAXLENGTH
+                . ", but is "
+                . strlen($room)
             );
         }
         $this->room = $room;
@@ -169,7 +178,7 @@ class slot {
         if (strlen($this->room) <= 1) {
             throw new moodle_exception('room name has to be at least 2 characters long');
         } else if (strlen($this->room) > slot_helper::ROOM_MAXLENGTH) {
-            throw new moodle_exception('room name has a maximum of '.slot_helper::ROOM_MAXLENGTH.' characters');
+            throw new moodle_exception('room name has a maximum of ' . slot_helper::ROOM_MAXLENGTH . ' characters');
         }
         // Validating size.
         if ($this->size < 0) {
@@ -313,7 +322,7 @@ class slot {
                 'id' => new external_value(PARAM_INT, 'slot ID'),
                 'startunit' => new external_value(PARAM_INT, 'unit this slot starts in (8:00 is unit 1)'),
                 'duration' => new external_value(PARAM_INT, 'duration of the slot in units'),
-                'weekday' => new external_value(PARAM_INT, 'The day this unit repeats weekly: '.WEEKDAY::format()),
+                'weekday' => new external_value(PARAM_INT, 'The day this unit repeats weekly: ' . WEEKDAY::format()),
                 'room' => new external_value(PARAM_TEXT, 'The room this slot is for'),
                 'size' => new external_value(PARAM_INT, 'total capacity of the slot'),
                 'fullness' => new external_value(PARAM_INT, 'how many people have already reserved this slot'),

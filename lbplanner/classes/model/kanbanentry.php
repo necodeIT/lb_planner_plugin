@@ -127,7 +127,7 @@ class kanbanentry {
                 'id' => new external_value(PARAM_INT, 'kanban board ID'),
                 'userid' => new external_value(PARAM_INT, 'ID of the owner of this entry'),
                 'cmid' => new external_value(PARAM_INT, 'ID of the course-module'),
-                'column' => new external_value(PARAM_TEXT, 'which column this module is in '.KANBANCOL_TYPE::format()),
+                'column' => new external_value(PARAM_TEXT, 'which column this module is in ' . KANBANCOL_TYPE::format()),
             ]
         );
     }

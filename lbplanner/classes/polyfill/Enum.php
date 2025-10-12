@@ -50,7 +50,7 @@ class Enum {
         if ($try) {
             return null;
         } else {
-            throw new \moodle_exception("value {$value} cannot be represented as a value in enum ".static::class);
+            throw new \moodle_exception("value {$value} cannot be represented as a value in enum " . static::class);
         }
     }
     /**
@@ -70,7 +70,7 @@ class Enum {
         if ($try) {
             return null;
         } else {
-            throw new \moodle_exception("name {$name} doesn't exist in ".static::class);
+            throw new \moodle_exception("name {$name} doesn't exist in " . static::class);
         }
     }
     /**

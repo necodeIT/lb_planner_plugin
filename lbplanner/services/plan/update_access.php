@@ -37,7 +37,7 @@ class plan_update_access extends external_api {
         return new external_function_parameters([
             'accesstype' => new external_value(
                 PARAM_INT,
-                'New access type '.PLAN_ACCESS_TYPE::format(),
+                'New access type ' . PLAN_ACCESS_TYPE::format(),
                 VALUE_REQUIRED,
                 null,
                 NULL_NOT_ALLOWED

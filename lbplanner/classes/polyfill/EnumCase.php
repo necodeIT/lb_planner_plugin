@@ -47,4 +47,4 @@ class EnumCase {
         $this->name = $name;
         $this->value = $value;
     }
-};
+}
