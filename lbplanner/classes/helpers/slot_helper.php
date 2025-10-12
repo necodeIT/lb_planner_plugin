@@ -117,7 +117,7 @@ class slot_helper {
         global $DB;
         $slots = $DB->get_records_sql(
             'SELECT slot.* FROM {' . self::TABLE_SLOTS . '} as slot ' .
-            'INNER JOIN {'. self::TABLE_SLOT_FILTERS . '} as filter ON slot.id=filter.slotid ' .
+            'INNER JOIN {' . self::TABLE_SLOT_FILTERS . '} as filter ON slot.id=filter.slotid ' .
             'WHERE filter.vintage=? OR filter.vintage=NULL',
             [$vintage]
         );
