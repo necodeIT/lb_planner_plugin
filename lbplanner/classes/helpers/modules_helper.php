@@ -190,7 +190,7 @@ class modules_helper {
     public static function get_all_modules_by_course(int $courseid, bool $ekenabled): array {
         global $DB;
 
-        $cmodules = $DB->get_records(self::COURSE_MODULES_TABLE, ['course' => $courseid, 'visible' => 1]);
+        $cmodules = $DB->get_records(self::COURSE_MODULES_TABLE, ['course' => $courseid, 'visible' => 1, 'visibleoncoursepage' => 1]);
 
         $modules = [];
 
