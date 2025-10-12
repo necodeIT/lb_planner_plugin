@@ -43,49 +43,57 @@ class user_update_user extends external_api {
                 PARAM_TEXT,
                 'The theme the user has selected',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'colorblindness' => new external_value(
                 PARAM_TEXT,
                 'The colorblindness the user has selected',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'displaytaskcount' => new external_value(
                 PARAM_BOOL,
                 'Whether the user has the taskcount enabled',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'ekenabled' => new external_value(
                 PARAM_BOOL,
                 'Whether the user wants to see EK modules',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'showcolumncolors' => new external_value(
                 PARAM_BOOL,
                 'Whether column colors should show in kanban board',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'automovecompletedtasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if completed ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'automovesubmittedtasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if submitted ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'automoveoverduetasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if overdue ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
         ]);
     }
