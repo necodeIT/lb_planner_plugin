@@ -118,15 +118,28 @@ class module {
     }
 
     /**
+     * Creates a module object from the course-module object.
+     * @param \stdClass $cmobj the course-module object from moodle's DB
+     * @return module a module object with filled-in course-module object
+     */
+    public static function from_cmobj(\stdClass $cmobj): self {
+        $obj = new self();
+        $obj->cmobj = $cmobj;
+        $obj->cmid = $cmobj->id;
+        $obj->assignid = $cmobj->instance;
+        return $obj;
+    }
+
+    /**
      * Fetches the necessary caches and returns the assignment ID
      * @return int assign ID
      */
     public function get_assignid(): int {
         if ($this->assignid === null) {
             if ($this->cmid !== null) {
-                $this->assignid = $this->get_cmobj()['instance'];
+                $this->assignid = $this->get_cmobj()->instance;
             } else {
-                throw new \coding_exception('requested assignid, but no assignid');
+                throw new \coding_exception('requested assignid, but no cmid');
             }
         }
         return $this->assignid;
@@ -169,7 +182,7 @@ class module {
             if ($this->cmid !== null) {
                 $res = $DB->get_record(
                     modules_helper::COURSE_MODULES_TABLE,
-                    ['id' => $this->cmid]
+                    ['id' => $this->cmid, 'module' => modules_helper::get_assign_module_id()]
                 );
                 if ($res === false) {
                     throw new \moodle_exception("couldn't get course module with cmid {$this->cmid}");
@@ -184,7 +197,7 @@ class module {
                     [
                         'course' => $courseid,
                         'instance' => $this->assignid,
-                        'module' => 1,
+                        'module' => modules_helper::get_assign_module_id(),
                     ]
                 );
                 if ($res === false) {
