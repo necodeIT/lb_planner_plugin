@@ -73,6 +73,7 @@ class modules_helper {
 
     /**
      * For caching {@see get_assign_module_id()}
+     * @var ?int $assignmoduleid {@see get_assign_module_id()}
      */
     private static ?int $assignmoduleid = null;
 
