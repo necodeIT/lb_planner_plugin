@@ -26,12 +26,10 @@
 namespace local_lbplanner\helpers;
 
 use core\context\system as context_system;
-
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
-use local_lbplanner\enums\CAPABILITY;
-use local_lbplanner\enums\WEEKDAY;
+use local_lbplanner\enums\{CAPABILITY, WEEKDAY};
 use local_lbplanner\model\{slot, reservation, slot_filter};
 
 /**
@@ -62,8 +60,8 @@ class slot_helper {
         '14:10',
         '15:10',
         '16:00',
-        '17:00',  // All units after this point are 45min long instead of the usual 50.
-        '17:45',  // We will assume 50min anyway because it's easier that way.
+        '17:00', // All units after this point are 45min long instead of the usual 50.
+        '17:45', // We will assume 50min anyway because it's easier that way.
         '18:45',
         '19:30',
         '20:15',
@@ -119,8 +117,8 @@ class slot_helper {
         global $DB;
 
         $slots = $DB->get_records_sql(
-            'SELECT slot.* FROM {'.self::TABLE_SLOTS.'} as slot '.
-            'INNER JOIN {'.self::TABLE_SUPERVISORS.'} as supervisor ON supervisor.slotid=slot.id '.
+            'SELECT slot.* FROM {' . self::TABLE_SLOTS . '} as slot ' .
+            'INNER JOIN {' . self::TABLE_SUPERVISORS . '} as supervisor ON supervisor.slotid=slot.id ' .
             'WHERE supervisor.userid=?',
             [$supervisorid]
         );
@@ -332,7 +330,7 @@ class slot_helper {
     public static function calculate_slot_datetime(slot $slot, DateTimeImmutable $now): DateTimeImmutable {
         $slotdaytime = self::SCHOOL_UNITS[$slot->startunit];
         // Move to next day this weekday occurs (doesn't move if it's the same as today).
-        $slotdatetime = $now->modify('this '.WEEKDAY::name_from($slot->weekday)." {$slotdaytime}");
+        $slotdatetime = $now->modify('this ' . WEEKDAY::name_from($slot->weekday) . " {$slotdaytime}");
         if ($slotdatetime === false) {
             throw new \coding_exception('error while calculating slot datetime');
         }
@@ -357,7 +355,7 @@ class slot_helper {
         $utctz = new DateTimeZone('UTC');
         $daytime = self::SCHOOL_UNITS[$unit];
 
-        return DateTimeImmutable::createFromFormat('Y-m-d G:i', $date->format('Y-m-d ').$daytime, $utctz);
+        return DateTimeImmutable::createFromFormat('Y-m-d G:i', $date->format('Y-m-d ') . $daytime, $utctz);
     }
 
     /**

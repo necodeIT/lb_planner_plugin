@@ -75,7 +75,6 @@ class plan_accept_invite extends external_api {
         // Deletes the old plan if the user is the owner of it.
         $oldplanid = plan_helper::get_plan_id($USER->id);
         if (plan_helper::get_owner($oldplanid) == $USER->id) {
-
             foreach (plan_helper::get_plan_members($oldplanid) as $member) {
                 if ($member->userid != $USER->id) {
                     self::call_external_function('local_lbplanner_plan_remove_user', [

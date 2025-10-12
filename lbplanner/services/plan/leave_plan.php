@@ -75,13 +75,15 @@ class plan_leave_plan extends external_api {
                 $allmembers[] = $member;
             }
             if (count($writemembers) > 0) {
-                $newowner = $writemembers[rand( 0, count($writemembers) - 1)]->userid;
+                $newowner = $writemembers[rand(0, count($writemembers) - 1)]->userid;
             } else {
-                $newowner = $allmembers[rand( 0, count($allmembers) - 1)]->userid;
+                $newowner = $allmembers[rand(0, count($allmembers) - 1)]->userid;
             }
             $newowneraccess = $DB->get_record(
                 plan_helper::ACCESS_TABLE,
-                ['planid' => $planid, 'userid' => $newowner], '*', MUST_EXIST
+                ['planid' => $planid, 'userid' => $newowner],
+                '*',
+                MUST_EXIST
             );
             $newowneraccess->accesstype = PLAN_ACCESS_TYPE::OWNER;
             $DB->update_record(plan_helper::ACCESS_TABLE, $newowneraccess);
@@ -91,7 +93,9 @@ class plan_leave_plan extends external_api {
 
         $oldaccess = $DB->get_record(
             plan_helper::ACCESS_TABLE,
-            ['planid' => $planid, 'userid' => $USER->id], '*', MUST_EXIST
+            ['planid' => $planid, 'userid' => $USER->id],
+            '*',
+            MUST_EXIST
         );
 
         $oldaccess->planid = $newplanid;

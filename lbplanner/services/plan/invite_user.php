@@ -75,10 +75,12 @@ class plan_invite_user extends external_api {
             throw new \moodle_exception('Cannot invite user who is already a member');
         }
 
-        if ($DB->record_exists(
+        if (
+            $DB->record_exists(
                 plan_helper::INVITES_TABLE,
                 ['inviteeid' => $inviteeid, 'planid' => $planid, 'status' => PLAN_INVITE_STATE::PENDING]
-            )) {
+            )
+        ) {
             throw new \moodle_exception('User is already invited');
         }
 

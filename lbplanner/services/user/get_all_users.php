@@ -16,15 +16,14 @@
 
 namespace local_lbplanner_services;
 
-use dml_exception;
 use core_external\{external_api, external_function_parameters, external_multiple_structure, external_value};
 use invalid_parameter_exception;
-use local_lbplanner\enums\CAPABILITY;
 use moodle_exception;
+use dml_exception;
 use core\context\system as context_system;
-
 use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
+use local_lbplanner\enums\CAPABILITY;
 
 /**
  * Gets all users with one or several LBP capabilities.
