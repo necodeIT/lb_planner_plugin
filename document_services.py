@@ -44,7 +44,26 @@ def warn(msg: str, *context: Any):
         sep=""
     )
 
-def convert_php_type_to_normal_type(param_type: str) -> str:
+def convert_php_type_to_normal_type(php_type: str) -> tuple[str, bool]:
+    CONVERSIONS = {
+        "int": "int",
+        "string": "String",
+        "bool": "bool",
+    }
+
+    if php_type[0] == '?':
+        nullable = True
+        php_type = php_type[1:]
+    else:
+        nullable = False
+
+    if php_type in CONVERSIONS.keys():
+        return CONVERSIONS[php_type], nullable
+    else:
+        warn("unrecognized php datatype", php_type)
+        return php_type, nullable
+
+def convert_moodle_type_to_normal_type(param_type: str) -> str:
     CONVERSIONS = {
         "PARAM_INT": "int",
         "PARAM_TEXT": "String",
@@ -340,7 +359,7 @@ class PHPConstructor(PHPExpression):
                     return IRValue(None, None, nullable=True, description="", required=True)
                 assert isinstance(self.parameters[0], PHPConstant)
                 assert isinstance(self.parameters[1], PHPString)
-                typ = convert_php_type_to_normal_type(self.parameters[0].name)
+                typ = convert_moodle_type_to_normal_type(self.parameters[0].name)
                 desc = self.parameters[1].get_value()
 
                 required = True
@@ -459,11 +478,11 @@ class ExtractedAPIFunction(SlotsDict):
     __slots__ = ('docstring', 'name', 'params', 'returns', 'body')
     docstring: DocString
     name: str
-    params: str
+    params: dict[str, str]
     returns: str
     body: str
 
-    def __init__(self, docstring: DocString, name: str, params: str, returns: str, body: str):
+    def __init__(self, docstring: DocString, name: str, params: dict[str, str], returns: str, body: str):
         self.docstring = docstring
         self.name = name
         self.params = params
@@ -858,7 +877,7 @@ def extract_api_functions(php_code: str, name: str) -> tuple[ExtractedAPIFunctio
         function_packed = ExtractedAPIFunction(
             parse_docstring(func_docstring),
             func_name,
-            func_params,
+            parse_php_function_parameters(func_params),
             func_returns,
             func_body
         )
@@ -931,6 +950,16 @@ def parse_docstring(inpot: str) -> DocString:
         desc = desc[:-1]
 
     return DocString(desc, params, returns, subpackage, copyright)
+
+def parse_php_function_parameters(inpot: str) -> dict[str, str]:
+    """ "int $a, string $b" → {"a": "int", "b": "string"} """
+    # https://regex101.com/r/zfWGKi
+    matches = re.findall(r"(\??[a-z]+)\s+\$([a-z_]+)", inpot)
+    out = {}
+    for match in matches:
+        out[match[1]] = match[0]
+
+    return out
 
 def find_import(nr: PHPNameResolution, symbol: str) -> str | None:
 
@@ -1039,8 +1068,8 @@ def main() -> None:
 
         complete_info.append(FunctionInfoEx(info, params, returns))
 
-        # checking function descriptions
         if main_func is not None:
+            # checking function descriptions
             if main_func.docstring.description != info.description or main_docstring.description != info.description:
                 warn(
                     "non-matching API function descriptions",
@@ -1048,7 +1077,50 @@ def main() -> None:
                     f"class docstring:     {main_docstring.description}",
                     f"service description: {info.description}",
                 )
-            # TODO: check params
+
+            # checking parameters
+            all_param_names = set()
+            params_moodleset: dict[str, tuple[str, bool]] = {}
+            if isinstance(params, IRObject):
+                for name, param in params.fields.items():
+                    if isinstance(param, IRValue):
+                        params_moodleset[name] = param.type, param.nullable
+                        all_param_names.add(name)
+                    else:
+                        warn("parameters' IRObject contains non-IRValue", param, params)
+            elif params is not None:
+                warn("parameters function does not return IRObject", params)
+
+            params_docstringset: dict[str, tuple[str, bool]] = {}
+            for name, docpair in main_func.docstring.params.items():
+                name = name[1:] # removing dollar sign
+                params_docstringset[name] = convert_php_type_to_normal_type(docpair.typ)
+                all_param_names.add(name)
+
+            params_phpset: dict[str, tuple[str, bool]] = {}
+            for name, typ in main_func.params.items():
+                params_phpset[name] = convert_php_type_to_normal_type(typ)
+
+            for name in all_param_names:
+                if not (
+                        name in params_moodleset.keys()
+                    and name in params_docstringset.keys()
+                    and name in params_phpset.keys()
+                ):
+                    warn(
+                        "API call parameter not found in all parameter lists",
+                        f"moodle: {params_moodleset}",
+                        f"docstring: {params_docstringset}",
+                        f"php: {params_phpset}",
+                    )
+                elif not (params_moodleset[name] == params_docstringset[name] == params_phpset[name]):
+                    warn(
+                        "API call parameter not the same type in all parameter lists",
+                        name,
+                        f"moodle:    {params_moodleset[name]}",
+                        f"docstring: {params_docstringset[name]}",
+                        f"php:       {params_phpset[name]}",
+                    )
 
         # checking copyright
         if main_docstring.copyright is None:
