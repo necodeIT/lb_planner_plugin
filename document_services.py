@@ -1065,7 +1065,15 @@ def main() -> None:
                     "expected: necodeIT",
                     f"got:     {main_docstring.copyright[1]}"
                 )
-        # TODO: check subpackage
+
+        # checking subpackage
+        expected_subpackage = 'services_' + path.basename(path.dirname(info.path))
+        if expected_subpackage != main_docstring.subpackage:
+            warn(
+                "incorrect subpackage",
+                f"expected: {expected_subpackage}",
+                f"got:      {main_docstring.subpackage}"
+            )
 
     CURRENT_SERVICE = None
 
