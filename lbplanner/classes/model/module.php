@@ -118,6 +118,18 @@ class module {
     }
 
     /**
+     * Creates a module object from the course-module object.
+     * @param \stdClass $cmobj the course-module object from moodle's DB
+     * @return module a module object with filled-in course-module object
+     */
+    public static function from_cmobj(\stdClass $cmobj): self {
+        $obj = new self();
+        $obj->cmobj = $cmobj;
+        $obj->cmid = $cmobj->id;
+        return $obj;
+    }
+
+    /**
      * Fetches the necessary caches and returns the assignment ID
      * @return int assign ID
      */

@@ -190,15 +190,12 @@ class modules_helper {
     public static function get_all_modules_by_course(int $courseid, bool $ekenabled): array {
         global $DB;
 
-        $assignments = $DB->get_records(self::ASSIGN_TABLE, ['course' => $courseid]);
+        $cmodules = $DB->get_records(self::COURSE_MODULES_TABLE, ['course' => $courseid, 'visible' => 1]);
 
         $modules = [];
 
-        foreach ($assignments as $assign) {
-            if ($assign === null) {
-                throw new coding_exception("what the fuck? 1 {$courseid} {$ekenabled}");
-            }
-            $module = module::from_assignobj($assign);
+        foreach ($cmodules as $cm) {
+            $module = module::from_cmobj($cm);
             if ((!$ekenabled) && $module->get_type() === MODULE_TYPE::EK) {
                 continue;
             }
