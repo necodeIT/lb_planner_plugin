@@ -4,6 +4,7 @@ import sys
 from os import path, listdir
 from abc import ABC, abstractmethod
 import traceback as tb
+from subprocess import Popen, PIPE
 
 from typing import Any, Iterable
 
@@ -1024,30 +1025,47 @@ def main() -> None:
 
         with open(info.path, "r") as func_file:
             func_content = func_file.read()
-            imports = extract_imports(func_content)
-            params_func, main_func, returns_func = extract_api_functions(func_content, info.path)
-            main_docstring = extract_main_api_docstring(func_content)
 
-            if returns_func is None or params_func is None:
-                continue
+        imports = extract_imports(func_content)
+        params_func, main_func, returns_func = extract_api_functions(func_content, info.path)
+        main_docstring = extract_main_api_docstring(func_content)
 
-            returns = parse_function(returns_func.body, imports)
+        if returns_func is None or params_func is None:
+            continue
 
-            params = parse_function(params_func.body, imports)
+        returns = parse_function(returns_func.body, imports)
 
-            complete_info.append(FunctionInfoEx(info, params, returns))
+        params = parse_function(params_func.body, imports)
 
-            if main_func is not None:
-                if main_func.docstring.description != info.description or main_docstring.description != info.description:
-                    warn(
-                        "non-matching API function descriptions",
-                        f"func docstring:      {main_func.docstring.description}",
-                        f"class docstring:     {main_docstring.description}",
-                        f"service description: {info.description}",
-                    )
-                # TODO: check params
-            # TODO: check subpackage
-            # TODO: check copyright
+        complete_info.append(FunctionInfoEx(info, params, returns))
+
+        # checking function descriptions
+        if main_func is not None:
+            if main_func.docstring.description != info.description or main_docstring.description != info.description:
+                warn(
+                    "non-matching API function descriptions",
+                    f"func docstring:      {main_func.docstring.description}",
+                    f"class docstring:     {main_docstring.description}",
+                    f"service description: {info.description}",
+                )
+            # TODO: check params
+
+        # checking copyright
+        with Popen(["git", "log", "-1", '--pretty=format:%as', info.path], stdout=PIPE) as p:
+            lastmodificationyear = int(p.communicate()[0].decode('utf-8').split('-')[0])
+            if main_docstring.copyright[0] != lastmodificationyear:
+                warn(
+                    "incorrect copyright year",
+                    f"expected: {lastmodificationyear}",
+                    f"got:      {main_docstring.copyright[0]}"
+                )
+            if main_docstring.copyright[1] != "necodeIT":
+                warn(
+                    "incorrect copyright name",
+                    "expected: necodeIT",
+                    f"got:     {main_docstring.copyright[1]}"
+                )
+        # TODO: check subpackage
 
     CURRENT_SERVICE = None
 
