@@ -85,13 +85,13 @@ class slots_update_slot extends external_api {
     /**
      * Update a slot's values
      * @param int $id ID of the slot to update
-     * @param int $startunit the unit this slot starts in
-     * @param int $duration how long the unit lasts for
-     * @param int $weekday which day of the week this slot is on
-     * @param string $room which room this slot is for
-     * @param int $size how many pupils this slot can fit
+     * @param ?int $startunit the unit this slot starts in
+     * @param ?int $duration how long the unit lasts for
+     * @param ?int $weekday which day of the week this slot is on
+     * @param ?string $room which room this slot is for
+     * @param ?int $size how many pupils this slot can fit
      */
-    public static function update_slot(int $id, int $startunit, int $duration, int $weekday, string $room, int $size): void {
+    public static function update_slot(int $id, ?int $startunit, ?int $duration, ?int $weekday, ?string $room, ?int $size): void {
         global $USER, $DB;
         self::validate_parameters(
             self::update_slot_parameters(),
