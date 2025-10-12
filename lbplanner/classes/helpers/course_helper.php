@@ -22,7 +22,6 @@ use core_tag_tag;
 use DateTimeImmutable;
 use dml_exception;
 use dml_write_exception;
-
 use local_lbplanner\model\course;
 
 /**

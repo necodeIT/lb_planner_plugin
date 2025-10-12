@@ -26,12 +26,10 @@
 namespace local_lbplanner\helpers;
 
 use core\context\system as context_system;
-
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
-use local_lbplanner\enums\CAPABILITY;
-use local_lbplanner\enums\WEEKDAY;
+use local_lbplanner\enums\{CAPABILITY, WEEKDAY};
 use local_lbplanner\model\{slot, reservation, slot_filter};
 
 /**

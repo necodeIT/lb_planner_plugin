@@ -17,14 +17,11 @@
 namespace local_lbplanner_services;
 
 use DateTimeImmutable;
-
+use DateTimeZone;
 use core_user;
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
-use DateTimeZone;
 use local_lbplanner\enums\NOTIF_TRIGGER;
-use local_lbplanner\helpers\config_helper;
-use local_lbplanner\helpers\notifications_helper;
-use local_lbplanner\helpers\slot_helper;
+use local_lbplanner\helpers\{config_helper, notifications_helper, slot_helper};
 use local_lbplanner\model\reservation;
 
 /**

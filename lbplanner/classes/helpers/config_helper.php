@@ -20,7 +20,6 @@ use core_component;
 use core_customfield\category_controller;
 use customfield_select\field_controller;
 use local_modcustomfields\customfield\mod_handler;
-
 use local_lbplanner\enums\SETTINGS;
 
 /**

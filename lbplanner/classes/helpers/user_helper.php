@@ -19,9 +19,7 @@ namespace local_lbplanner\helpers;
 use dml_exception;
 use stdClass;
 use core_user;
-
-use local_lbplanner\enums\NOTIF_TRIGGER;
-use local_lbplanner\enums\PLAN_ACCESS_TYPE;
+use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_ACCESS_TYPE};
 use local_lbplanner\model\user;
 
 /**

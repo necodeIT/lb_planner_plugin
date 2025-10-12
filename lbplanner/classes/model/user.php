@@ -28,10 +28,8 @@ namespace local_lbplanner\model;
 use core\context\system as context_system;
 use core_external\{external_single_structure, external_value};
 use user_picture;
-
-use local_lbplanner\enums\{CAPABILITY, CAPABILITY_FLAG, KANBANCOL_TYPE, KANBANCOL_TYPE_ORNONE};
-use local_lbplanner\helpers\plan_helper;
-use local_lbplanner\helpers\user_helper;
+use local_lbplanner\enums\{CAPABILITY, CAPABILITY_FLAG, KANBANCOL_TYPE_ORNONE};
+use local_lbplanner\helpers\{plan_helper, user_helper};
 
 /**
  * Model class for model
