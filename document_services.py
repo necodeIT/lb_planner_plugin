@@ -34,7 +34,8 @@ def warn(msg: str, *context: Any):
 
     context = tuple(f"{c}".strip() for c in context)
     context_formatted = [f"\n{c}\033[0m".replace('\n', f"\n\033[0m{WARN_TAB}  \033[2m") for c in context]
-    context_formatted[-1] = context_formatted[-1].replace(WARN_TAB, WARN_TAB_LAST)
+    if len(context_formatted) > 0:
+        context_formatted[-1] = context_formatted[-1].replace(WARN_TAB, WARN_TAB_LAST)
 
     print(
         f"{WARN}\033[31m{msg}\033[0m {service_msg}({stack_str})",
