@@ -21,12 +21,11 @@ use local_lbplanner\helpers\{config_helper, slot_helper};
 use local_lbplanner\model\slot;
 
 /**
- * Returns all slots the user can theoretically reserve.
- * This does not include times the user has already reserved a slot for.
+ * Returns all slots the user can reserve, not including already-reserved ones.
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_get_my_slots extends external_api {
@@ -39,7 +38,7 @@ class slots_get_my_slots extends external_api {
     }
 
     /**
-     * Returns slots the current user is supposed to see
+     * Returns all slots the user can reserve, not including already-reserved ones.
      */
     public static function get_my_slots(): array {
         global $USER;

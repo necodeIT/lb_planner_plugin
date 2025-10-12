@@ -23,11 +23,11 @@ use local_lbplanner\enums\{PLAN_ACCESS_TYPE, PLAN_INVITE_STATE, NOTIF_TRIGGER};
 use local_lbplanner\helpers\invite_helper;
 
 /**
- * Accept an invite to the plan.
+ * Accept an invite.
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_accept_invite extends external_api {
@@ -42,7 +42,7 @@ class plan_accept_invite extends external_api {
     }
 
     /**
-     * Accepts an invite
+     * Accept an invite.
      *
      * @param int $inviteid the ID of the invite to be accepted
      * @return void

@@ -20,11 +20,11 @@ use core_external\{external_api, external_function_parameters, external_multiple
 use local_lbplanner\helpers\notifications_helper;
 
 /**
- * Get all the notifications of the user.
+ * Returns all notifications for this user.
  *
  * @package local_lbplanner
  * @subpackage services_notifications
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class notifications_get_all_notifications extends external_api {
@@ -37,7 +37,7 @@ class notifications_get_all_notifications extends external_api {
     }
 
     /**
-     * Returns all the notifications of the user
+     * Returns all notifications for this user.
      *
      * @return array
      */

@@ -24,7 +24,7 @@ use local_lbplanner\helpers\slot_helper;
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_delete_slot extends external_api {
@@ -45,7 +45,7 @@ class slots_delete_slot extends external_api {
     }
 
     /**
-     * Tries to request unbooking
+     * Deletes slot
      * @param int $id which slot to delete
      */
     public static function delete_slot(int $id): void {

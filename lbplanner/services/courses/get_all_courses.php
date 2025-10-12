@@ -23,7 +23,7 @@ use local_lbplanner\model\course;
 use local_lbplanner\model\user;
 
 /**
- * Get ALL courses. Slotmaster only.
+ * Returns ALL courses.
  *
  * @package local_lbplanner
  * @subpackage services_courses
@@ -40,7 +40,7 @@ class courses_get_all_courses extends \core_external\external_api {
     }
 
     /**
-     * Get ALL courses.
+     * Returns ALL courses.
      */
     public static function get_all_courses(): array {
         global $USER;

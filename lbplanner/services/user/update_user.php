@@ -25,7 +25,7 @@ use local_lbplanner\model\user;
 use local_lbplanner\enums\KANBANCOL_TYPE_ORNONE;
 
 /**
- * Update the data for a user. null values or unset parameters are left unmodified.
+ * Update current user settings. null values or unset parameters are left unmodified.
  *
  * @package local_lbplanner
  * @subpackage services_user
@@ -43,55 +43,63 @@ class user_update_user extends external_api {
                 PARAM_TEXT,
                 'The theme the user has selected',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'colorblindness' => new external_value(
                 PARAM_TEXT,
                 'The colorblindness the user has selected',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'displaytaskcount' => new external_value(
                 PARAM_BOOL,
                 'Whether the user has the taskcount enabled',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'ekenabled' => new external_value(
                 PARAM_BOOL,
                 'Whether the user wants to see EK modules',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'showcolumncolors' => new external_value(
                 PARAM_BOOL,
                 'Whether column colors should show in kanban board',
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'automovecompletedtasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if completed ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'automovesubmittedtasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if submitted ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
             'automoveoverduetasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if overdue ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null
+                null,
+                NULL_ALLOWED
             ),
         ]);
     }
 
     /**
-     * Updates the given user in the eduplanner DB
+     * Update current user settings. null values or unset parameters are left unmodified.
      * @param ?string $theme The theme the user has selected
      * @param ?string $colorblindness The colorblindness the user has selected
      * @param ?bool $displaytaskcount The displaytaskcount the user has selected

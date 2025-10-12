@@ -26,11 +26,11 @@ use local_lbplanner\model\user;
 use local_lbplanner\enums\CAPABILITY;
 
 /**
- * Gets all users with one or several LBP capabilities.
+ * Returns all users, optionally filtered by vintage.
  *
  * @package local_lbplanner
  * @subpackage services_user
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class user_get_all_users extends external_api {
@@ -45,7 +45,7 @@ class user_get_all_users extends external_api {
     }
 
     /**
-     * Gives back all users.
+     * Returns all users, optionally filtered by vintage.
      * @param ?string $vintage (optional) gives back all users with the given vintage
      * @throws moodle_exception
      * @throws dml_exception
