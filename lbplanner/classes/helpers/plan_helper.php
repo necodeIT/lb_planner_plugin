@@ -278,7 +278,9 @@ class plan_helper {
 
         $oldaccess = $DB->get_record(
             self::ACCESS_TABLE,
-            ['planid' => $planid, 'userid' => $removeuserid], '*', MUST_EXIST
+            ['planid' => $planid, 'userid' => $removeuserid],
+            '*',
+            MUST_EXIST
         );
 
         $oldaccess->planid = $newplanid;

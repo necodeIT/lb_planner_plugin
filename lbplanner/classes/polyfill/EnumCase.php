@@ -25,8 +25,6 @@
 
 namespace local_lbplanner\polyfill;
 
-defined('MOODLE_INTERNAL') || die();
-
 // TODO: revert to native enums once we migrate to php8.
 
 /**
