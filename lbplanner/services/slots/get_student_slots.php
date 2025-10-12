@@ -25,7 +25,7 @@ use local_lbplanner\model\slot;
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_get_student_slots extends external_api {

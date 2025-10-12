@@ -26,7 +26,7 @@ use local_lbplanner\model\module;
  *
  * @package local_lbplanner
  * @subpackage services_modules
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class modules_get_all_course_modules extends external_api {

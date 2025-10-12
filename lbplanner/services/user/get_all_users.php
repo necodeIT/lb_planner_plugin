@@ -30,7 +30,7 @@ use local_lbplanner\enums\CAPABILITY;
  *
  * @package local_lbplanner
  * @subpackage services_user
- * @copyright 2024 necodeIT
+ * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class user_get_all_users extends external_api {
