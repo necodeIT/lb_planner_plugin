@@ -24,7 +24,7 @@ use local_lbplanner\helpers\slot_helper;
  * Update a slot's values
  *
  * @package local_lbplanner
- * @subpackage services_TODO
+ * @subpackage services_slots
  * @copyright 2025 necodeIT
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
