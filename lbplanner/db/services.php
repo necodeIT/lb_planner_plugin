@@ -438,7 +438,6 @@ $services = [
             'local_lbplanner_plan_update_plan',
             'local_lbplanner_notifications_get_all_notifications',
             'local_lbplanner_notifications_update_notification',
-            'local_lbplanner_plan_get_access',
             'local_lbplanner_plan_update_access',
             'local_lbplanner_user_delete_user',
             'local_lbplanner_plan_accept_invite',
