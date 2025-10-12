@@ -18,9 +18,8 @@ namespace local_lbplanner_services;
 
 use coding_exception;
 use dml_exception;
-use core_external\{external_function_parameters, external_single_structure};
 use moodle_exception;
-
+use core_external\{external_function_parameters, external_single_structure};
 use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
 

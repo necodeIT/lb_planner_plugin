@@ -24,7 +24,6 @@
  */
 
 use core\context\course as context_course;
-
 use local_lbplanner\helpers\{config_helper, course_helper};
 
 /**

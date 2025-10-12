@@ -17,11 +17,8 @@
 namespace local_lbplanner_services;
 
 use DateTimeImmutable;
-
 use core_external\{external_api, external_function_parameters, external_value};
-
-use local_lbplanner\helpers\slot_helper;
-use local_lbplanner\helpers\notifications_helper;
+use local_lbplanner\helpers\{slot_helper, notifications_helper};
 use local_lbplanner\enums\NOTIF_TRIGGER;
 
 /**
@@ -91,7 +88,7 @@ class slots_unbook_reservation extends external_api {
                 if ($startpast) {
                     throw new \moodle_exception(
                         'Students can\'t unbook reservations that have already started.'
-                        .' If you want to unbook this reservation regardless, force it.'
+                        . ' If you want to unbook this reservation regardless, force it.'
                     );
                 }
                 notifications_helper::notify_user($reservation->userid, $reservation->id, NOTIF_TRIGGER::UNBOOK_REQUESTED);

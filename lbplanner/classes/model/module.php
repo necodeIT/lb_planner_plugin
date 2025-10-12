@@ -303,7 +303,6 @@ class module {
                 $mdlgrade = end($mdlgrades);
 
                 if ($mdlgrade->grade > 0) {
-
                     $grade  = modules_helper::determine_uinified_grade(
                         $mdlgrade->grade,
                         $moduleboundaries->grademax,
@@ -349,9 +348,9 @@ class module {
                 'cmid' => new external_value(PARAM_INT, 'Course module ID'),
                 'name' => new external_value(PARAM_TEXT, 'Shortened module name (max. 5 chars)'),
                 'courseid' => new external_value(PARAM_INT, 'Course ID'),
-                'status' => new external_value(PARAM_INT, 'Module status '.MODULE_STATUS::format()),
-                'type' => new external_value(PARAM_INT, 'Module type '.MODULE_TYPE::format()),
-                'grade' => new external_value(PARAM_INT, 'The grade of the module '.MODULE_GRADE::format()),
+                'status' => new external_value(PARAM_INT, 'Module status ' . MODULE_STATUS::format()),
+                'type' => new external_value(PARAM_INT, 'Module type ' . MODULE_TYPE::format()),
+                'grade' => new external_value(PARAM_INT, 'The grade of the module ' . MODULE_GRADE::format()),
                 'duedate' => new external_value(PARAM_INT, 'The deadline of the module set by the teacher'),
             ]
         );

@@ -36,7 +36,6 @@ use local_lbplanner\model\module;
  * Contains helper functions for working with modules.
  */
 class modules_helper {
-
     /**
      * Table where modules are stored.
      */
