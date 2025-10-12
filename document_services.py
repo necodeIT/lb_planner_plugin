@@ -438,8 +438,8 @@ class DocString(SlotsDict):
     description: str
     params: dict[str, DocString_TypeDescPair]
     returns: DocString_TypeDescPair | None
-    subpackage: str
-    copyright: tuple[int, str]
+    subpackage: str | None
+    copyright: tuple[int, str] | None
 
     def __init__(
         self,
@@ -1051,8 +1051,11 @@ def main() -> None:
             # TODO: check params
 
         # checking copyright
-        with Popen(["git", "log", "-1", '--pretty=format:%as', info.path], stdout=PIPE) as p:
-            lastmodificationyear = int(p.communicate()[0].decode('utf-8').split('-')[0])
+        if main_docstring.copyright is None:
+            warn("missing copyright notice")
+        else:
+            with Popen(["git", "log", "-1", '--pretty=format:%as', info.path], stdout=PIPE) as p:
+                lastmodificationyear = int(p.communicate()[0].decode('utf-8').split('-')[0])
             if main_docstring.copyright[0] != lastmodificationyear:
                 warn(
                     "incorrect copyright year",
