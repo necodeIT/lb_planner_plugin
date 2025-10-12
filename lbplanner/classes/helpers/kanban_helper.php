@@ -28,7 +28,6 @@ use local_lbplanner\model\kanbanentry;
  * @license    https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class kanban_helper {
-
     /**
      * Table for storing kanban board entries.
      */
@@ -76,7 +75,10 @@ class kanban_helper {
             $DB->delete_records(self::TABLE, ['userid' => $entry->userid, 'cmid' => $entry->cmid]);
         } catch (\dml_exception $e) {
             // Needed for low-reporting contexts such as a prod server.
-            echo 'error while trying to delete preexisting kanban entries: '.$e->getMessage()."\nFurther info:\n".$e->debuginfo;
+            echo 'error while trying to delete preexisting kanban entries: '
+                . $e->getMessage()
+                . "\nFurther info:\n"
+                . $e->debuginfo;
             var_dump($entry);
             throw $e;
         }

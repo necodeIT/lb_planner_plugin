@@ -35,4 +35,3 @@ function xmldb_local_lbplanner_uninstall() {
     $tag = core_tag_tag::get_by_name(core_tag_collection::get_default(), course_helper::EDUPLANNER_TAG, strictness:MUST_EXIST);
     core_tag_tag::delete_tags($tag->id);
 }
-

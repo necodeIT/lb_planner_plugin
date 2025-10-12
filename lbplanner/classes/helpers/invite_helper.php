@@ -28,7 +28,6 @@ use local_lbplanner\enums\PLAN_INVITE_STATE;
  * @license    https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class invite_helper {
-
     /**
      * Returns the data structure of an invite.
      *
@@ -55,7 +54,7 @@ class invite_helper {
     public static function assert_invite_pending(int $status) {
         if ($status !== PLAN_INVITE_STATE::PENDING) {
             $name = PLAN_INVITE_STATE::name_from($status);
-            throw new \moodle_exception('Invite already '.$name);
+            throw new \moodle_exception("Invite already {$name}");
         }
     }
 }
