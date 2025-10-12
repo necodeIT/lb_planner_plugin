@@ -108,6 +108,29 @@ class slot_helper {
     }
 
     /**
+     * Returns a list of all slots relevant for a vintage.
+     *
+     * @param string $vintage the vintage to filter for
+     * @return slot[] An array of the slots.
+     */
+    public static function get_vintage_slots(string $vintage): array {
+        global $DB;
+        $slots = $DB->get_records_sql(
+            'SELECT slot.* FROM {' . self::TABLE_SLOTS . '} as slot ' .
+            'INNER JOIN {'. self::TABLE_SLOT_FILTERS . '} as filter ON slot.id=filter.slotid ' .
+            'WHERE filter.vintage=? OR filter.vintage=NULL',
+            [$vintage]
+        );
+
+        $slotsobj = [];
+        foreach ($slots as $slot) {
+            array_push($slotsobj, slot::from_db($slot));
+        }
+
+        return $slotsobj;
+    }
+
+    /**
      * Returns a list of all slots belonging to a supervisor.
      * @param int $supervisorid userid of the supervisor in question
      *

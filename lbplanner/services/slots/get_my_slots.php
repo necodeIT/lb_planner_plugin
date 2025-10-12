@@ -43,7 +43,7 @@ class slots_get_my_slots extends external_api {
     public static function get_my_slots(): array {
         global $USER;
 
-        $allslots = slot_helper::get_all_slots();
+        $allslots = slot_helper::get_vintage_slots($USER->address);
 
         $myslots = slot_helper::filter_slots_for_user($allslots, $USER);
 
