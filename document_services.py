@@ -8,7 +8,7 @@ from subprocess import Popen, PIPE
 
 from typing import Any, Iterable
 
-WARNCOUNT = 0
+WARNCOUNT: dict[str, int] = {}
 CURRENT_SERVICE: str | None = None
 
 def warn(msg: str, *context: Any):
@@ -17,12 +17,11 @@ def warn(msg: str, *context: Any):
     :param str msg: The warning message to print.
     :param Any *context: Any contextual info to be passed along.
     """
-    global WARNCOUNT
     WARN = "\033[0m\033[43m\033[30mWARN:\033[0m "
     WARN_TAB = "\033[0m    \033[43m\033[33m|\033[0m "
     WARN_TAB_LAST = "\033[0m    \033[43m\033[33m\033[58;5;0m\033[4m|\033[0m "
 
-    WARNCOUNT += 1
+    WARNCOUNT[msg] = (WARNCOUNT.get(msg) or 0) + 1
 
     stack = tb.extract_stack()
     stack_str = " -> ".join([f"\033[34m{frame.name}\033[0m" for frame in stack if frame != stack[-1]])
@@ -92,7 +91,7 @@ def parse_nullable(inpot: str) -> bool | None:
     elif inpot == 'NULL_ALLOWED':
         return True
     else:
-        warn(f"found weird value for nullable: {inpot}")
+        warn("found weird value for nullable", inpot)
         return None
 
 class PHPNameResolution:
@@ -195,7 +194,7 @@ class PHPClassMemberFunction(PHPExpression):
 
         meth_matches: list[str] = re.findall(meth_pattern, new_file_content, re.DOTALL)
         if len(meth_matches) == 0:
-            warn(f"couldn't find {self} inside {self.fp}")
+            warn("Missing class member", f"couldn't find {self} inside {self.fp}")
             return PHPConstant('null')
         elif len(meth_matches) > 1:
             raise Exception(f"Found multiple definitions for {self} inside {self.fp}")
@@ -220,7 +219,7 @@ class PHPEnum():
 
         fp = f"lbplanner/classes/enums/{classname}.php"
         if not path.exists(fp):
-            warn(f"Couldn't find enum file {fp}")
+            warn("Couldn't find enum file", fp)
             return {}
         with open(fp, "r") as f:
             matches: list[list[str]] = re.findall(fullbody_pattern, f.read(), re.DOTALL)
@@ -229,7 +228,7 @@ class PHPEnum():
                     cases = cls.getcases(matches[0][0])
                 body = matches[0][1]
             else:
-                warn(f"couldn't parse enum {classname}", matches)
+                warn("couldn't parse enum", f"name: {classname}", matches)
 
         matches2: list[str] = re.findall(casepattern, body)
         for match in matches2:
@@ -252,7 +251,7 @@ class PHPEnumCase(PHPEnum, PHPString):
     def resolve(self) -> PHPString:
         cases = self.getcases(self.classname)
         if self.casename not in cases.keys():
-            warn(f"enum member {self.classname}::{self.casename} not found", cases)
+            warn("enum member not found", f"{self.classname}::{self.casename}", cases)
             return PHPStringLiteral("?")
 
         val = cases[self.casename]
@@ -375,7 +374,7 @@ class PHPConstructor(PHPExpression):
 
                 return IRValue(typ, default_value=default, nullable=nullable, description=desc, required=required)
             case _:
-                warn(f"unkown constructor name: {self.name}")
+                warn("unkown constructor name", self.name)
                 return IRValue(None, None, nullable=True)
 
 class PHPConstant(PHPExpression):
@@ -765,7 +764,7 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
             else:
                 existing_descriptions.append(finfo.description)
         else:
-            warn(f"Could not gather all info for {func_dict["name"]}", func_dict)
+            warn("Could not gather all info for API function", func_dict["name"], func_dict)
 
     if len(function_infos) == 0:
         warn("Couldn't find any functions!")
@@ -791,11 +790,11 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
                     break
 
             if not found:
-                warn(f"Couldn't find service function {func_group}_{func_name} in $functions")
+                warn("Couldn't find service function in $functions", f"{func_group}_{func_name}")
 
         for functioninfo in function_infos_copy:
             # The ones left here are not in services_function.
-            warn(f"Couldn't find service function {functioninfo.group}_{functioninfo.name} in $services")
+            warn("Couldn't find service function in $services", f"{functioninfo.group}_{functioninfo.name}")
 
     # double-checking using existing files
     function_infos_copy = function_infos.copy()
@@ -803,15 +802,15 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
     for subdir in listdir(searchdir):
         dirpath = path.join(searchdir, subdir)
         if not path.isdir(dirpath):
-            warn(f'found file {subdir} in services folder')
+            warn('found file in services folder', subdir)
             continue
 
         for filename in listdir('lbplanner/services/' + subdir):
             if path.isdir(filename):
-                warn(f'found directory "{filename}" in folder "{dirpath}"')
+                warn('found directory in folder', filename, dirpath)
                 continue
             if not filename.endswith('.php'):
-                warn(f'found non-php file "{filename}" in folder "{dirpath}"')
+                warn('found non-php file in folder', filename, dirpath)
                 continue
 
             for functioninfo in function_infos_copy:
@@ -821,11 +820,11 @@ def extract_function_info(file_content: str) -> list[FunctionInfo]:
                     break
 
             if not found:
-                warn(f"Couldn't find service function {func_group}_{func_name} in $function")
+                warn("Couldn't find service function in $function", f"{func_group}_{func_name}")
 
     for functioninfo in function_infos_copy:
         # The ones left here are not in the dirs.
-        warn(f"Couldn't find file {functioninfo.group}/{functioninfo.name}.php in services folder")
+        warn("Couldn't find file in services folder", f"{functioninfo.group}/{functioninfo.name}.php")
 
     return function_infos
 
@@ -871,11 +870,11 @@ def extract_api_functions(php_code: str, name: str) -> tuple[ExtractedAPIFunctio
             main_function = function_packed
 
     if parameters_function is None:
-        warn(f"Couldn't find parameters function in {name}", php_code)
+        warn("Couldn't find parameters function", name, php_code)
     if returns_function is None:
-        warn(f"Couldn't find returns function in {name}", php_code)
+        warn("Couldn't find returns function", name, php_code)
     if main_function is None:
-        warn(f"Couldn't find main function in {name}", php_code)
+        warn("Couldn't find main function", name, php_code)
 
     return parameters_function, main_function, returns_function
 
@@ -904,7 +903,7 @@ def parse_docstring(inpot: str) -> DocString:
             match splitline[0]:
                 case '@param':
                     if splitline[2] in params:
-                        warn(f"specified @param {splitline[2]} twice in docstring")
+                        warn("specified @param twice in docstring", splitline[2])
                     params[splitline[2]] = DocString_TypeDescPair(splitline[1], " ".join(splitline[3:]))
                 case '@return':
                     if returns is not None:
@@ -912,7 +911,7 @@ def parse_docstring(inpot: str) -> DocString:
                     returns = DocString_TypeDescPair(splitline[1], " ".join(splitline[2:]))
                 case '@package':
                     if splitline[1] != "local_lbplanner":
-                        warn(f"found @package with value {splitline[1]} instead of local_lbplanner")
+                        warn("found @package with invalid value instead of local_lbplanner", splitline[1])
                 case '@subpackage':
                     subpackage = " ".join(splitline[1:])
                 case '@copyright':
@@ -920,7 +919,7 @@ def parse_docstring(inpot: str) -> DocString:
                 case '@throws' | '@see' | '@link' | '@license':
                     pass
                 case unknown:
-                    warn(f"unknown @-rule: {unknown}", line)
+                    warn("unknown @-rule", unknown, line)
         elif isdesc:
             desc_a.append(strippedline)
 
@@ -967,10 +966,10 @@ def find_import(nr: PHPNameResolution, symbol: str) -> str | None:
             fp_l.append(fallback)
 
     if len(fp_l) > 1:
-        warn(f"found potential import collision for {symbol} using [{nr}]")
+        warn("found potential import collision", f"{symbol} in [{nr}]")
         return None
     elif len(fp_l) == 0:
-        warn(f"couldn't find symbol: {symbol} using [{nr}]")
+        warn("couldn't find symbol", f"{symbol} in [{nr}]")
         return None
     else:
         return fp_l[0]
@@ -1098,8 +1097,11 @@ def main() -> None:
         with open(f"{sys.argv[1]}/script.js", "w") as f:
             f.write(script)
 
-    if WARNCOUNT > 0:
-        print(f"printed {WARNCOUNT} warnings in total ({WARNCOUNT / len(infos):.2f} per API function)", file=sys.stderr)
+    if len(WARNCOUNT) > 0:
+        total_warns = sum(count for count in WARNCOUNT.values())
+        print(f"printed \033[33m{total_warns}\033[0m warnings in total (\033[33m{total_warns / len(infos):.2f}\033[0m per \033[36mservice\033[0m)", file=sys.stderr)
+        for msg, count in WARNCOUNT.items():
+            print(f"\033[33m{count:02d}\033[0mx \033[31m{msg}\033[0m")
         sys.exit(1)
 
 
