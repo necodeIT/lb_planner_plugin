@@ -18,7 +18,7 @@
  * Defines versioning
  *
  * @package local_lbplanner
- * @copyright 2025 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
