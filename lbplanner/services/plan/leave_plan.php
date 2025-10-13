@@ -27,7 +27,7 @@ use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_ACCESS_TYPE, PLAN_INVITE_STATE};
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2025 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_leave_plan extends external_api {

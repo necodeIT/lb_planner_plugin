@@ -19,7 +19,7 @@
  *
  * @package local_lbplanner
  * @subpackage model
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 

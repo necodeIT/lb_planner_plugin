@@ -27,7 +27,7 @@ use local_lbplanner\model\{slot, supervisor};
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2025 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_create_slot extends external_api {

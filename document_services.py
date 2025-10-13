@@ -1134,11 +1134,11 @@ def main() -> None:
                     f"expected: {lastmodificationyear}",
                     f"got:      {main_docstring.copyright[0]}"
                 )
-            if main_docstring.copyright[1] != "necodeIT":
+            if main_docstring.copyright[1] != "Pallasys":
                 warn(
                     "incorrect copyright name",
-                    "expected: necodeIT",
-                    f"got:     {main_docstring.copyright[1]}"
+                    "expected: Pallasys",
+                    f"got:      {main_docstring.copyright[1]}"
                 )
 
         # checking subpackage
