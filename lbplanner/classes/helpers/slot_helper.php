@@ -108,6 +108,42 @@ class slot_helper {
     }
 
     /**
+     * Returns a list of all slots relevant for a vintage and range of weekdays.
+     *
+     * @param string $vintage the vintage to filter for
+     * @param int $today the starting day to filter for
+     * @param int $range the range in days
+     * @return slot[] An array of the slots.
+     */
+    public static function get_vintage_time_slots(string $vintage, int $today, int $range): array {
+        global $DB;
+
+        if ($range < 7) {
+            $valid = [];
+            for ($i = $today; $i < ($today + $range); $i++) {
+                array_push($valid, (($i - 1) % 7) + 1);
+            }
+            $insert = " AND slot.weekday IN (" . implode(',', $valid) . ")";
+        } else {
+            $insert = '';
+        }
+
+        $slots = $DB->get_records_sql(
+            'SELECT slot.* FROM {' . self::TABLE_SLOTS . '} as slot ' .
+            'INNER JOIN {' . self::TABLE_SLOT_FILTERS . '} as filter ON slot.id=filter.slotid ' .
+            'WHERE (filter.vintage=? OR filter.vintage=NULL)' . $insert,
+            [$vintage]
+        );
+
+        $slotsobj = [];
+        foreach ($slots as $slot) {
+            array_push($slotsobj, slot::from_db($slot));
+        }
+
+        return $slotsobj;
+    }
+
+    /**
      * Returns a list of all slots belonging to a supervisor.
      * @param int $supervisorid userid of the supervisor in question
      *
@@ -306,6 +342,9 @@ class slot_helper {
      * @return slot[] the filtered slot array
      */
     public static function filter_slots_for_time(array $allslots, int $range): array {
+        if ($range === 7) {
+            return $allslots;
+        }
         $utctz = new DateTimeZone('UTC');
         $now = new DateTimeImmutable('now', $utctz);
         $slots = [];
