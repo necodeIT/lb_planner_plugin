@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.10](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.9...1.1.10) (2025-10-15)
+
+
+### Bug Fixes
+
+* Dramatically increase performance for get_my_slots ([#95](https://github.com/necodeIT/lb_planner_plugin/issues/95)) ([b8c97b7](https://github.com/necodeIT/lb_planner_plugin/commit/b8c97b7af5b2890d7ae9301c127ae943f61c7a2e))
+
 ## [1.1.9](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.8...1.1.9) (2025-10-12)
 
 
