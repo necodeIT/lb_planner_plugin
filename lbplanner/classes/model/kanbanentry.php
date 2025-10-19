@@ -70,7 +70,7 @@ class kanbanentry {
      * @return kanbanentry the kanbanentry obj
      */
     public static function from_obj(\stdClass $obj): self {
-        return new self($obj->id, $obj->userid, $obj->cmid, $obj->column);
+        return new self($obj->id, $obj->userid, $obj->cmid, $obj->selectedcolumn);
     }
 
     /**
