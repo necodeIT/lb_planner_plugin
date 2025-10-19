@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.11](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.10...1.1.11) (2025-10-19)
+
+
+### Bug Fixes
+
+* Kanban board crash due to misnamed DB field ([#97](https://github.com/necodeIT/lb_planner_plugin/issues/97)) ([1136cf8](https://github.com/necodeIT/lb_planner_plugin/commit/1136cf878560b2facc13c7d583a40e0898627707))
+
 ## [1.1.10](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.9...1.1.10) (2025-10-15)
 
 
