@@ -16,6 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
+      - name: Set environment to prod
+        run: |
+          sed -i "s/set_config('sentry_environment', 'develop', 'local_lbplanner')/set_config('sentry_environment', 'production', 'local_lbplanner')/g" "$TARGET_FOLDER/version.php"
+
       - name: Extract version
         id: version
         run: |

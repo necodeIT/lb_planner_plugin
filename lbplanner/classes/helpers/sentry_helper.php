@@ -45,10 +45,12 @@ class sentry_helper {
      */
     public static function init(): void {
         if (self::enabled()) {
-            $cfg = [ // TODO: look at all the config options.
+            $cfg = [
                 "dsn" => config_helper::get_sentry_dsn(),
                 "enable_tracing" => true,
                 "attach_stacktrace" => true,
+                "release" => 'lbplanner@' . get_config('local_lbplanner', 'release'),
+                "environment" => get_config('local_lbplanner', 'sentry_environment'),
             ];
             \Sentry\init($cfg);
         }
