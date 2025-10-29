@@ -67,7 +67,7 @@ class sentry_helper {
      * Does a bunch of setup for measuring transaction duration.
      * @param string $name name of the transaction to start
      * @param string $op the operation this transaction is for
-     * @param ?array<string, mixed> $data an assocarr of data to record for this transaction, or null
+     * @param ?array $data an assocarr of data to record for this transaction, or null
      * @return ?Transaction the transaction that got started, or null if disabled
      */
     public static function transaction_start(string $name, string $op, ?array $data = null): ?Transaction {
