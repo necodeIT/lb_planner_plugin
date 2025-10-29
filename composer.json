@@ -8,6 +8,7 @@
         "guzzlehttp/psr7": "*",
         "psr/http-factory": "*",
         "psr/http-message": "*",
+        "psr/log": "*",
         "ralouphie/getallheaders": "*"
     },
     "config": {
