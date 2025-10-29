@@ -17,14 +17,13 @@
 namespace local_lbplanner\helpers;
 
 use Throwable;
-
 use local_lbplanner\helpers\config_helper;
 use Sentry\SentrySdk;
 use Sentry\Tracing\{Span, SpanContext, Transaction, TransactionContext};
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/local/lbplanner/vendor/autoload.php');
+require_once($CFG->dirroot . '/local/lbplanner/vendor/autoload.php');
 
 /**
  * Provides helper methods for sentry logging
@@ -36,7 +35,7 @@ require_once($CFG->dirroot.'/local/lbplanner/vendor/autoload.php');
  */
 class sentry_helper {
     /**
-     * Remembers what spans have been in use.
+     * @var array $spans Remembers what spans have been in use.
      */
     private static array $spans = [];
 

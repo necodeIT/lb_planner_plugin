@@ -47,7 +47,12 @@ function local_lbplanner_override_webservice_execution(stdClass $externalfunctio
                 $paramsstring = var_export($params, true);
                 throw new \coding_exception(
                     "webservice override: call_user_func_array returned with false at "
-                    .$externalfunctioninfo->classname."::".$externalfunctioninfo->methodname."(".$paramsstring.");"
+                    . $externalfunctioninfo->classname
+                    . "::"
+                    . $externalfunctioninfo->methodname
+                    . "("
+                    . $paramsstring
+                    . ");"
                 );
             }
 
