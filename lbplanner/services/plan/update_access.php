@@ -25,7 +25,7 @@ use local_lbplanner\helpers\plan_helper;
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_update_access extends external_api {
@@ -37,7 +37,7 @@ class plan_update_access extends external_api {
         return new external_function_parameters([
             'accesstype' => new external_value(
                 PARAM_INT,
-                'New access type '.PLAN_ACCESS_TYPE::format(),
+                'New access type ' . PLAN_ACCESS_TYPE::format(),
                 VALUE_REQUIRED,
                 null,
                 NULL_NOT_ALLOWED

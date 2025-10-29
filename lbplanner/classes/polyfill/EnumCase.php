@@ -19,13 +19,11 @@
  *
  * @package local_lbplanner
  * @subpackage polyfill
- * @copyright 2024 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
 namespace local_lbplanner\polyfill;
-
-defined('MOODLE_INTERNAL') || die();
 
 // TODO: revert to native enums once we migrate to php8.
 
@@ -47,4 +45,4 @@ class EnumCase {
         $this->name = $name;
         $this->value = $value;
     }
-};
+}

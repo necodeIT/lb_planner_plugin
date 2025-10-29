@@ -21,12 +21,11 @@ use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\reservation;
 
 /**
- * Returns all slots a supervisor can theoretically reserve for a user.
- * This does not include times the user has already reserved a slot for.
+ * Returns all reservations for this user.
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_get_my_reservations extends external_api {

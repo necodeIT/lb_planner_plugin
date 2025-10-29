@@ -20,11 +20,11 @@ use core_external\{external_function_parameters, external_single_structure};
 use local_lbplanner\helpers\plan_helper;
 
 /**
- * Get the plan of the given user.
+ * Returns the plan of the current user.
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_get_plan extends \core_external\external_api {

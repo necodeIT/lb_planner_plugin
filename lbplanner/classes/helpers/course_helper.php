@@ -22,7 +22,6 @@ use core_tag_tag;
 use DateTimeImmutable;
 use dml_exception;
 use dml_write_exception;
-
 use local_lbplanner\model\course;
 
 /**
@@ -30,11 +29,10 @@ use local_lbplanner\model\course;
  *
  * @package    local_lbplanner
  * @subpackage helpers
- * @copyright  2024 NecodeIT
+ * @copyright  2025 Pallasys
  * @license    https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class course_helper {
-
     /**
      * The course table used by the LP
      */
@@ -99,8 +97,8 @@ class course_helper {
                  But their perf is so abysmal that we have to roll our own function.
                  The code is largely leaned on how these functions work internally, optimized for our purposes. */
         if ($onlyenrolled) {
-            $mdlcourses = $DB->get_records_sql("
-                SELECT c.* FROM {course} c
+            $mdlcourses = $DB->get_records_sql(
+                "SELECT c.* FROM {course} c
                 INNER JOIN {enrol} e ON e.courseid = c.id
                 INNER JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :userid)
                 INNER JOIN {tag_instance} ti ON (ti.itemid = c.id)
@@ -129,8 +127,8 @@ class course_helper {
                 ]
             );
         } else {
-            $mdlcourses = $DB->get_records_sql("
-                SELECT c.* FROM {course} c
+            $mdlcourses = $DB->get_records_sql(
+                "SELECT c.* FROM {course} c
                 INNER JOIN {tag_instance} ti ON (ti.itemid = c.id)
                 WHERE (
                        c.enddate > :courseexpiredate
@@ -156,7 +154,9 @@ class course_helper {
             } else {
                 // IF not create an Object to be put into the Eduplanner database.
                 $fetchedcourse = new course(
-                    0, $courseid, $userid,
+                    0,
+                    $courseid,
+                    $userid,
                     course::prepare_shortname($mdlcourse->shortname),
                     self::COLORS[array_rand(self::COLORS)],
                     false,

@@ -25,11 +25,9 @@ use moodle_exception;
 /**
  * Removes all user data stored by the lbplanner app.
  *
- * Admins can pass a userid to delete the user with the given id
- *
  * @package local_lbplanner
  * @subpackage services_user
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class user_delete_user extends external_api {
@@ -61,7 +59,8 @@ class user_delete_user extends external_api {
         if (
             !(count(plan_helper::get_plan_members($planid)) == 1 )
             &&
-            !(plan_helper::get_access_type($planid, $userid) == PLAN_ACCESS_TYPE::OWNER)) {
+            !(plan_helper::get_access_type($planid, $userid) == PLAN_ACCESS_TYPE::OWNER)
+        ) {
             self::call_external_function('local_lbplanner_plan_leave_plan', ['userid' => $userid, 'planid' => $planid]);
         }
         $DB->delete_records(plan_helper::DEADLINES_TABLE, ['planid' => $planid]);

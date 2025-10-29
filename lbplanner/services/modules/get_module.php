@@ -20,11 +20,11 @@ use core_external\{external_api, external_function_parameters, external_single_s
 use local_lbplanner\model\module;
 
 /**
- * Get the data for a module.
+ * Returns the data for a module.
  *
  * @package local_lbplanner
  * @subpackage services_modules
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class modules_get_module extends external_api {

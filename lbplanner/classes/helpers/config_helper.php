@@ -20,7 +20,6 @@ use core_component;
 use core_customfield\category_controller;
 use customfield_select\field_controller;
 use local_modcustomfields\customfield\mod_handler;
-
 use local_lbplanner\enums\SETTINGS;
 
 /**
@@ -28,7 +27,7 @@ use local_lbplanner\enums\SETTINGS;
  *
  * @package local_lbplanner
  * @subpackage helpers
- * @copyright 2025 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class config_helper {
@@ -40,9 +39,7 @@ class config_helper {
         // Check if the category is already created and only create it if it doesn't exist.
         // Check if plugin "modcustomfields" is installed and create the category and the custom field.
         if (self::get_category_id() === -1) {
-
             if (array_key_exists('modcustomfields', core_component::get_plugin_list('local'))) {
-
                 $handler = mod_handler::create();
                 $categoryid = $handler->create_category('LB Planer');
 

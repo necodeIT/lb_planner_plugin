@@ -20,11 +20,11 @@ use core_external\{external_api, external_function_parameters, external_value};
 use local_lbplanner\helpers\plan_helper;
 
 /**
- * Delete a deadline from your plan
+ * Deletes a deadline from your plan.
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_delete_deadline extends external_api {
@@ -45,7 +45,7 @@ class plan_delete_deadline extends external_api {
     }
 
     /**
-     * Delete a deadline.
+     * Deletes a deadline from your plan.
      *
      * @param int $moduleid ID of the Module
      * @return void

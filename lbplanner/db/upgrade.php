@@ -19,12 +19,11 @@
  *
  * @package local_lbplanner
  * @subpackage db
- * @copyright 2025 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
 use core\context\course as context_course;
-
 use local_lbplanner\helpers\{config_helper, course_helper};
 
 /**

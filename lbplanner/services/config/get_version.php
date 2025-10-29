@@ -19,11 +19,11 @@ namespace local_lbplanner_services;
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
 
 /**
- * Get version service.
+ * Returns the version of the plugin.
  *
  * @package local_lbplanner
  * @subpackage services_config
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class config_get_version extends external_api {
@@ -38,7 +38,7 @@ class config_get_version extends external_api {
     }
 
     /**
-     * Returns the version.
+     * Returns the version of the plugin.
      *
      * @return array containing the version
      */

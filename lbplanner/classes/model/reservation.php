@@ -19,16 +19,15 @@
  *
  * @package local_lbplanner
  * @subpackage helpers
- * @copyright 2024 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
 namespace local_lbplanner\model;
 
 use DateTimeImmutable;
-
-use core_external\{external_single_structure, external_value};
 use DateTimeZone;
+use core_external\{external_single_structure, external_value};
 use local_lbplanner\model\slot;
 use local_lbplanner\helpers\slot_helper;
 

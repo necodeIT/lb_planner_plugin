@@ -17,7 +17,6 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_value};
-
 use local_lbplanner\helpers\slot_helper;
 
 /**
@@ -25,7 +24,7 @@ use local_lbplanner\helpers\slot_helper;
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2025 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_remove_slot_supervisor extends external_api {

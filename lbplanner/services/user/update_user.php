@@ -16,21 +16,20 @@
 
 namespace local_lbplanner_services;
 
-use dml_exception;
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
 use invalid_parameter_exception;
 use moodle_exception;
-
+use dml_exception;
 use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
 use local_lbplanner\enums\KANBANCOL_TYPE_ORNONE;
 
 /**
- * Update the data for a user. null values or unset parameters are left unmodified.
+ * Update current user settings. null values or unset parameters are left unmodified.
  *
  * @package local_lbplanner
  * @subpackage services_user
- * @copyright 2025 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class user_update_user extends external_api {
@@ -40,47 +39,67 @@ class user_update_user extends external_api {
      */
     public static function update_user_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'theme' => new external_value(PARAM_TEXT, 'The theme the user has selected', VALUE_DEFAULT, null),
+            'theme' => new external_value(
+                PARAM_TEXT,
+                'The theme the user has selected',
+                VALUE_DEFAULT,
+                null,
+                NULL_ALLOWED
+            ),
             'colorblindness' => new external_value(
                 PARAM_TEXT,
                 'The colorblindness the user has selected',
                 VALUE_DEFAULT,
-                null),
+                null,
+                NULL_ALLOWED
+            ),
             'displaytaskcount' => new external_value(
                 PARAM_BOOL,
                 'Whether the user has the taskcount enabled',
                 VALUE_DEFAULT,
-                null),
+                null,
+                NULL_ALLOWED
+            ),
             'ekenabled' => new external_value(
                 PARAM_BOOL,
                 'Whether the user wants to see EK modules',
                 VALUE_DEFAULT,
-                null),
+                null,
+                NULL_ALLOWED
+            ),
             'showcolumncolors' => new external_value(
                 PARAM_BOOL,
                 'Whether column colors should show in kanban board',
                 VALUE_DEFAULT,
-                null),
+                null,
+                NULL_ALLOWED
+            ),
             'automovecompletedtasks' => new external_value(
                 PARAM_TEXT,
-                'The kanban column to move a task to if completed '.KANBANCOL_TYPE_ORNONE::format(),
+                'The kanban column to move a task to if completed ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null),
+                null,
+                NULL_ALLOWED
+            ),
             'automovesubmittedtasks' => new external_value(
                 PARAM_TEXT,
-                'The kanban column to move a task to if submitted '.KANBANCOL_TYPE_ORNONE::format(),
+                'The kanban column to move a task to if submitted ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null),
+                null,
+                NULL_ALLOWED
+            ),
             'automoveoverduetasks' => new external_value(
                 PARAM_TEXT,
-                'The kanban column to move a task to if overdue '.KANBANCOL_TYPE_ORNONE::format(),
+                'The kanban column to move a task to if overdue ' . KANBANCOL_TYPE_ORNONE::format(),
                 VALUE_DEFAULT,
-                null),
+                null,
+                NULL_ALLOWED
+            ),
         ]);
     }
 
     /**
-     * Updates the given user in the eduplanner DB
+     * Update current user settings. null values or unset parameters are left unmodified.
      * @param ?string $theme The theme the user has selected
      * @param ?string $colorblindness The colorblindness the user has selected
      * @param ?bool $displaytaskcount The displaytaskcount the user has selected

@@ -27,7 +27,7 @@ use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_INVITE_STATE};
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_invite_user extends external_api {
@@ -75,10 +75,12 @@ class plan_invite_user extends external_api {
             throw new \moodle_exception('Cannot invite user who is already a member');
         }
 
-        if ($DB->record_exists(
+        if (
+            $DB->record_exists(
                 plan_helper::INVITES_TABLE,
                 ['inviteeid' => $inviteeid, 'planid' => $planid, 'status' => PLAN_INVITE_STATE::PENDING]
-            )) {
+            )
+        ) {
             throw new \moodle_exception('User is already invited');
         }
 

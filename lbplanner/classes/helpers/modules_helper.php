@@ -19,7 +19,7 @@
  *
  * @package local_lbplanner
  * @subpackage helpers
- * @copyright 2024 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -36,7 +36,6 @@ use local_lbplanner\model\module;
  * Contains helper functions for working with modules.
  */
 class modules_helper {
-
     /**
      * Table where modules are stored.
      */
@@ -71,6 +70,23 @@ class modules_helper {
      * Submitted status name of a submission.
      */
     const SUBMISSION_STATUS_SUBMITTED = 'submitted';
+
+    /**
+     * For caching {@see get_assign_module_id()}
+     * @var ?int $assignmoduleid {@see get_assign_module_id()}
+     */
+    private static ?int $assignmoduleid = null;
+
+    /**
+     * Gets the ID of the module type "assign" (as opposed to "forum", "quiz", etc.)
+     */
+    public static function get_assign_module_id(): int {
+        global $DB;
+        if (self::$assignmoduleid === null) {
+            self::$assignmoduleid = $DB->get_field('modules', 'id', ['name' => 'assign'], MUST_EXIST);
+        }
+        return self::$assignmoduleid;
+    }
 
     /**
      * Determins the enum value for a grade.
@@ -191,15 +207,20 @@ class modules_helper {
     public static function get_all_modules_by_course(int $courseid, bool $ekenabled): array {
         global $DB;
 
-        $assignments = $DB->get_records(self::ASSIGN_TABLE, ['course' => $courseid]);
+        $cmodules = $DB->get_records(
+            self::COURSE_MODULES_TABLE,
+            [
+                'course' => $courseid,
+                'visible' => 1,
+                'visibleoncoursepage' => 1,
+                'module' => self::get_assign_module_id(), // Must be assign, not forum or other types of modules.
+            ]
+        );
 
         $modules = [];
 
-        foreach ($assignments as $assign) {
-            if ($assign === null) {
-                throw new coding_exception("what the fuck? 1 {$courseid} {$ekenabled}");
-            }
-            $module = module::from_assignobj($assign);
+        foreach ($cmodules as $cm) {
+            $module = module::from_cmobj($cm);
             if ((!$ekenabled) && $module->get_type() === MODULE_TYPE::EK) {
                 continue;
             }

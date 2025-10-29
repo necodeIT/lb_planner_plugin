@@ -16,22 +16,21 @@
 
 namespace local_lbplanner_services;
 
-use dml_exception;
 use core_external\{external_api, external_function_parameters, external_multiple_structure, external_value};
 use invalid_parameter_exception;
-use local_lbplanner\enums\CAPABILITY;
 use moodle_exception;
+use dml_exception;
 use core\context\system as context_system;
-
 use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
+use local_lbplanner\enums\CAPABILITY;
 
 /**
- * Gets all users with one or several LBP capabilities.
+ * Returns all users, optionally filtered by vintage.
  *
  * @package local_lbplanner
  * @subpackage services_user
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class user_get_all_users extends external_api {
@@ -46,7 +45,7 @@ class user_get_all_users extends external_api {
     }
 
     /**
-     * Gives back all users.
+     * Returns all users, optionally filtered by vintage.
      * @param ?string $vintage (optional) gives back all users with the given vintage
      * @throws moodle_exception
      * @throws dml_exception

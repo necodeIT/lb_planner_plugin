@@ -18,7 +18,7 @@
  * Defines versioning
  *
  * @package local_lbplanner
- * @copyright 2025 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -27,8 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->requires = 2024042200.00; // Require Moodle >=4.4.0.
 $plugin->maturity = MATURITY_BETA;
 $plugin->component = 'local_lbplanner';
-$plugin->release = '1.1.8';
-$plugin->version = 202510090000;
+$plugin->release = '1.1.11';
+$plugin->version = 202510190000;
 $plugin->dependencies = [
     // Depend upon version 2023110600 of local_modcustomfields.
     'local_modcustomfields' => 2023110600,

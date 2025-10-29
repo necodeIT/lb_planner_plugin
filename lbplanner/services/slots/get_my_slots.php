@@ -17,16 +17,16 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_multiple_structure};
+use DateTimeImmutable;
 use local_lbplanner\helpers\{config_helper, slot_helper};
 use local_lbplanner\model\slot;
 
 /**
- * Returns all slots the user can theoretically reserve.
- * This does not include times the user has already reserved a slot for.
+ * Returns all slots the user can reserve, not including already-reserved ones.
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_get_my_slots extends external_api {
@@ -39,18 +39,21 @@ class slots_get_my_slots extends external_api {
     }
 
     /**
-     * Returns slots the current user is supposed to see
+     * Returns all slots the user can reserve, not including already-reserved ones.
      */
     public static function get_my_slots(): array {
         global $USER;
 
-        $allslots = slot_helper::get_all_slots();
+        $dayofweek = (int)(new DateTimeImmutable('today'))->format('N');
+        $allslots = slot_helper::get_vintage_time_slots(
+            $USER->address,
+            $dayofweek,
+            config_helper::get_slot_futuresight()
+        );
 
         $myslots = slot_helper::filter_slots_for_user($allslots, $USER);
 
-        $returnslots = slot_helper::filter_slots_for_time($myslots, config_helper::get_slot_futuresight());
-
-        return array_map(fn(slot $slot) => $slot->prepare_for_api(), $returnslots);
+        return array_map(fn(slot $slot) => $slot->prepare_for_api(), $myslots);
     }
 
     /**

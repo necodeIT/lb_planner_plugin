@@ -17,19 +17,16 @@
 namespace local_lbplanner_services;
 
 use DateTimeImmutable;
-
 use core_external\{external_api, external_function_parameters, external_value};
-
-use local_lbplanner\helpers\slot_helper;
-use local_lbplanner\helpers\notifications_helper;
+use local_lbplanner\helpers\{slot_helper, notifications_helper};
 use local_lbplanner\enums\NOTIF_TRIGGER;
 
 /**
- * Unbooks reservation
+ * Tries to request unbooking a reservation.
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_unbook_reservation extends external_api {
@@ -57,7 +54,7 @@ class slots_unbook_reservation extends external_api {
     }
 
     /**
-     * Tries to request unbooking
+     * Tries to request unbooking a reservation.
      * @param int $reservationid which reservation to unbook
      * @param bool $nice whether to ask the student to unbook themself, or force-unbook
      */
@@ -91,7 +88,7 @@ class slots_unbook_reservation extends external_api {
                 if ($startpast) {
                     throw new \moodle_exception(
                         'Students can\'t unbook reservations that have already started.'
-                        .' If you want to unbook this reservation regardless, force it.'
+                        . ' If you want to unbook this reservation regardless, force it.'
                     );
                 }
                 notifications_helper::notify_user($reservation->userid, $reservation->id, NOTIF_TRIGGER::UNBOOK_REQUESTED);

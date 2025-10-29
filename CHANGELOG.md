@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.11](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.10...1.1.11) (2025-10-19)
+
+
+### Bug Fixes
+
+* Kanban board crash due to misnamed DB field ([#97](https://github.com/necodeIT/lb_planner_plugin/issues/97)) ([1136cf8](https://github.com/necodeIT/lb_planner_plugin/commit/1136cf878560b2facc13c7d583a40e0898627707))
+
+## [1.1.10](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.9...1.1.10) (2025-10-15)
+
+
+### Bug Fixes
+
+* Dramatically increase performance for get_my_slots ([#95](https://github.com/necodeIT/lb_planner_plugin/issues/95)) ([b8c97b7](https://github.com/necodeIT/lb_planner_plugin/commit/b8c97b7af5b2890d7ae9301c127ae943f61c7a2e))
+
+## [1.1.9](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.8...1.1.9) (2025-10-12)
+
+
+### Bug Fixes
+
+* Only show visible modules ([#94](https://github.com/necodeIT/lb_planner_plugin/issues/94)) ([378597a](https://github.com/necodeIT/lb_planner_plugin/commit/378597aad9748db20d94d019ccd1b4abf4efc842))
+* Rename column to selectedcolumn in DB ([#90](https://github.com/necodeIT/lb_planner_plugin/issues/90)) ([abdbf0e](https://github.com/necodeIT/lb_planner_plugin/commit/abdbf0e1d27bcdecc8584ea1a0f15d71ecdfb9da)), closes [#89](https://github.com/necodeIT/lb_planner_plugin/issues/89)
+* Various things we found out through the new CI checks ([#92](https://github.com/necodeIT/lb_planner_plugin/issues/92)) ([cf4f42b](https://github.com/necodeIT/lb_planner_plugin/commit/cf4f42bc3c11ca4227feb9377190356b179528c1)), closes [#91](https://github.com/necodeIT/lb_planner_plugin/issues/91)
+
 ## [1.1.8](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.7...1.1.8) (2025-10-04)
 
 

@@ -22,13 +22,12 @@ use local_lbplanner\helpers\notifications_helper;
 use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_ACCESS_TYPE, PLAN_INVITE_STATE};
 
 /**
- * Leave your plan
- *
- * if no other user exists in the plan, the user can't leave
+ * Leave current plan.
+ * If no other user exists in the plan, the user can't leave.
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_leave_plan extends external_api {
@@ -41,7 +40,8 @@ class plan_leave_plan extends external_api {
     }
 
     /**
-     * Leave your plan
+     * Leave current plan.
+     * If no other user exists in the plan, the user can't leave.
      *
      * @return void
      * @throws \moodle_exception when user is only member left in plan
@@ -75,13 +75,15 @@ class plan_leave_plan extends external_api {
                 $allmembers[] = $member;
             }
             if (count($writemembers) > 0) {
-                $newowner = $writemembers[rand( 0, count($writemembers) - 1)]->userid;
+                $newowner = $writemembers[rand(0, count($writemembers) - 1)]->userid;
             } else {
-                $newowner = $allmembers[rand( 0, count($allmembers) - 1)]->userid;
+                $newowner = $allmembers[rand(0, count($allmembers) - 1)]->userid;
             }
             $newowneraccess = $DB->get_record(
                 plan_helper::ACCESS_TABLE,
-                ['planid' => $planid, 'userid' => $newowner], '*', MUST_EXIST
+                ['planid' => $planid, 'userid' => $newowner],
+                '*',
+                MUST_EXIST
             );
             $newowneraccess->accesstype = PLAN_ACCESS_TYPE::OWNER;
             $DB->update_record(plan_helper::ACCESS_TABLE, $newowneraccess);
@@ -91,7 +93,9 @@ class plan_leave_plan extends external_api {
 
         $oldaccess = $DB->get_record(
             plan_helper::ACCESS_TABLE,
-            ['planid' => $planid, 'userid' => $USER->id], '*', MUST_EXIST
+            ['planid' => $planid, 'userid' => $USER->id],
+            '*',
+            MUST_EXIST
         );
 
         $oldaccess->planid = $newplanid;

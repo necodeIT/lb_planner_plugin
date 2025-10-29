@@ -18,7 +18,6 @@ namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_single_structure, external_value};
 use core\context\system as context_system;
-
 use local_lbplanner\enums\{CAPABILITY, WEEKDAY};
 use local_lbplanner\helpers\slot_helper;
 use local_lbplanner\model\{slot, supervisor};
@@ -28,7 +27,7 @@ use local_lbplanner\model\{slot, supervisor};
  *
  * @package local_lbplanner
  * @subpackage services_slots
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class slots_create_slot extends external_api {
@@ -55,7 +54,7 @@ class slots_create_slot extends external_api {
             ),
             'weekday' => new external_value(
                 PARAM_INT,
-                'The weekday this slot happens on. '.WEEKDAY::format(),
+                'The weekday this slot happens on. ' . WEEKDAY::format(),
                 VALUE_REQUIRED,
                 null,
                 NULL_NOT_ALLOWED

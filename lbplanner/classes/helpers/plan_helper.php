@@ -19,7 +19,7 @@
  *
  * @package    local_lbplanner
  * @subpackage helpers
- * @copyright  2024 NecodeIT
+ * @copyright  2025 Pallasys
  * @license    https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -79,7 +79,8 @@ class plan_helper {
 
         $owner = $DB->get_field(
             self::ACCESS_TABLE,
-            'userid', ['planid' => $planid, 'accesstype' => PLAN_ACCESS_TYPE::OWNER]
+            'userid',
+            ['planid' => $planid, 'accesstype' => PLAN_ACCESS_TYPE::OWNER]
         );
 
         return intval($owner);
@@ -277,7 +278,9 @@ class plan_helper {
 
         $oldaccess = $DB->get_record(
             self::ACCESS_TABLE,
-            ['planid' => $planid, 'userid' => $removeuserid], '*', MUST_EXIST
+            ['planid' => $planid, 'userid' => $removeuserid],
+            '*',
+            MUST_EXIST
         );
 
         $oldaccess->planid = $newplanid;
@@ -342,4 +345,3 @@ class plan_helper {
             ->getTimestamp();
     }
 }
-

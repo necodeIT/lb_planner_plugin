@@ -21,11 +21,11 @@ use local_lbplanner\helpers\course_helper;
 use moodle_exception;
 
 /**
- * Update the data for a course.
+ * Update the user-specific data for a course.
  *
  * @package local_lbplanner
  * @subpackage services_courses
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class courses_update_course extends external_api {
@@ -48,15 +48,15 @@ class courses_update_course extends external_api {
     }
 
     /**
-     * Update the User-data for a course.
+     * Update the user-specific data for a course.
      * @param int $courseid The id of the course
      * @param string $color The color of the course
      * @param string $shortname The shortname of the course
-     * @param int $enabled Whether the course is enabled or not (0 or 1)
+     * @param bool $enabled Whether the course is enabled or not
      * @return void
      * @throws moodle_exception
      */
-    public static function update_course(int $courseid, string $color, string $shortname, int $enabled): void {
+    public static function update_course(int $courseid, string $color, string $shortname, bool $enabled): void {
         global $DB, $USER;
 
         self::validate_parameters(
@@ -82,7 +82,7 @@ class courses_update_course extends external_api {
             $course->set_shortname($shortname);
         }
         if ($enabled !== null) {
-            $course->set_enabled((bool) $enabled);
+            $course->set_enabled($enabled);
         }
 
         $DB->update_record(course_helper::EDUPLANNER_COURSE_TABLE, $course->prepare_for_db());

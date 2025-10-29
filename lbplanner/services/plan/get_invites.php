@@ -21,11 +21,11 @@ use local_lbplanner\helpers\invite_helper;
 use local_lbplanner\helpers\plan_helper;
 
 /**
- * Get all the invites of the current user.
+ * Returns all invites for this user.
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_get_invites extends external_api {
@@ -38,7 +38,7 @@ class plan_get_invites extends external_api {
     }
 
     /**
-     * Returns all invites of the current user.
+     * Returns all invites for this user.
      *
      * @return array
      */

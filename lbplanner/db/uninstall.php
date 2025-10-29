@@ -20,7 +20,7 @@
  *
  * @package local_lbplanner
  * @subpackage db
- * @copyright 2025 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -35,4 +35,3 @@ function xmldb_local_lbplanner_uninstall() {
     $tag = core_tag_tag::get_by_name(core_tag_collection::get_default(), course_helper::EDUPLANNER_TAG, strictness:MUST_EXIST);
     core_tag_tag::delete_tags($tag->id);
 }
-

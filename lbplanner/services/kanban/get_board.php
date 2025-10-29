@@ -32,7 +32,7 @@ use local_lbplanner\model\{module, user};
  *
  * @package local_lbplanner
  * @subpackage services_kanban
- * @copyright 2025 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class kanban_get_board extends external_api {
@@ -45,7 +45,7 @@ class kanban_get_board extends external_api {
     }
 
     /**
-     * Gets all the entries on this user's board.
+     * Returns all entries in the kanban board for the current user.
      */
     public static function get_board(): array {
         global $USER;

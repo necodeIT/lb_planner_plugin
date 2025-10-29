@@ -19,7 +19,7 @@
  *
  * @package local_lbplanner
  * @subpackage model
- * @copyright 2025 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -70,7 +70,7 @@ class kanbanentry {
      * @return kanbanentry the kanbanentry obj
      */
     public static function from_obj(\stdClass $obj): self {
-        return new self($obj->id, $obj->userid, $obj->cmid, $obj->column);
+        return new self($obj->id, $obj->userid, $obj->cmid, $obj->selectedcolumn);
     }
 
     /**
@@ -127,7 +127,7 @@ class kanbanentry {
                 'id' => new external_value(PARAM_INT, 'kanban board ID'),
                 'userid' => new external_value(PARAM_INT, 'ID of the owner of this entry'),
                 'cmid' => new external_value(PARAM_INT, 'ID of the course-module'),
-                'column' => new external_value(PARAM_TEXT, 'which column this module is in '.KANBANCOL_TYPE::format()),
+                'column' => new external_value(PARAM_TEXT, 'which column this module is in ' . KANBANCOL_TYPE::format()),
             ]
         );
     }

@@ -17,20 +17,18 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_function_parameters, external_multiple_structure};
-
 use local_lbplanner\helpers\course_helper;
 use local_lbplanner\model\course;
 
 /**
- * Get all the courses of the current year.
+ * Returns courses visible to this user.
  *
  * @package local_lbplanner
  * @subpackage services_courses
- * @copyright 2025 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class courses_get_my_courses extends \core_external\external_api {
-
     /**
      * Has no Parameters
      * @return external_function_parameters
@@ -40,7 +38,7 @@ class courses_get_my_courses extends \core_external\external_api {
     }
 
     /**
-     * Get all the courses of the current year.
+     * Returns courses visible to this user.
      */
     public static function get_my_courses(): array {
         $courses = course_helper::get_eduplanner_courses(true);

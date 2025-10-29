@@ -21,11 +21,11 @@ use local_lbplanner\helpers\{plan_helper, notifications_helper, invite_helper};
 use local_lbplanner\enums\{NOTIF_TRIGGER, PLAN_INVITE_STATE};
 
 /**
- * Decline an invite from the plan.
+ * Decline an invite.
  *
  * @package local_lbplanner
  * @subpackage services_plan
- * @copyright 2024 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 class plan_decline_invite extends external_api {

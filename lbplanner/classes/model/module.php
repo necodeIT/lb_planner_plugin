@@ -19,7 +19,7 @@
  *
  * @package local_lbplanner
  * @subpackage model
- * @copyright 2025 necodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -118,15 +118,28 @@ class module {
     }
 
     /**
+     * Creates a module object from the course-module object.
+     * @param \stdClass $cmobj the course-module object from moodle's DB
+     * @return module a module object with filled-in course-module object
+     */
+    public static function from_cmobj(\stdClass $cmobj): self {
+        $obj = new self();
+        $obj->cmobj = $cmobj;
+        $obj->cmid = $cmobj->id;
+        $obj->assignid = $cmobj->instance;
+        return $obj;
+    }
+
+    /**
      * Fetches the necessary caches and returns the assignment ID
      * @return int assign ID
      */
     public function get_assignid(): int {
         if ($this->assignid === null) {
             if ($this->cmid !== null) {
-                $this->assignid = $this->get_cmobj()['instance'];
+                $this->assignid = $this->get_cmobj()->instance;
             } else {
-                throw new \coding_exception('requested assignid, but no assignid');
+                throw new \coding_exception('requested assignid, but no cmid');
             }
         }
         return $this->assignid;
@@ -169,7 +182,7 @@ class module {
             if ($this->cmid !== null) {
                 $res = $DB->get_record(
                     modules_helper::COURSE_MODULES_TABLE,
-                    ['id' => $this->cmid]
+                    ['id' => $this->cmid, 'module' => modules_helper::get_assign_module_id()]
                 );
                 if ($res === false) {
                     throw new \moodle_exception("couldn't get course module with cmid {$this->cmid}");
@@ -184,7 +197,7 @@ class module {
                     [
                         'course' => $courseid,
                         'instance' => $this->assignid,
-                        'module' => 1,
+                        'module' => modules_helper::get_assign_module_id(),
                     ]
                 );
                 if ($res === false) {
@@ -303,7 +316,6 @@ class module {
                 $mdlgrade = end($mdlgrades);
 
                 if ($mdlgrade->grade > 0) {
-
                     $grade  = modules_helper::determine_uinified_grade(
                         $mdlgrade->grade,
                         $moduleboundaries->grademax,
@@ -349,9 +361,9 @@ class module {
                 'cmid' => new external_value(PARAM_INT, 'Course module ID'),
                 'name' => new external_value(PARAM_TEXT, 'Shortened module name (max. 5 chars)'),
                 'courseid' => new external_value(PARAM_INT, 'Course ID'),
-                'status' => new external_value(PARAM_INT, 'Module status '.MODULE_STATUS::format()),
-                'type' => new external_value(PARAM_INT, 'Module type '.MODULE_TYPE::format()),
-                'grade' => new external_value(PARAM_INT, 'The grade of the module '.MODULE_GRADE::format()),
+                'status' => new external_value(PARAM_INT, 'Module status ' . MODULE_STATUS::format()),
+                'type' => new external_value(PARAM_INT, 'Module type ' . MODULE_TYPE::format()),
+                'grade' => new external_value(PARAM_INT, 'The grade of the module ' . MODULE_GRADE::format()),
                 'duedate' => new external_value(PARAM_INT, 'The deadline of the module set by the teacher'),
             ]
         );

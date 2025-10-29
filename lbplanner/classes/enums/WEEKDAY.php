@@ -20,7 +20,7 @@
  *
  * @package local_lbplanner
  * @subpackage enums
- * @copyright 2024 NecodeIT
+ * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
@@ -31,9 +31,8 @@ namespace local_lbplanner\enums;
 use local_lbplanner\polyfill\Enum;
 
 /**
- * All the days of the week.
- * All seven of them.
- * Yup.
+ * ISO 8601 numeric representation of the day of the week.
+ * Same as `(int)DateTime::format('N');`
  */
 class WEEKDAY extends Enum {
     /**
