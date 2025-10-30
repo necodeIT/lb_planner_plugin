@@ -97,6 +97,8 @@ class slot_helper {
      */
     public static function get_all_slots(): array {
         global $DB;
+        $sentryspan = sentry_helper::span_start(__FUNCTION__);
+
         $slots = $DB->get_records(self::TABLE_SLOTS, []);
 
         $slotsobj = [];
@@ -104,6 +106,7 @@ class slot_helper {
             array_push($slotsobj, slot::from_db($slot));
         }
 
+        sentry_helper::span_end($sentryspan);
         return $slotsobj;
     }
 
@@ -117,6 +120,7 @@ class slot_helper {
      */
     public static function get_vintage_time_slots(string $vintage, int $today, int $range): array {
         global $DB;
+        $sentryspan = sentry_helper::span_start(__FUNCTION__, ['range' => $range]);
 
         if ($range < 7) {
             $valid = [];
@@ -140,6 +144,7 @@ class slot_helper {
             array_push($slotsobj, slot::from_db($slot));
         }
 
+        sentry_helper::span_end($sentryspan);
         return $slotsobj;
     }
 
@@ -151,6 +156,7 @@ class slot_helper {
      */
     public static function get_supervisor_slots(int $supervisorid): array {
         global $DB;
+        $sentryspan = sentry_helper::span_start(__FUNCTION__);
 
         $slots = $DB->get_records_sql(
             'SELECT slot.* FROM {' . self::TABLE_SLOTS . '} as slot ' .
@@ -164,6 +170,7 @@ class slot_helper {
             array_push($slotsobj, slot::from_db($slot));
         }
 
+        sentry_helper::span_end($sentryspan);
         return $slotsobj;
     }
 
@@ -175,6 +182,8 @@ class slot_helper {
      */
     public static function get_slots_by_room(string $room): array {
         global $DB;
+        $sentryspan = sentry_helper::span_start(__FUNCTION__);
+
         $slots = $DB->get_records(self::TABLE_SLOTS, ['room' => $room]);
 
         $slotsobj = [];
@@ -182,6 +191,7 @@ class slot_helper {
             array_push($slotsobj, slot::from_db($slot));
         }
 
+        sentry_helper::span_end($sentryspan);
         return $slotsobj;
     }
 
@@ -271,6 +281,8 @@ class slot_helper {
      * @return reservation[] reservations that pass
      */
     public static function filter_reservations_for_recency(array $reservations): array {
+        $sentryspan = sentry_helper::span_start(__FUNCTION__, ['count_in' => count($reservations)]);
+
         $goodeggs = [];
         foreach ($reservations as $reservation) {
             if (!$reservation->is_outdated()) {
@@ -278,6 +290,8 @@ class slot_helper {
             }
         }
 
+        $sentryspan->setData(['count_out' => count($goodeggs)]);
+        sentry_helper::span_end($sentryspan);
         return $goodeggs;
     }
 
@@ -308,6 +322,8 @@ class slot_helper {
      * @return slot[] the filtered slot array
      */
     public static function filter_slots_for_user(array $allslots, \stdClass $user): array {
+        $sentryspan = sentry_helper::span_start(__FUNCTION__, ['count_in' => count($allslots)]);
+
         $mycourses = course_helper::get_eduplanner_courses(true);
         $mycourseids = [];
         foreach ($mycourses as $course) {
@@ -332,6 +348,9 @@ class slot_helper {
                 break;
             }
         }
+
+        $sentryspan->setData(['count_out' => count($slots)]);
+        sentry_helper::span_end($sentryspan);
         return $slots;
     }
 
@@ -342,6 +361,8 @@ class slot_helper {
      * @return slot[] the filtered slot array
      */
     public static function filter_slots_for_time(array $allslots, int $range): array {
+        $sentryspan = sentry_helper::span_start(__FUNCTION__, ['count_in' => count($allslots)]);
+
         if ($range === 7) {
             return $allslots;
         }
@@ -357,6 +378,9 @@ class slot_helper {
                 array_push($slots, $slot);
             }
         }
+
+        $sentryspan->setData(['count_out' => count($slots)]);
+        sentry_helper::span_end($sentryspan);
         return $slots;
     }
 

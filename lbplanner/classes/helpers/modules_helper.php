@@ -207,6 +207,7 @@ class modules_helper {
     public static function get_all_modules_by_course(int $courseid, bool $ekenabled): array {
         global $DB;
 
+        $sentryspan = sentry_helper::span_start(__FUNCTION__, ["ekenabled" => $ekenabled]);
         $cmodules = $DB->get_records(
             self::COURSE_MODULES_TABLE,
             [
@@ -227,6 +228,7 @@ class modules_helper {
             array_push($modules, $module);
         }
 
+        sentry_helper::span_end($sentryspan);
         return $modules;
     }
 }

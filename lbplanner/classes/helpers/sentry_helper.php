@@ -40,11 +40,20 @@ class sentry_helper {
     private static array $spans = [];
 
     /**
+     * This cache is needed because the value is read fairly often and determining it is somewhat expensive.
+     * @var bool $isenabled cache for enabled/disabled state of sentry reporting.
+     */
+    private static ?bool $isenabled = null;
+
+    /**
      * Checks if moodle plugin is set to report exceptions to sentry
      * @return bool whether sentry is to be used
      */
     public static function enabled(): bool {
-        return strlen(config_helper::get_sentry_dsn()) > 0;
+        if (self::$isenabled === null) {
+            self::$isenabled = strlen(config_helper::get_sentry_dsn()) > 0;
+        }
+        return self::$isenabled;
     }
     /**
      * Initializes the sentry library for future use.
@@ -97,12 +106,16 @@ class sentry_helper {
     /**
      * Does a bunch of setup for measuring span duration.
      * @param string $op the operation this span is for
+     * @param ?array $data an assocarr of data to record for this span, or null
      * @return ?Span the span that got started, or null if disabled
      */
-    public static function span_start(string $op): ?Span {
+    public static function span_start(string $op, ?array $data = null): ?Span {
         if (self::enabled()) {
             $ctx = SpanContext::make()
                 ->setOp($op);
+            if ($data !== null) {
+                $ctx = $ctx->setData($data);
+            }
             $parent = SentrySdk::getCurrentHub()->getSpan();
             $span = $parent->startChild($ctx);
             self::$spans[(string)$span->getSpanId()] = $span;
