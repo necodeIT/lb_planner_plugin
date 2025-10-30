@@ -146,6 +146,7 @@ class plan_helper {
      */
     public static function get_deadlines(int $planid): array {
         global $DB;
+        $sentryspan = sentry_helper::span_start(__FUNCTION__);
 
         $dbdeadlines = $DB->get_records(self::DEADLINES_TABLE, ['planid' => $planid]);
 
@@ -159,6 +160,7 @@ class plan_helper {
             ];
         }
 
+        sentry_helper::span_end($sentryspan);
         return $deadlines;
     }
 

@@ -35,3 +35,4 @@ $plugin->dependencies = [
 ];
 
 set_config('release', $plugin->release, 'local_lbplanner');
+set_config('sentry_environment', 'develop', 'local_lbplanner'); // NOTE: gets set to 'production' by CI for release.

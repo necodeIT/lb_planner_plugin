@@ -88,6 +88,10 @@ class course_helper {
         global $DB, $USER;
         $userid = $USER->id;
 
+        $sentryspan = sentry_helper::span_start(__FUNCTION__, ['onlyenrolled' => $onlyenrolled]);
+
+        // TODO: rewrite this where it asks the DB for all lbp courses, and then for any mdlcourses that aren't in lbpc.
+
         $lbptag = core_tag_tag::get_by_name(core_tag_collection::get_default(), self::EDUPLANNER_TAG, strictness:MUST_EXIST);
         $courseexpireseconds = config_helper::get_course_outdatedrange();
         $courseexpiredate = (new DateTimeImmutable("{$courseexpireseconds} seconds ago"))->getTimestamp();
@@ -177,6 +181,9 @@ class course_helper {
             $fetchedcourse->set_mdlcourse($mdlcourse);
             array_push($results, $fetchedcourse);
         }
+
+        $sentryspan->setData(['count_out', count($results)]);
+        sentry_helper::span_end($sentryspan);
         return $results;
     }
 
