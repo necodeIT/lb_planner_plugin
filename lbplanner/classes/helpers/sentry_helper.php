@@ -63,6 +63,9 @@ class sentry_helper {
         if (self::enabled()) {
             $env = get_config('local_lbplanner', SETTINGS::SENTRY_ENV);
             $release = get_config('local_lbplanner', SETTINGS::V_RELEASE);
+            if ($env === ENVIRONMENT::DEV) {
+                $release .= '.' . get_config('local_lbplanner', SETTINGS::V_FULLNUM);
+            }
             $cfg = [
                 "dsn" => config_helper::get_sentry_dsn(),
                 "enable_tracing" => true,
