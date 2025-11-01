@@ -182,7 +182,7 @@ class course_helper {
             array_push($results, $fetchedcourse);
         }
 
-        $sentryspan->setData(['count_out', count($results)]);
+        $sentryspan->setData(['count_out' => count($results)]);
         sentry_helper::span_end($sentryspan);
         return $results;
     }
