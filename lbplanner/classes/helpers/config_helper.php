@@ -43,7 +43,7 @@ class config_helper {
                 $handler = mod_handler::create();
                 $categoryid = $handler->create_category('LB Planer');
 
-                set_config('categoryid', $categoryid, 'local_lbplanner');
+                set_config(SETTINGS::CF_CATID, $categoryid, 'local_lbplanner');
                 $categorycontroller = category_controller::create($categoryid, null, $handler);
                 $categorycontroller->save();
 
@@ -77,7 +77,7 @@ class config_helper {
     public static function remove_customfield(): void {
         $handler = mod_handler::create();
         $catid = self::get_category_id();
-        unset_config('categoryid', 'local_lbplanner');
+        unset_config(SETTINGS::CF_CATID, 'local_lbplanner');
         if ($catid !== -1) {
             $catcontroller = category_controller::create($catid, null, $handler);
             $handler->delete_category($catcontroller);
@@ -89,7 +89,7 @@ class config_helper {
      * @return int the category id if it is set, -1 otherwise
      */
     public static function get_category_id(): int {
-        $catid = get_config('local_lbplanner', 'categoryid');
+        $catid = get_config('local_lbplanner', SETTINGS::CF_CATID);
         if ($catid === false) {
             return -1;
         } else {

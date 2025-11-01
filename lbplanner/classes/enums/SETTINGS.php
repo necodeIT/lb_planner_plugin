@@ -30,9 +30,19 @@ namespace local_lbplanner\enums;
 use local_lbplanner\polyfill\Enum;
 
 /**
- * The keys for plugin settings
+ * The keys for plugin settings/configs
  */
 class SETTINGS extends Enum {
+    /**
+     * Key for the release version.
+     * NOTE: This is a constant! Do not set outside version.php under ANY circumstances!
+     */
+    const V_RELEASE = 'release';
+    /**
+     * Key for the full version number in $plugin->version.
+     * NOTE: This is a constant! Do not set outside version.php under ANY circumstances!
+     */
+    const V_FULLNUM = 'release_fullnum';
     /**
      * Key for the setting for how many days into the future a student should be able to reserve a slot.
      */
@@ -45,4 +55,12 @@ class SETTINGS extends Enum {
      * Key for the setting for where sentry events should be sent to.
      */
     const SENTRY_DSN = 'sentry_dsn';
+    /**
+     * Key for the sentry environment.
+     */
+    const SENTRY_ENV = 'sentry_environment';
+    /**
+     * Key for the custom field category ID.
+     */
+    const CF_CATID = 'categoryid';
 }

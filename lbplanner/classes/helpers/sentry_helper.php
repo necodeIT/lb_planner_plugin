@@ -17,6 +17,7 @@
 namespace local_lbplanner\helpers;
 
 use Throwable;
+use local_lbplanner\enums\{ENVIRONMENT, SETTINGS};
 use local_lbplanner\helpers\config_helper;
 use Sentry\SentrySdk;
 use Sentry\Tracing\{Span, SpanContext, Transaction, TransactionContext};
@@ -60,13 +61,15 @@ class sentry_helper {
      */
     public static function init(): void {
         if (self::enabled()) {
+            $env = get_config('local_lbplanner', SETTINGS::SENTRY_ENV);
+            $release = get_config('local_lbplanner', SETTINGS::V_RELEASE);
             $cfg = [
                 "dsn" => config_helper::get_sentry_dsn(),
                 "enable_tracing" => true,
                 "traces_sample_rate" => 0.2,
                 "attach_stacktrace" => true,
-                "release" => 'lbplanner@' . get_config('local_lbplanner', 'release'),
-                "environment" => get_config('local_lbplanner', 'sentry_environment'),
+                "release" => 'lbplanner@' . $release,
+                "environment" => $env,
             ];
             \Sentry\init($cfg);
         }
