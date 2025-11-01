@@ -17,7 +17,7 @@
 namespace local_lbplanner_services;
 
 use core_external\{external_api, external_function_parameters, external_multiple_structure, external_value};
-use local_lbplanner\helpers\{modules_helper, plan_helper, course_helper};
+use local_lbplanner\helpers\{modules_helper, plan_helper, course_helper, sentry_helper};
 use local_lbplanner\model\module;
 
 /**
@@ -71,7 +71,11 @@ class modules_get_all_modules extends external_api {
                 $modules
             );
         }
-        return array_map(fn(module $m) => $m->prepare_for_api_personal($USER->id, $planid), $modules);
+
+        $sentryspan = sentry_helper::span_start('prepare_module_array_for_api_personal', ['amount' => count($modules)]);
+        $result = array_map(fn(module $m) => $m->prepare_for_api_personal($USER->id, $planid), $modules);
+        sentry_helper::span_end($sentryspan);
+        return $result;
     }
 
     /**
