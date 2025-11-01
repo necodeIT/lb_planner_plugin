@@ -38,7 +38,7 @@ function local_lbplanner_override_webservice_execution(stdClass $externalfunctio
         // Actually calling the function (since we're overriding this part, duh).
         try {
             $callable = [$externalfunctioninfo->classname, $externalfunctioninfo->methodname];
-            $transaction = sentry_helper::transaction_start($callable[0], $callable[1], $params);
+            $transaction = sentry_helper::transaction_start($callable[0], $callable[1]);
             $result = call_user_func_array($callable, $params);
             sentry_helper::transaction_end($transaction);
 
