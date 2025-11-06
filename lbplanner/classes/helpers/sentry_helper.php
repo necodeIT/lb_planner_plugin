@@ -68,6 +68,8 @@ class sentry_helper {
             }
             $cfg = [
                 "dsn" => config_helper::get_sentry_dsn(),
+                'in_app_include' => [realpath(__DIR__.'/../..')],
+                'in_app_exclude' => [realpath(__DIR__.'/../../vendor')],
                 "enable_tracing" => true,
                 "traces_sample_rate" => 0.2,
                 "attach_stacktrace" => true,
