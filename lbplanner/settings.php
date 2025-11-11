@@ -57,4 +57,13 @@ if ($hassiteconfig) {
     );
     $outdaterangesett->set_min_duration(0);
     $settings->add($outdaterangesett);
+
+    $sentrydsnsett = new admin_setting_configtext(
+        'local_lbplanner/' . SETTINGS::SENTRY_DSN,
+        'Sentry DSN',
+        'for where to send error debugging info to.',
+        '',
+        PARAM_TEXT
+    );
+    $settings->add($sentrydsnsett);
 }

@@ -1,5 +1,5 @@
 <?php
-// This file is part of local_lbplanner.
+// This file is part of the local_lbplanner.
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,27 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines versioning
+ * software environments
  *
  * @package local_lbplanner
+ * @subpackage enums
  * @copyright 2025 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_lbplanner\enums;
 
-use local_lbplanner\enums\{ENVIRONMENT, SETTINGS};
+// TODO: revert to native enums once we migrate to php8.
 
-$plugin->requires = 2024042200.00; // Require Moodle >=4.4.0.
-$plugin->maturity = MATURITY_BETA;
-$plugin->component = 'local_lbplanner';
-$plugin->release = '1.1.11';
-$plugin->version = 202510190000;
-$plugin->dependencies = [
-    // Depend upon version 2023110600 of local_modcustomfields.
-    'local_modcustomfields' => 2023110600,
-];
+use local_lbplanner\polyfill\Enum;
 
-set_config(SETTINGS::V_RELEASE, $plugin->release, 'local_lbplanner');
-set_config(SETTINGS::V_FULLNUM, $plugin->version, 'local_lbplanner');
-set_config(SETTINGS::SENTRY_ENV, ENVIRONMENT::DEV, 'local_lbplanner'); // NOTE: gets set to 'production' by CI for release.
+/**
+ * Software environments
+ */
+class ENVIRONMENT extends Enum {
+    /**
+     * Key for the production environment.
+     */
+    const PROD = 'production';
+    /**
+     * Key for the development environment.
+     */
+    const DEV = 'development';
+}

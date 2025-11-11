@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>vendor</location>
+    <name>Sentry API SDK</name>
+    <description>An error reporting library.</description>
+    <version>4.16</version>
+    <license>MIT</license>
+    <licenseversion></licenseversion>
+    <repository>https://github.com/getsentry/sentry-php</repository>
+    <copyrights>
+      <copyright>2012 Functional Software, Inc. dba Sentry</copyright>
+    </copyrights>
+  </library>
+</libraries>
