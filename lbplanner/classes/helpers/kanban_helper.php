@@ -69,22 +69,18 @@ class kanban_helper {
      * @param kanbanentry $entry the entry to set
      */
     public static function set_entry(kanbanentry $entry): void {
-        global $DB, $CFG;
+        global $DB;
 
-        try {
+        if ($entry->column === KANBANCOL_TYPE_NUMERIC::BACKLOG) {
             $DB->delete_records(self::TABLE, ['userid' => $entry->userid, 'cmid' => $entry->cmid]);
-        } catch (\dml_exception $e) {
-            // Needed for low-reporting contexts such as a prod server.
-            echo 'error while trying to delete preexisting kanban entries: '
-                . $e->getMessage()
-                . "\nFurther info:\n"
-                . $e->debuginfo;
-            var_dump($entry);
-            throw $e;
-        }
-        if ($entry->column !== KANBANCOL_TYPE_NUMERIC::BACKLOG) {
-            $newid = $DB->insert_record(self::TABLE, $entry->prepare_for_db(), true);
-            $entry->set_fresh($newid);
+        } else {
+            $id = $DB->get_field(self::TABLE, 'id', ['userid' => $entry->userid, 'cmid' => $entry->cmid], IGNORE_MISSING);
+            if ($id === false) {
+                $id = $DB->insert_record(self::TABLE, $entry->prepare_for_db(), true);
+            } else {
+                $DB->set_field(self::TABLE, 'selectedcolumn', $entry->column, ['id' => $id]);
+            }
+            $entry->set_fresh($id);
         }
     }
 }
