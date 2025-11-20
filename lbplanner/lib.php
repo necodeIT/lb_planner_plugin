@@ -35,7 +35,7 @@ use local_lbplanner\enums\SETTINGS;
 function local_lbplanner_override_webservice_execution(stdClass $externalfunctioninfo, array $params): mixed {
     // Only override calling our own functions.
     if ($externalfunctioninfo->component === 'local_lbplanner') {
-        if (get_config('local_lbplanner', SETTINGS::SENTRY_DSN) === '1') {
+        if (get_config('local_lbplanner', SETTINGS::PANIC) === '1') {
             return null; // WILL crash things, but that's ok. It's a panic switch, not a careful deliberations switch.
         }
         sentry_helper::init();
