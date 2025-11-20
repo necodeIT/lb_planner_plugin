@@ -23,6 +23,7 @@
  */
 
 use local_lbplanner\helpers\sentry_helper;
+use local_lbplanner\enums\SETTINGS;
 
 /**
  * Callback for any webservices that get called by external actors.
@@ -34,6 +35,9 @@ use local_lbplanner\helpers\sentry_helper;
 function local_lbplanner_override_webservice_execution(stdClass $externalfunctioninfo, array $params): mixed {
     // Only override calling our own functions.
     if ($externalfunctioninfo->component === 'local_lbplanner') {
+        if (get_config('local_lbplanner', SETTINGS::SENTRY_DSN) === '1') {
+            return null; // WILL crash things, but that's ok. It's a panic switch, not a careful deliberations switch.
+        }
         sentry_helper::init();
         // Actually calling the function (since we're overriding this part, duh).
         try {
