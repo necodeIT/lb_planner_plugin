@@ -36,7 +36,7 @@ function local_lbplanner_override_webservice_execution(stdClass $externalfunctio
     // Only override calling our own functions.
     if ($externalfunctioninfo->component === 'local_lbplanner') {
         if (get_config('local_lbplanner', SETTINGS::PANIC) === '1') {
-            return null; // WILL crash things, but that's ok. It's a panic switch, not a careful deliberations switch.
+            throw new \moodle_exception('PANIC'); // TODO: add to translations.
         }
         sentry_helper::init();
         // Actually calling the function (since we're overriding this part, duh).
