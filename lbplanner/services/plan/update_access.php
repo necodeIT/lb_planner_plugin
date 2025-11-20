@@ -72,25 +72,27 @@ class plan_update_access extends external_api {
         $planid = plan_helper::get_plan_id($USER->id);
 
         if (plan_helper::get_owner($planid) !== intval($USER->id)) {
-            throw new \moodle_exception('Access denied');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
+
+        // TODO: factor out into plan_helper
 
         $accesstypeobj = PLAN_ACCESS_TYPE::try_from($accesstype);
 
         if ($accesstypeobj === null) {
-            throw new \moodle_exception('Access type not valid');
+            throw new \moodle_exception(get_string('err_plan_changeaccess_inval', 'local_lbplanner'));
         }
 
         if ($USER->id === $memberid) {
-            throw new \moodle_exception('Cannot change own permissions');
+            throw new \moodle_exception(get_string('err_plan_changeaccess_self', 'local_lbplanner'));
         }
 
         if (plan_helper::get_owner($planid) == $memberid) {
-            throw new \moodle_exception('Cannot change permissions for the plan owner');
+            throw new \moodle_exception(get_string('err_plan_changeaccess_ofowner', 'local_lbplanner'));
         }
 
         if ($accesstypeobj === PLAN_ACCESS_TYPE::OWNER) {
-            throw new \moodle_exception('Cannot change permission to owner');
+            throw new \moodle_exception(get_string('err_plan_changeaccess_toowner', 'local_lbplanner'));
         }
 
         $access = $DB->get_record(plan_helper::ACCESS_TABLE, ['planid' => $planid, 'userid' => $memberid], '*', MUST_EXIST);

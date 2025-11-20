@@ -139,7 +139,7 @@ class module {
             if ($this->cmid !== null) {
                 $this->assignid = $this->get_cmobj()->instance;
             } else {
-                throw new \coding_exception('requested assignid, but no cmid');
+                throw new \coding_exception(get_string('err_mod_assnocmid', 'local_lbplanner'));
             }
         }
         return $this->assignid;
@@ -185,11 +185,11 @@ class module {
                     ['id' => $this->cmid, 'module' => modules_helper::get_assign_module_id()]
                 );
                 if ($res === false) {
-                    throw new \moodle_exception("couldn't get course module with cmid {$this->cmid}");
+                    throw new \moodle_exception(get_string('err_mod_cmidnocm', 'local_lbplanner', $this->cmid));
                 }
             } else {
                 if ($this->assignid === null) {
-                    throw new \coding_exception('tried to query cmid on a module object without assignid');
+                    throw new \coding_exception(get_string('err_mod_cmidnoass', 'local_lbplanner'));
                 }
                 $courseid = $this->get_courseid();
                 $res = $DB->get_record(
@@ -201,9 +201,11 @@ class module {
                     ]
                 );
                 if ($res === false) {
-                    throw new \moodle_exception(
-                        "couldn't get course module with assignid {$this->assignid} and courseid {$courseid}"
-                    );
+                    throw new \moodle_exception(get_string(
+                        'err_mod_assnocm',
+                        'local_lbplanner',
+                        ['assignid' => $this->assignid, 'courseid' => $courseid],
+                    ));
                 }
             }
             $this->cmobj = $res;
@@ -243,7 +245,7 @@ class module {
                 if ($this->cmid !== null) {
                     $viacm = true;
                 } else if ($this->cmid === null) {
-                    throw new \coding_exception('invalid module model: neither cmid nor assignid defined');
+                    throw new \coding_exception(get_string('err_mod_nocmidnorass', 'local_lbplanner'));
                 }
             }
         }

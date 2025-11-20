@@ -125,16 +125,17 @@ class modules_helper {
      * @throws \moodle_exception
      */
     public static function determine_type(int $cmid): int {
+        // TODO: cache category controller.
         $catid = config_helper::get_category_id();
         if ($catid === -1) {
-            throw new \moodle_exception('couldn\'t find custom fields category ID');
+            throw new \moodle_exception(get_string('err_cf_nocatid', 'local_lbplanner'));
         }
         $categorycontroller = category_controller::create($catid);
         $instancedata = $categorycontroller->get_handler()->get_instance_data($cmid);
         if (count($instancedata) === 0) {
-            throw new \moodle_exception("couldn't find any instance data for module ID {$cmid} in category ID {$catid}");
+            throw new \moodle_exception(get_string('err_cf_nodata', 'local_lbplanner', ['cmid' => $cmid, 'catid' => $catid]));
         } else if (count($instancedata) > 1) {
-            throw new \moodle_exception("found multiple data for module ID {$cmid} in category ID {$catid}");
+            throw new \moodle_exception(get_string('err_cf_multidata', 'local_lbplanner', ['cmid' => $cmid, 'catid' => $catid]));
         }
         $type = intval($instancedata[array_key_last($instancedata)]->get_value()) - 1;
         if ($type === -1) {

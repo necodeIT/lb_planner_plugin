@@ -53,8 +53,8 @@ class config_helper {
 
                 $fieldcontroller = field_controller::create(0, $record, $categorycontroller);
                 // Added the default attributes for the custom field.
-                $fieldcontroller->set('name', 'LB Planer Task Type');
-                $fieldcontroller->set('description', 'Tracks whether the task is GK/EK/TEST/M');
+                $fieldcontroller->set('name', get_string('cf_name', 'local_lbplanner'));
+                $fieldcontroller->set('description', get_string('cf_description', 'local_lbplanner'));
                 $fieldcontroller->set('type', 'select');
                 // Because moodle wants me to save the configdata as a json string, I have to do this.
                 // I don't know why moodle does this, but it does. I don't like it. but I have to do it. so I do it.

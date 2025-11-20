@@ -58,6 +58,11 @@ class slot_filter {
     public function __construct(int $id, int $slotid, int $courseid, string $vintage) {
         assert(strlen($vintage) <= 7);
 
+        // Ensure that either $courseid or $vintage are non-null.
+        if (is_null($courseid) && is_null($vintage)) {
+            throw new \moodle_exception(get_string('err_slotfilter_bothnull', 'local_lbplanner'));
+        }
+
         $this->id = $id;
         $this->slotid = $slotid;
         $this->courseid = $courseid;

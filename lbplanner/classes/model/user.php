@@ -231,7 +231,7 @@ class user {
         global $USER;
         if ($this->mdluser !== null) {
             if ($this->mdluser->id !== $USER->id) {
-                throw new \coding_exception('tried to set cached mdluser twice');
+                throw new \coding_exception(get_string('err_doublechacheset', 'local_lbplanner', 'mdluser'));
             }
         }
         $this->mdluser = $mdluser;
@@ -255,7 +255,7 @@ class user {
      */
     public function set_planid(int $planid): void {
         if ($this->planid !== null) {
-            throw new \coding_exception('tried to set cached planid twice');
+            throw new \coding_exception(get_string('err_doublechacheset', 'local_lbplanner', 'planid'));
         }
         $this->planid = $planid;
     }

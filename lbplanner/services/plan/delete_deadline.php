@@ -49,7 +49,7 @@ class plan_delete_deadline extends external_api {
      *
      * @param int $moduleid ID of the Module
      * @return void
-     * @throws Exception when access denied
+     * @throws \moodle_exception when access denied
      */
     public static function delete_deadline(int $moduleid) {
         global $DB, $USER;
@@ -64,7 +64,7 @@ class plan_delete_deadline extends external_api {
         $planid = plan_helper::get_plan_id($USER->id);
 
         if (!plan_helper::check_edit_permissions($planid, $USER->id)) {
-            throw new \Exception('Access denied');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
         $DB->delete_records(
