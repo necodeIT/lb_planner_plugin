@@ -66,4 +66,12 @@ if ($hassiteconfig) {
         PARAM_TEXT
     );
     $settings->add($sentrydsnsett);
+
+    $panicsett = new admin_setting_configcheckbox(
+        'local_lbplanner/' . SETTINGS::PANIC,
+        'PANIC SWITCH',
+        'Turns API off - only use in emergencies. No data loss, but total loss of EduPlanner services until box is unchecked.',
+        '0',
+    );
+    $settings->add($panicsett);
 }

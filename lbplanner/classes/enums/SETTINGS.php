@@ -44,6 +44,10 @@ class SETTINGS extends Enum {
      */
     const V_FULLNUM = 'release_fullnum';
     /**
+     * Key for the panic / fulloff button.
+     */
+    const PANIC = 'panic';
+    /**
      * Key for the setting for how many days into the future a student should be able to reserve a slot.
      */
     const SLOT_FUTURESIGHT = 'slot_futuresight';
