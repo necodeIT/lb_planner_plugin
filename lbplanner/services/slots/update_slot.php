@@ -125,7 +125,7 @@ class slots_update_slot extends external_api {
         );
         // Check if slot is now overfull, and notify frontend via exception if so.
         if ($slot->get_fullness() > $slot->size) {
-            throw new \moodle_exception('Slot is now overfull!');
+            throw new \moodle_exception(get_string('err_slot_overfull', 'local_lbplanner'));
         }
     }
 

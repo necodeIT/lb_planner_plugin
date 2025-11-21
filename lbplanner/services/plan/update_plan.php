@@ -49,7 +49,7 @@ class plan_update_plan extends external_api {
      *
      * @param string $planname Name of the Plan
      * @return void
-     * @throws Exception when access denied
+     * @throws \moodle_exception when access denied
      */
     public static function update_plan(string $planname) {
         global $DB, $USER;
@@ -62,7 +62,7 @@ class plan_update_plan extends external_api {
         $planid = plan_helper::get_plan_id($USER->id);
 
         if (!plan_helper::check_edit_permissions($planid, $USER->id)) {
-            throw new \Exception('Access denied');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
         $plan = $DB->get_record(plan_helper::TABLE, ['id' => $planid], '*', MUST_EXIST);

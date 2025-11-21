@@ -71,6 +71,7 @@ class course {
      * @param bool $enabled whether the course is enabled
      */
     public function __construct(int $id, int $courseid, int $userid, string $shortname, string $color, bool $enabled) {
+        // TODO: private constructor, remove checks, separate public function with checks.
         $this->id = $id;
         $this->courseid = $courseid;
         $this->userid = $userid;
@@ -110,7 +111,7 @@ class course {
      */
     public function set_color(string $color) {
         if ($color[0] !== '#') {
-            throw new \coding_exception("incorrect color format - must be either #RGB or #RRGGBB, got \"{$color}\" instead");
+            throw new \coding_exception(get_string('err_color_wrongformat', 'local_lbplanner', $color));
         }
         $len = strlen($color);
         if ($len === 4) {
@@ -122,11 +123,11 @@ class course {
             // Format #RRGGBB.
             $rrggbb = $color;
         } else {
-            throw new \coding_exception("incorrect color format - got incorrect length of {$len}");
+            throw new \coding_exception(get_string('err_color_wronglength', 'local_lbplanner', $len));
         }
         $rrggbb = strtoupper($rrggbb);
         if (preg_match('/^#[1-9A-F]{6}$/', $rrggbb) === false) {
-            throw new \coding_exception("incorrect color format - found non-hexadecimal character in color \"{$color}\"");
+            throw new \coding_exception(get_string('err_color_nonhexadecimal', 'local_lbplanner', $color));
         }
         $this->color = $rrggbb;
     }
@@ -139,7 +140,7 @@ class course {
     public function set_shortname(string $shortname) {
         $length = strlen($shortname);
         if ($length > 5 || $length < 0) {
-            throw new \moodle_exception("shortname length must be <=5 and >0, but is {$length} instead");
+            throw new \moodle_exception(get_string('err_course_shortnamelength', 'local_lbplanner', $length));
         }
         $this->shortname = $shortname;
     }
@@ -173,7 +174,7 @@ class course {
      */
     public function set_mdlcourse(\stdClass $mdlcourse): void {
         if ($this->mdlcourse !== null) {
-            throw new \coding_exception('tried to set cached mdluser twice');
+            throw new \coding_exception(get_string('err_doublechacheset', 'local_lbplanner', 'mdlcourse'));
         }
         $this->mdlcourse = $mdlcourse;
     }

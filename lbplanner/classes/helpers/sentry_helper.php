@@ -89,7 +89,7 @@ class sentry_helper {
     public static function transaction_start(string $name, string $op, ?array $data = null): ?Transaction {
         if (self::enabled()) {
             if (SentrySdk::getCurrentHub()->getSpan() !== null) {
-                throw new \coding_exception('tried to start a new sentry transaction when there\'s already a span set');
+                throw new \coding_exception(get_string('err_sentry_transactcoll', 'local_lbplanner'));
             }
             $ctx = TransactionContext::make()
                 ->setName($name)

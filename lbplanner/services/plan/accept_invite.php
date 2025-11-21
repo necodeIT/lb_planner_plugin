@@ -61,7 +61,7 @@ class plan_accept_invite extends external_api {
         );
 
         if ($invite === false) {
-            throw new \moodle_exception('Invite not found');
+            throw new \moodle_exception(get_string('err_invite_notfound', 'lb_plannerlocal_lbplanner'));
         }
         invite_helper::assert_invite_pending($invite->status);
 

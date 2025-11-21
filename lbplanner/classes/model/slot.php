@@ -88,40 +88,16 @@ class slot {
      */
     public function __construct(int $id, int $startunit, int $duration, int $weekday, string $room, int $size) {
         $this->id = $id;
-        if ($startunit <= 0 || $startunit > slot_helper::SCHOOL_UNIT_MAX) {
-            throw new \moodle_exception(
-                "slot's startunit must be >0 and <="
-                . slot_helper::SCHOOL_UNIT_MAX
-                . ", but is {$startunit}"
-            );
-        }
-        if ($duration <= 0 || ($startunit + $duration - 1) > slot_helper::SCHOOL_UNIT_MAX) {
-            throw new \moodle_exception(
-                "slot's duration must be >0 and can't exceed "
-                . slot_helper::SCHOOL_UNIT_MAX
-                . " with startunit, but is {$duration}"
-            );
-        }
         $this->startunit = $startunit;
         $this->duration = $duration;
         $this->weekday = WEEKDAY::from($weekday);
-        if (strlen($room) <= 0 && strlen($room) > slot_helper::ROOM_MAXLENGTH) {
-            throw new \moodle_exception(
-                "room name's length must be >0 and <="
-                . slot_helper::ROOM_MAXLENGTH
-                . ", but is "
-                . strlen($room)
-            );
-        }
         $this->room = $room;
-        if ($size < 0) {
-            throw new \moodle_exception('room size must be >0');
-        }
         $this->size = $size;
         $this->fullness = null;
         $this->forcuruser = null;
         $this->supervisors = null;
         $this->filters = null;
+        $this->validate();
     }
 
     /**
@@ -161,27 +137,29 @@ class slot {
         static $maxunit = slot_helper::SCHOOL_UNIT_MAX;
          // Validating startunit.
         if ($this->startunit < 1) {
-            throw new moodle_exception('can\'t have a start unit smaller than 1');
+            throw new moodle_exception(get_string('err_slot_startunittoosmall', 'local_lbplanner'));
         } else if ($this->startunit > $maxunit) {
-            throw new moodle_exception("can't have a start unit larger than {$maxunit}");
+            throw new moodle_exception(get_string('err_slot_startunittoolarge', 'local_lbplanner'));
         }
         // Validating duration.
         if ($this->duration < 1) {
-            throw new moodle_exception('duration must be at least 1');
+            throw new moodle_exception(get_string('err_slot_durationtoosmall', 'local_lbplanner'));
         } else if ($this->startunit + $this->duration > $maxunit) {
-            throw new moodle_exception("slot goes past the max unit {$maxunit}");
+            throw new moodle_exception(get_string('err_slot_durationtoolarge', 'local_lbplanner', $maxunit));
         }
         // Validating weekday.
         WEEKDAY::from($this->weekday);
         // Validating room.
         if (strlen($this->room) <= 1) {
-            throw new moodle_exception('room name has to be at least 2 characters long');
+            throw new moodle_exception(get_string('err_slot_roomnametooshort', 'local_lbplanner'));
         } else if (strlen($this->room) > slot_helper::ROOM_MAXLENGTH) {
-            throw new moodle_exception('room name has a maximum of ' . slot_helper::ROOM_MAXLENGTH . ' characters');
+            throw new moodle_exception(
+                get_string('err_slot_roomnametoolong', 'local_lbplanner', slot_helper::ROOM_MAXLENGTH)
+            );
         }
         // Validating size.
         if ($this->size < 0) {
-            throw new moodle_exception('can\'t have a negative size for a slot');
+            throw new moodle_exception(get_string('err_slot_roomsizetoosmall', 'local_lbplanner'));
         }
     }
 

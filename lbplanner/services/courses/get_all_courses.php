@@ -46,7 +46,7 @@ class courses_get_all_courses extends \core_external\external_api {
         global $USER;
         $user = user::from_mdlobj($USER);
         if (!($user->get_capabilitybitmask() & (CAPABILITY_FLAG::SLOTMASTER | CAPABILITY_FLAG::TEACHER))) {
-            throw new \moodle_exception('access denied: must be slotmaster');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
         $courses = course_helper::get_eduplanner_courses(false);

@@ -88,12 +88,12 @@ class slots_book_reservation extends external_api {
         $now = new DateTimeImmutable('today', $utctz);
         $dateobj = DateTimeImmutable::createFromFormat("Y-m-d", $date, $utctz);
         if ($dateobj === false) {
-            throw new \moodle_exception("invalid date formatting: got '{$date}', must be YYYY-MM-DD");
+            throw new \moodle_exception(get_string('err_dateformat', 'local_lbplanner', $date));
         }
         $td = $now->diff($dateobj);
 
         if ($td->invert === 1) {
-            throw new \moodle_exception('Can\'t reserve date in the past');
+            throw new \moodle_exception(get_string('err_reserv_past', 'local_lbplanner'));
         }
 
         $maxdays = null;
@@ -115,26 +115,26 @@ class slots_book_reservation extends external_api {
         }
 
         if ($td->days > $maxdays) {
-            throw new \moodle_exception("Date is past allowed date ({$maxdays} days in the future)");
+            throw new \moodle_exception(get_string('err_reserv_toofuture', 'local_lbplanner', $maxdays));
         }
 
         $slot = slot_helper::get_slot($slotid);
 
         // Check if user has access to slot.
         if (count(slot_helper::filter_slots_for_user([$slot], $student)) === 0) {
-            throw new \moodle_exception('Student does not have access to this slot');
+            throw new \moodle_exception(get_string('err_reserv_studentnoaccess', 'local_lbplanner'));
         }
 
         // Check if user is already in slot.
         foreach (slot_helper::get_reservations_for_slot($slotid) as $tmpreservation) {
             if ($tmpreservation->userid === $userid) {
-                throw new \moodle_exception('Student is already in slot');
+                throw new \moodle_exception(get_string('err_reserv_studentalrin', 'local_lbplanner'));
             }
         }
 
         // Check if slot is full.
         if ($slot->get_fullness() >= $slot->size) {
-            throw new \moodle_exception('Slot is already full');
+            throw new \moodle_exception(get_string('err_reserv_slotfull', 'local_lbplanner'));
         }
 
         $reservation = new reservation(0, $slotid, $dateobj, $userid, $curuserid);

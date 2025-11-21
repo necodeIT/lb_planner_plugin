@@ -82,7 +82,7 @@ class plan_set_deadline extends external_api {
         $planid = plan_helper::get_plan_id($USER->id);
 
         if (!plan_helper::check_edit_permissions($planid, $USER->id)) {
-            throw new \moodle_exception('Access denied');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
         $deadline = $DB->get_record(plan_helper::DEADLINES_TABLE, ['moduleid' => $moduleid, 'planid' => $planid]);

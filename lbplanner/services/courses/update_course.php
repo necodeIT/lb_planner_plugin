@@ -69,10 +69,6 @@ class courses_update_course extends external_api {
             ]
         );
 
-        if (strlen($shortname) > 5) {
-            throw new moodle_exception('Shortname is too long');
-        }
-
         $course = course_helper::get_eduplanner_course($courseid, $USER->id);
 
         if ($color !== null) {

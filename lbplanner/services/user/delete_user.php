@@ -50,7 +50,7 @@ class user_delete_user extends external_api {
 
         // Check if User is in user table.
         if (!$DB->record_exists(user_helper::EDUPLANNER_USER_TABLE, ['userid' => $userid])) {
-            throw new moodle_exception('User is not registered in Eduplanner');
+            throw new moodle_exception(get_string('err_user_notfound', 'local_lbplanner'));
         }
 
         $planid = plan_helper::get_plan_id($userid);
@@ -61,6 +61,7 @@ class user_delete_user extends external_api {
             &&
             !(plan_helper::get_access_type($planid, $userid) == PLAN_ACCESS_TYPE::OWNER)
         ) {
+            // TODO: replace with plan_helper function
             self::call_external_function('local_lbplanner_plan_leave_plan', ['userid' => $userid, 'planid' => $planid]);
         }
         $DB->delete_records(plan_helper::DEADLINES_TABLE, ['planid' => $planid]);
@@ -83,6 +84,7 @@ class user_delete_user extends external_api {
 
         // Deleting all Courses associated with the User.
         $DB->delete_records(course_helper::EDUPLANNER_COURSE_TABLE, ['userid' => $userid]);
+        // TODO: delete kanban, slot, slot_filter & reservation data
         // Deleting User from User table.
         $DB->delete_records(user_helper::EDUPLANNER_USER_TABLE, ['userid' => $userid]);
     }

@@ -219,7 +219,7 @@ class slot_helper {
         $reservation = $DB->get_record(self::TABLE_RESERVATIONS, ['id' => $reservationid]);
 
         if ($reservation === false) {
-            throw new \moodle_exception('requested reservation does not exist');
+            throw new \moodle_exception(get_string('err_slot_reservnoexist', 'local_lbplanner', $reservationid));
         }
 
         return reservation::from_obj($reservation);
@@ -395,7 +395,7 @@ class slot_helper {
         // Move to next day this weekday occurs (doesn't move if it's the same as today).
         $slotdatetime = $now->modify('this ' . WEEKDAY::name_from($slot->weekday) . " {$slotdaytime}");
         if ($slotdatetime === false) {
-            throw new \coding_exception('error while calculating slot datetime');
+            throw new \coding_exception(get_string('err_slot_calcdatetime', 'local_lbplanner'));
         }
 
         // Check if slot is before now (because time of day and such) and move it a week into the future if so.
@@ -449,7 +449,7 @@ class slot_helper {
      */
     public static function assert_slot_supervisor(int $supervisorid, int $slotid): void {
         if (!self::check_slot_supervisor($supervisorid, $slotid)) {
-            throw new \moodle_exception('Insufficient Permission: you\'re not supervisor of this slot');
+            throw new \moodle_exception(get_string('err_slot_urnotsupervisor', 'local_lbplanner'));
         }
     }
 }

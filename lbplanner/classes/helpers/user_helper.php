@@ -79,7 +79,7 @@ class user_helper {
 
         // Create empty plan for newly registered user.
         $plan = new \stdClass();
-        $plan->name = 'Plan for ' . ($eduplanneruser->get_mdluser()->username);
+        $plan->name = get_string('plan_defaultname', 'local_lbplanner', $eduplanneruser->get_mdluser()->username);
         $planid = $DB->insert_record(plan_helper::TABLE, $plan);
         $eduplanneruser->set_planid($planid);
 
