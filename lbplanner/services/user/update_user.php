@@ -112,6 +112,7 @@ class user_update_user extends external_api {
      * @param ?bool $displaytaskcount The displaytaskcount the user has selected
      * @param ?bool $ekenabled whether the user wants to see EK modules
      * @param ?bool $showcolumncolors whether column colors should show in kanban board
+     * @param ?int $defaultcapabilityview Which capability's view to show in app per default
      * @param ?string $automovecompletedtasks what kanban column to move completed tasks to ("" → don't move)
      * @param ?string $automovesubmittedtasks what kanban column to move submitted tasks to ("" → don't move)
      * @param ?string $automoveoverduetasks what kanban column to move overdue tasks to ("" → don't move)

@@ -138,6 +138,7 @@ class user {
      * @param bool $displaytaskcount user's display task count
      * @param bool $ekenabled whether the user wants to see EK modules
      * @param bool $showcolumncolors whether column colors should show in kanban board
+     * @param ?int $defaultcapabilityview Which capability's view to show in app per default
      * @param ?string $automovecompletedtasks what kanban column to move completed tasks to (null → don't move)
      * @param ?string $automovesubmittedtasks what kanban column to move submitted tasks to (null → don't move)
      * @param ?string $automoveoverduetasks what kanban column to move overdue tasks to (null → don't move)
