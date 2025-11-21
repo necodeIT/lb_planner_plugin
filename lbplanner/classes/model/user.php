@@ -28,7 +28,7 @@ namespace local_lbplanner\model;
 use core\context\system as context_system;
 use core_external\{external_single_structure, external_value};
 use user_picture;
-use local_lbplanner\enums\{CAPABILITY, CAPABILITY_FLAG, KANBANCOL_TYPE_ORNONE};
+use local_lbplanner\enums\{CAPABILITY, CAPABILITY_FLAG, KANBANCOL_TYPE_ORNONE, CAPABILITY_FLAG_ORNONE};
 use local_lbplanner\helpers\{plan_helper, user_helper};
 
 /**
@@ -69,6 +69,12 @@ class user {
      * @var bool $showcolumncolors Whether column colors should show in kanban board.
      */
     public bool $showcolumncolors;
+
+    /**
+     * @var ?int $defaultcapabilityview Which capability's view to show in app per default.
+     * @see CAPABILITY_FLAG_ORNONE
+     */
+    public ?int $defaultcapabilityview;
 
     /**
      * @var ?string $automovecompletedtasks what kanban column to move completed tasks to (null → don't move)
@@ -117,6 +123,7 @@ class user {
         'displaytaskcount',
         'ekenabled',
         'showcolumncolors',
+        'defaultcapabilityview',
         'automovecompletedtasks',
         'automovesubmittedtasks',
         'automoveoverduetasks',
@@ -143,6 +150,7 @@ class user {
         bool $displaytaskcount,
         bool $ekenabled,
         bool $showcolumncolors,
+        int $defaultcapabilityview,
         ?string $automovecompletedtasks,
         ?string $automovesubmittedtasks,
         ?string $automoveoverduetasks,
@@ -309,7 +317,7 @@ class user {
      * Prepares data for the DB endpoint.
      * doesn't set ID if it's 0
      *
-     * @return object a representation of this course and its data
+     * @return object a representation of this user and its data
      */
     public function prepare_for_db(): object {
         $obj = new \stdClass();
@@ -388,6 +396,7 @@ class user {
                 'colorblindness' => $this->colorblindness,
                 'displaytaskcount' => $this->displaytaskcount,
                 'showcolumncolors' => $this->showcolumncolors,
+                'defaultcapabilityview' => $this->defaultcapabilityview,
                 'automovecompletedtasks' => $this->automovecompletedtasks ?? KANBANCOL_TYPE_ORNONE::NONE,
                 'automovesubmittedtasks' => $this->automovesubmittedtasks ?? KANBANCOL_TYPE_ORNONE::NONE,
                 'automoveoverduetasks' => $this->automoveoverduetasks ?? KANBANCOL_TYPE_ORNONE::NONE,
@@ -415,6 +424,10 @@ class user {
                 'colorblindness' => new external_value(PARAM_TEXT, 'The colorblindness of the user'),
                 'displaytaskcount' => new external_value(PARAM_BOOL, 'Whether the user has the taskcount enabled'),
                 'showcolumncolors' => new external_value(PARAM_BOOL, 'Whether column colors should show in kanban board'),
+                'defaultcapabilityview' => new external_value(
+                    PARAM_INT,
+                    'Which capability\'s view to show in app per default ' . CAPABILITY_FLAG_ORNONE::format()
+                ),
                 'automovecompletedtasks' => new external_value(
                     PARAM_TEXT,
                     'The kanban column to move a task to if completed ' . KANBANCOL_TYPE_ORNONE::format()
