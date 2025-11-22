@@ -9,6 +9,7 @@
 				<FIELD NAME="displaytaskcount" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="The display task count the user has selected in the app." />
 				<FIELD NAME="ekenabled" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Whether the user wants to see EK modules"/>
 				<FIELD NAME="showcolumncolors" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Whether column colors should show in kanban board"/>
+				<FIELD NAME="defaultcapabilityview" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Which capability's view to show in app per default"/>
 				<FIELD NAME="automovecompletedtasks" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The kanban column to move a task to if completed"/>
 				<FIELD NAME="automovesubmittedtasks" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The kanban column to move a task to if submitted"/>
 				<FIELD NAME="automoveoverduetasks" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The kanban column to move a task to if overdue"/>
