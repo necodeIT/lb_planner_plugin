@@ -35,12 +35,12 @@ $string['lb_planner:student'] = 'LB Planner Student';
 $string['lb_planner:teacher'] = 'LB Planner Lehrer';
 $string['lb_planner:slotmaster'] = 'LB Planner Slotmaster';
 // Settings
-$string['sett_futuresight_title'] = 'Reservierungsbereich der Studenten';
-$string['sett_futuresight_desc'] = 'Maximale Anzahl der Tage im Voraus, an denen Studenten Slots reservieren können. (0 = nur am selben Tag)';
-$string['sett_outdaterange_title'] = 'Veralteter Bereich der Kurse';
-$string['sett_outdaterange_desc'] = 'Die maximale Dauer, die ein Kurs nach seinem Ende in EduPlanner sichtbar bleibt.';
+$string['sett_futuresight_title'] = 'Reservierungszeitraum der Studenten';
+$string['sett_futuresight_desc'] = 'Wie viele Tage im Voraus Studierende Termine/Slots buchen dürfen. (0 = nur am selben Tag)';
+$string['sett_outdaterange_title'] = 'Sichtbarkeitsdauer nach Kursende';
+$string['sett_outdaterange_desc'] = 'Die maximale Dauer, die ein Kurs nach seinem Ende im EduPlanner sichtbar bleibt.';
 $string['sett_sentrydsn_title'] = 'Sentry DSN';
-$string['sett_sentrydsn_desc'] = 'Wohin Fehler-Debugging-Informationen gesendet werden sollen. (Bitte fragen Sie das Pallasys-Team nach einem Schlüssel)';
+$string['sett_sentrydsn_desc'] = 'Zielort, an den Debug- und Fehlermeldungen übermittelt werden. (Bitte fragen Sie das Pallasys-Team nach einem Schlüssel)';
 // Custom Fields.
 $string['cf_name'] = 'LB Planer Aufgabentyp';
 $string['cf_description'] = 'Verfolgt, ob die Aufgabe GK/EK/TEST/M ist';
