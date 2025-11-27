@@ -104,5 +104,12 @@ function xmldb_local_lbplanner_upgrade($oldversion): bool {
 
         upgrade_plugin_savepoint(true, 202510090000, 'local', 'lbplanner');
     }
+    if ($oldversion < 202511210000) {
+        $table = new xmldb_table('local_lbplanner_users');
+        $f5 = new xmldb_field('defaultcapabilityview', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, false, 0, 'showcolumncolors');
+        $dbman->add_field($table, $f5);
+
+        upgrade_plugin_savepoint(true, 202511210000, 'local', 'lbplanner');
+    }
     return true;
 }

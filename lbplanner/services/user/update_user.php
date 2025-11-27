@@ -22,7 +22,7 @@ use moodle_exception;
 use dml_exception;
 use local_lbplanner\helpers\user_helper;
 use local_lbplanner\model\user;
-use local_lbplanner\enums\KANBANCOL_TYPE_ORNONE;
+use local_lbplanner\enums\{KANBANCOL_TYPE_ORNONE, CAPABILITY_FLAG_ORNONE};
 
 /**
  * Update current user settings. null values or unset parameters are left unmodified.
@@ -74,6 +74,13 @@ class user_update_user extends external_api {
                 null,
                 NULL_ALLOWED
             ),
+            'defaultcapabilityview' => new external_value(
+                PARAM_INT,
+                'Which capability\'s view to show in app per default ' . CAPABILITY_FLAG_ORNONE::format(),
+                VALUE_DEFAULT,
+                null,
+                NULL_ALLOWED
+            ),
             'automovecompletedtasks' => new external_value(
                 PARAM_TEXT,
                 'The kanban column to move a task to if completed ' . KANBANCOL_TYPE_ORNONE::format(),
@@ -105,6 +112,7 @@ class user_update_user extends external_api {
      * @param ?bool $displaytaskcount The displaytaskcount the user has selected
      * @param ?bool $ekenabled whether the user wants to see EK modules
      * @param ?bool $showcolumncolors whether column colors should show in kanban board
+     * @param ?int $defaultcapabilityview Which capability's view to show in app per default
      * @param ?string $automovecompletedtasks what kanban column to move completed tasks to ("" → don't move)
      * @param ?string $automovesubmittedtasks what kanban column to move submitted tasks to ("" → don't move)
      * @param ?string $automoveoverduetasks what kanban column to move overdue tasks to ("" → don't move)
@@ -119,6 +127,7 @@ class user_update_user extends external_api {
         ?bool $displaytaskcount,
         ?bool $ekenabled,
         ?bool $showcolumncolors,
+        ?int $defaultcapabilityview,
         ?string $automovecompletedtasks,
         ?string $automovesubmittedtasks,
         ?string $automoveoverduetasks,
@@ -133,6 +142,7 @@ class user_update_user extends external_api {
                 'displaytaskcount' => $displaytaskcount,
                 'ekenabled' => $ekenabled,
                 'showcolumncolors' => $showcolumncolors,
+                'defaultcapabilityview' => $defaultcapabilityview,
                 'automovecompletedtasks' => $automovecompletedtasks,
                 'automovesubmittedtasks' => $automovesubmittedtasks,
                 'automoveoverduetasks' => $automoveoverduetasks,
@@ -158,6 +168,9 @@ class user_update_user extends external_api {
         }
         if ($showcolumncolors !== null) {
             $user->showcolumncolors = $showcolumncolors;
+        }
+        if ($defaultcapabilityview !== null) {
+            $user->defaultcapabilityview = CAPABILITY_FLAG_ORNONE::from($defaultcapabilityview);
         }
         foreach (['automovecompletedtasks', 'automovesubmittedtasks', 'automoveoverduetasks'] as $propname) {
             if ($$propname !== null) {
