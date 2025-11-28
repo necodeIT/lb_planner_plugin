@@ -43,7 +43,7 @@ $string['sett_sentrydsn_title'] = 'Sentry DSN';
 $string['sett_sentrydsn_desc'] = 'Zielort, an den Debug- und Fehlermeldungen übermittelt werden. (Bitte fragen Sie das Pallasys-Team nach einem Schlüssel)';
 // Custom Fields.
 $string['cf_name'] = 'LB Planer Aufgabentyp';
-$string['cf_description'] = 'Verfolgt, ob die Aufgabe GK/EK/TEST/M ist';
+$string['cf_description'] = 'Gibt an, ob die Aufgabe GK/EK/TEST/M ist';
 // Invite States.
 $string['invite_state_pending'] = 'ausstehend';
 $string['invite_state_accepted'] = 'akzeptiert';
@@ -51,60 +51,60 @@ $string['invite_state_declined'] = 'abgelehnt';
 $string['invite_state_expired'] = 'abgelaufen';
 // Misc.
 $string['plan_defaultname'] = 'Plan für {$a}'; // $a is the user's name.
-$string['capability_deprecated_unnecessary'] = 'Diese Berechtigung wurde aufgrund interner Änderungen entfernt, die sie überflüssig machen';
+$string['capability_deprecated_unnecessary'] = 'Diese Berechtigung wurde entfernt, da sie nicht mehr benötigt wird';
 // Error messages.
 $string['err_accessdenied'] = 'Zugriff verweigert';
-$string['err_doublechacheset'] = 'Versuch, zwischengespeicherte {$a} zweimal zu setzen'; // $a is an object name.
-$string['err_dateformat'] = 'Ungültige Datumsformatierung: erhalten \'{$a}\', muss YYYY-MM-DD sein';
-$string['err_enum_casevaluetype_unimp'] = 'Nicht implementierter Fall-Werttyp für Enum::format()';
+$string['err_doublechacheset'] = '{$a} wurde bereits im Cache gespeichert'; // $a is an object name.
+$string['err_dateformat'] = 'Ungültiges Datumsformat: \'{$a}\' erhalten, erwartet YYYY-MM-DD';
+$string['err_enum_casevaluetype_unimp'] = 'Nicht implementierter Werttyp für Enum::format()';
 $string['err_enum_namemissing'] = 'Name {$a->name} existiert nicht in {$a->classname}';
 $string['err_invite_alr'] = 'Einladung bereits {$a}'; // $a is a state the invite is in.
 $string['err_invite_notfound'] = 'Einladung existiert nicht';
-$string['err_invite_yourself'] = 'Sie können sich nicht selbst einladen';
-$string['err_invite_alrmember'] = 'Benutzer, der bereits Mitglied ist, kann nicht eingeladen werden';
-$string['err_invite_alrinvited'] = 'Benutzer, der bereits eingeladen wurde, kann nicht eingeladen werden';
+$string['err_invite_yourself'] = 'Du kannst dich nicht selbst einladen';
+$string['err_invite_alrmember'] = 'Benutzer ist bereits Mitglied';
+$string['err_invite_alrinvited'] = 'Benutzer wurde bereits eingeladen';
 $string['err_mod_assnocmid'] = 'Assignid angefordert, aber keine cmid gesetzt';
 $string['err_mod_cmidnoass'] = 'Cmid angefordert, aber keine assignid gesetzt';
 $string['err_mod_nocmidnorass'] = 'Ungültiges Modulmodell: weder cmid noch assignid definiert';
 $string['err_mod_cmidnocm'] = 'Kursmodul mit cmid {$a} konnte nicht abgerufen werden';
 $string['err_mod_assnocm'] = 'Kursmodul mit assignid {$a->assignid} und courseid {$a->courseid} konnte nicht abgerufen werden';
-$string['err_plan_cantremove_userfromother'] = 'Benutzer kann nicht aus einem Plan entfernt werden, in dem er sich nicht befindet';
-$string['err_plan_cantremove_yourself'] = 'Sie können sich nicht selbst entfernen';
-$string['err_plan_cantremove_owner'] = 'Eigentümer kann nicht entfernt werden';
-$string['err_plan_cantleave_empty'] = 'Plan kann nicht verlassen werden: Plan muss mindestens ein weiteres Mitglied haben';
-$string['err_plan_changeaccess_inval'] = 'Zugriffstyp nicht gültig';
-$string['err_plan_changeaccess_self'] = 'Eigene Berechtigungen können nicht geändert werden';
-$string['err_plan_changeaccess_ofowner'] = 'Berechtigungen für den Planbesitzer können nicht geändert werden';
-$string['err_plan_changeaccess_toowner'] = 'Berechtigung kann nicht auf Eigentümer geändert werden';
-$string['err_cf_nocatid'] = 'Kategorie-ID für benutzerdefinierte Felder konnte nicht gefunden werden';
-$string['err_cf_nodata'] = 'Keine Instanzdaten für Modul-ID {$a->cmid} in Kategorie-ID {$a->catid} gefunden';
-$string['err_cf_multidata'] = 'Mehrere Daten für Modul-ID {$a->cmid} in Kategorie-ID {$a->catid} gefunden';
-$string['err_sentry_transactcoll'] = 'Versuch, eine neue Sentry-Transaktion zu starten, wenn bereits eine Spanne festgelegt ist';
-$string['err_sentry_webservfalse'] = 'Webservice-Überschreibung: call_user_func_array hat false bei {$a} zurückgegeben'; // $a is a function
-$string['err_slot_reservnoexist'] = 'Reservierung {$a} existiert nicht';
-$string['err_slot_calcdatetime'] = 'Slot-Datum/Uhrzeit konnte nicht berechnet werden';
-$string['err_slot_urnotsupervisor'] = 'Unzureichende Berechtigung: Sie sind kein Supervisor dieses Slots';
+$string['err_plan_cantremove_userfromother'] = 'Benutzer ist nicht in diesem Plan';
+$string['err_plan_cantremove_yourself'] = 'Du kannst dich nicht selbst entfernen';
+$string['err_plan_cantremove_owner'] = 'Besitzer kann nicht entfernt werden';
+$string['err_plan_cantleave_empty'] = 'Plan muss mindestens ein weiteres Mitglied haben';
+$string['err_plan_changeaccess_inval'] = 'Ungültiger Zugriffstyp';
+$string['err_plan_changeaccess_self'] = 'Du kannst deine eigenen Berechtigungen nicht ändern';
+$string['err_plan_changeaccess_ofowner'] = 'Berechtigungen des Besitzers können nicht geändert werden';
+$string['err_plan_changeaccess_toowner'] = 'Berechtigung kann nicht auf Besitzer gesetzt werden';
+$string['err_cf_nocatid'] = 'Kategorie-ID für benutzerdefinierte Felder nicht gefunden';
+$string['err_cf_nodata'] = 'Keine Daten für Modul-ID {$a->cmid} in Kategorie-ID {$a->catid}';
+$string['err_cf_multidata'] = 'Mehrere Einträge für Modul-ID {$a->cmid} in Kategorie-ID {$a->catid}';
+$string['err_sentry_transactcoll'] = 'Sentry-Transaktion existiert bereits';
+$string['err_sentry_webservfalse'] = 'Webservice: call_user_func_array gab false zurück bei {$a}'; // $a is a function
+$string['err_slot_reservnoexist'] = 'Reservierung {$a} nicht gefunden';
+$string['err_slot_calcdatetime'] = 'Slot-Zeitpunkt konnte nicht berechnet werden';
+$string['err_slot_urnotsupervisor'] = 'Du bist kein Supervisor dieses Slots';
 $string['err_slot_startunittoosmall'] = 'Slot-Starteinheit muss >=1 sein';
 $string['err_slot_startunittoolarge'] = 'Slot-Starteinheit muss <={$a} sein';
 $string['err_slot_durationtoosmall'] = 'Slot-Dauer muss >=1 sein';
 $string['err_slot_durationtoolarge'] = 'Slot-Starteinheit plus Dauer muss <={$a} sein';
-$string['err_slot_roomnametooshort'] = 'Raumname muss mindestens 2 Zeichen lang sein';
-$string['err_slot_roomnametoolong'] = 'Raumname muss {$a} Zeichen lang oder kürzer sein';
-$string['err_slot_roomsizetoosmall'] = 'Raumgröße muss >=0 sein';
-$string['err_slot_overfull'] = 'Slot ist jetzt überfüllt';
+$string['err_slot_roomnametooshort'] = 'Raumname muss mindestens 2 Zeichen haben';
+$string['err_slot_roomnametoolong'] = 'Raumname darf maximal {$a} Zeichen haben';
+$string['err_slot_roomsizetoosmall'] = 'Raumgröße muss mindestens 0 sein';
+$string['err_slot_overfull'] = 'Slot ist überfüllt';
 $string['err_slotfilter_bothnull'] = 'Courseid und Jahrgang können nicht beide null sein';
-$string['err_reserv_past'] = 'Datum in der Vergangenheit kann nicht reserviert werden';
-$string['err_reserv_toofuture'] = 'Datum liegt nach dem erlaubten Datum ({$a} Tage in der Zukunft)';
-$string['err_reserv_studentnoaccess'] = 'Student hat keinen Zugriff auf diesen Slot';
-$string['err_reserv_studentalrin'] = 'Student hat bereits eine Reservierung für diesen Slot';
-$string['err_reserv_slotfull'] = 'Slot ist bereits voll';
-$string['err_reserv_unreserv_alrstarted'] = 'Sie können diese Reservierung nicht stornieren, da sie bereits begonnen hat';
-$string['err_reserv_unreserv_alrended'] = 'Sie können diese Reservierung nicht stornieren, da sie bereits beendet ist';
+$string['err_reserv_past'] = 'Vergangene Termine können nicht reserviert werden';
+$string['err_reserv_toofuture'] = 'Datum liegt zu weit in der Zukunft (max. {$a} Tage)';
+$string['err_reserv_studentnoaccess'] = 'Kein Zugriff auf diesen Slot';
+$string['err_reserv_studentalrin'] = 'Du hast bereits eine Reservierung für diesen Slot';
+$string['err_reserv_slotfull'] = 'Slot ist voll';
+$string['err_reserv_unreserv_alrstarted'] = 'Reservierung hat bereits begonnen';
+$string['err_reserv_unreserv_alrended'] = 'Reservierung ist bereits beendet';
 $string['err_reserv_unreserv_alrstartedorforce'] =
-	'Studenten können Reservierungen, die bereits begonnen haben, nicht stornieren. Wenn Sie diese Reservierung trotzdem stornieren möchten, erzwingen Sie es.';
-$string['err_color_wrongformat'] = 'Falsches Farbformat - muss entweder #RGB oder #RRGGBB sein, erhalten "{$a}"';
-$string['err_color_wronglength'] = 'Falsches Farbformat - falsche Länge von {$a}';
-$string['err_color_nonhexadecimal'] = 'Falsches Farbformat - nicht-hexadezimales Zeichen in Farbe "{$a}" gefunden';
-$string['err_course_shortnamelength'] = 'Kurznamenlänge muss <=5 und >0 sein, ist aber {$a}';
-$string['err_notif_notfound'] = 'Benachrichtigung existiert nicht';
-$string['err_user_notfound'] = 'Benutzer ist nicht in Eduplanner registriert';
+	'Bereits begonnene Reservierungen können nicht storniert werden. Zum Erzwingen die Force-Option nutzen.';
+$string['err_color_wrongformat'] = 'Ungültiges Farbformat: "{$a}" (erwartet #RGB oder #RRGGBB)';
+$string['err_color_wronglength'] = 'Ungültige Farblänge: {$a}';
+$string['err_color_nonhexadecimal'] = 'Ungültiges Zeichen in Farbe "{$a}"';
+$string['err_course_shortnamelength'] = 'Kurzname muss 1-5 Zeichen haben (aktuell: {$a})';
+$string['err_notif_notfound'] = 'Benachrichtigung nicht gefunden';
+$string['err_user_notfound'] = 'Benutzer nicht in EduPlanner registriert';
