@@ -23,6 +23,7 @@
  */
 
 use local_lbplanner\helpers\sentry_helper;
+use local_lbplanner\enums\SETTINGS;
 
 /**
  * Callback for any webservices that get called by external actors.
@@ -34,6 +35,9 @@ use local_lbplanner\helpers\sentry_helper;
 function local_lbplanner_override_webservice_execution(stdClass $externalfunctioninfo, array $params): mixed {
     // Only override calling our own functions.
     if ($externalfunctioninfo->component === 'local_lbplanner') {
+        if (get_config('local_lbplanner', SETTINGS::PANIC) === '1') {
+            throw new \moodle_exception('PANIC'); // TODO: add to translations.
+        }
         sentry_helper::init();
         // Actually calling the function (since we're overriding this part, duh).
         try {
