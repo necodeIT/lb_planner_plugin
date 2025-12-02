@@ -39,8 +39,9 @@ $string['sett_futuresight_title'] = 'Reservierungszeitraum der Schüler';
 $string['sett_futuresight_desc'] = 'Wie viele Tage im Voraus Schüler Termine/Slots buchen dürfen. (0 = nur selber Tag)';
 $string['sett_outdaterange_title'] = 'Sichtbarkeitsdauer nach Kursende';
 $string['sett_outdaterange_desc'] = 'Die maximale Dauer, die ein Kurs nach seinem Ende im EduPlanner sichtbar bleibt.';
-$string['sett_sentrydsn_title'] = 'Sentry DSN';
-$string['sett_sentrydsn_desc'] = 'Wo Fehlermeldungen hingeschickt werden. (Bitte frag das Pallasys-Team um einen Code)';
+$string['sett_panic_title'] = 'PANIKSCHALTER';
+$string['sett_panic_desc'] =
+	'Schaltet API ab - nur im Notfall. Kein Datenverlust, aber totale Abschaltung der Dienste bis die box enthakt wird.';
 // Custom Fields.
 $string['cf_name'] = 'LB Planer Aufgabentyp';
 $string['cf_description'] = 'Gibt an, ob die Aufgabe GK/EK/TEST/M ist';
@@ -53,11 +54,14 @@ $string['invite_state_expired'] = 'abgelaufen';
 $string['plan_defaultname'] = 'Plan für {$a}'; // $a is the user's name.
 $string['capability_deprecated_unnecessary'] = 'Diese Berechtigung wurde entfernt, da sie nicht mehr benötigt wird';
 // Error messages.
+$string['err_panic'] = 'PANIK';
 $string['err_accessdenied'] = 'Zugriff verweigert';
 $string['err_doublechacheset'] = 'Versuchte {$a} doppelt im Cache zu speichern'; // $a is an object name.
 $string['err_dateformat'] = 'Ungültiges Datumsformat: \'{$a}\' erhalten, erwartet YYYY-MM-DD';
 $string['err_enum_casevaluetype_unimp'] = 'Nicht implementierter Case Value Typ für Enum::format()';
 $string['err_enum_namemissing'] = 'Name {$a->name} existiert nicht in {$a->classname}';
+$string['err_enum_capability_none'] =
+	'0 heißt die Abwesenheit von Berechtigungen, und kann daher nicht zur Berechtigung umgewandelt werden';
 $string['err_invite_alr'] = 'Einladung bereits {$a}'; // $a is a state the invite is in.
 $string['err_invite_notfound'] = 'Einladung existiert nicht';
 $string['err_invite_yourself'] = 'Kann dich nicht selbst einladen';

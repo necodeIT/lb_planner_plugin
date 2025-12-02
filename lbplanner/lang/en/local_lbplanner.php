@@ -41,6 +41,9 @@ $string['sett_outdaterange_title'] = 'Courses\' outdated range';
 $string['sett_outdaterange_desc'] = 'The maximum duration a course remains visible in EduPlanner after it ends.';
 $string['sett_sentrydsn_title'] = 'Sentry DSN';
 $string['sett_sentrydsn_desc'] = 'For where to send error debugging info to. (Please ask the Pallasys team for a key)';
+$string['sett_panic_title'] = 'PANIC SWITCH';
+$string['sett_panic_desc'] =
+	'Turns API off - only use in emergencies. No data loss, but total loss of EduPlanner services until box is unchecked.';
 // Custom Fields.
 $string['cf_name'] = 'LB Planer Task Type';
 $string['cf_description'] = 'Tracks whether the task is GK/EK/TEST/M';
@@ -53,11 +56,14 @@ $string['invite_state_expired'] = 'expired';
 $string['plan_defaultname'] = 'Plan for {$a}'; // $a is the user's name.
 $string['capability_deprecated_unnecessary'] = 'This capability was removed because of internal changes making it unnecessary';
 // Error messages.
+$string['err_panic'] = 'PANIC';
 $string['err_accessdenied'] = 'Access denied';
 $string['err_doublechacheset'] = 'Tried to set cached {$a} twice'; // $a is an object name.
 $string['err_dateformat'] = 'Invalid date formatting: got \'{$a}\', must be YYYY-MM-DD';
 $string['err_enum_casevaluetype_unimp'] = 'Unimplemented case value type for Enum::format()';
 $string['err_enum_namemissing'] = 'Name {$a->name} doesn\'t exist in {$a->classname}';
+$string['err_enum_capability_none'] =
+	'0 means the absence of capabilities, and thus cannot be converted to a capability';
 $string['err_invite_alr'] = 'Invite already {$a}'; // $a is a state the invite is in.
 $string['err_invite_notfound'] = 'Invitation does not exist';
 $string['err_invite_yourself'] = 'Cannot invite yourself';
