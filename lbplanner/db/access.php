@@ -45,9 +45,9 @@ $capabilities = [
 
 $deprecatedcapabilities = [
     'local/lb_planner:admin' => [
-        'message' => 'this capability was removed because of internal changes making it unnecessary',
+        'message' => get_string('capability_deprecated_unnecessary', 'local_lbplanner'),
     ],
     'local/lb_planner:manager' => [
-        'message' => 'this capability was removed because of internal changes making it unnecessary',
+        'message' => get_string('capability_deprecated_unnecessary', 'local_lbplanner'),
     ],
 ];

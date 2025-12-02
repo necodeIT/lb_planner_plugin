@@ -261,19 +261,19 @@ class plan_helper {
     public static function remove_user(int $planid, int $userid, int $removeuserid): int {
         global $DB; // TODO: use global user object.
         if (self::get_owner($planid) != $userid) {
-            throw new \moodle_exception('Access denied');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
         if (self::get_plan_id($removeuserid) != $planid) {
-            throw new \moodle_exception('Cannot remove user from other plan');
+            throw new \moodle_exception(get_string('err_plan_cantremove_userfromother', 'local_lbplanner'));
         }
 
         if ($userid == $removeuserid) {
-            throw new \moodle_exception('Cannot remove yourself');
+            throw new \moodle_exception(get_string('err_plan_cantremove_yourself', 'local_lbplanner'));
         }
 
         if (self::get_access_type($removeuserid, $planid) === PLAN_ACCESS_TYPE::OWNER) {
-            throw new \moodle_exception('Cannot remove owner');
+            throw new \moodle_exception(get_string('err_plan_cantremove_owner', 'local_lbplanner'));
         }
 
         $newplanid = self::copy_plan($planid, user_helper::get_mdluser($removeuserid)->username);

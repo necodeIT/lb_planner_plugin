@@ -77,25 +77,24 @@ class slots_unbook_reservation extends external_api {
         $startpast = $endpast || ($now->diff($reservation->get_datetime())->invert === 1);
 
         if ($userid === $reservation->userid) {
-            if ($startpast) {
-                throw new \moodle_exception('You can\'t unbook this reservation because it has already started');
+            if ($endpast) {
+                throw new \moodle_exception(get_string('err_reserv_unreserv_alrended', 'local_lbplanner'));
+            } else if ($startpast) {
+                throw new \moodle_exception(get_string('err_reserv_unreserv_alrstarted', 'local_lbplanner'));
             }
         } else if (slot_helper::check_slot_supervisor($userid, $reservation->slotid)) {
             if ($endpast) {
-                throw new \moodle_exception('You can\'t unbook this reservation because it has already ended');
+                throw new \moodle_exception(get_string('err_reserv_unreserv_alrended', 'local_lbplanner'));
             }
             if ($nice) {
                 if ($startpast) {
-                    throw new \moodle_exception(
-                        'Students can\'t unbook reservations that have already started.'
-                        . ' If you want to unbook this reservation regardless, force it.'
-                    );
+                    throw new \moodle_exception(get_string('err_reserv_unreserv_alrstartedorforce', 'local_lbplanner'));
                 }
                 notifications_helper::notify_user($reservation->userid, $reservation->id, NOTIF_TRIGGER::UNBOOK_REQUESTED);
                 return;
             }
         } else {
-            throw new \moodle_exception('insufficient permission to unbook this reservation');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
         $DB->delete_records(

@@ -30,28 +30,31 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_lbplanner', 'EduPlanner');
     $ADMIN->add('localplugins', $settings);
 
+    $daysingular = get_string('unit_day', 'local_lbplanner');
+    $dayplural = get_string('unit_day_pl', 'local_lbplanner');
+
     $futuresightsett = new admin_setting_configselect(
         'local_lbplanner/' . SETTINGS::SLOT_FUTURESIGHT,
-        'Advance reservation limit',
-        'Maximum number of days in advance students can reserve slots (0 = same day only).',
+        get_string('sett_futuresight_title', 'local_lbplanner'),
+        get_string('sett_futuresight_desc', 'local_lbplanner'),
         3,
         [
-            0 => "0 Days",
-            1 => "1 Day",
-            2 => "2 Days",
-            3 => "3 Days",
-            4 => "4 Days",
-            5 => "5 Days",
-            6 => "6 Days",
-            7 => "7 Days",
+            0 => "0 {$dayplural}",
+            1 => "1 {$daysingular}",
+            2 => "2 {$dayplural}",
+            3 => "3 {$dayplural}",
+            4 => "4 {$dayplural}",
+            5 => "5 {$dayplural}",
+            6 => "6 {$dayplural}",
+            7 => "7 {$dayplural}",
         ],
     );
     $settings->add($futuresightsett);
 
     $outdaterangesett = new admin_setting_configduration(
         'local_lbplanner/' . SETTINGS::COURSE_OUTDATERANGE,
-        'Mark courses as outdated after',
-        'The maximum duration a course remains visible in EduPlanner after it ends.',
+        get_string('sett_outdaterange_title', 'local_lbplanner'),
+        get_string('sett_outdaterange_desc', 'local_lbplanner'),
         31536000, // 1 non-leap year.
         86400, // In days.
     );
@@ -60,8 +63,8 @@ if ($hassiteconfig) {
 
     $sentrydsnsett = new admin_setting_configtext(
         'local_lbplanner/' . SETTINGS::SENTRY_DSN,
-        'Sentry DSN',
-        'for where to send error debugging info to.',
+        get_string('sett_sentrydsn_title', 'local_lbplanner'),
+        get_string('sett_sentrydsn_desc', 'local_lbplanner'),
         '',
         PARAM_TEXT
     );
@@ -69,8 +72,8 @@ if ($hassiteconfig) {
 
     $panicsett = new admin_setting_configcheckbox(
         'local_lbplanner/' . SETTINGS::PANIC,
-        'PANIC SWITCH',
-        'Turns API off - only use in emergencies. No data loss, but total loss of EduPlanner services until box is unchecked.',
+        get_string('sett_panic_title', 'local_lbplanner'),
+        get_string('sett_panic_desc', 'local_lbplanner'),
         '0',
     );
     $settings->add($panicsett);

@@ -47,8 +47,8 @@ class CAPABILITY_FLAG_ORNONE extends CAPABILITY_FLAG {
      * @link CAPABILITY
      */
     public static function to_capability(int $num): string {
-        if ($num === 0) { // TODO: put in translation strings.
-            throw new \coding_exception('0 means the absence of capabilities, and thus cannot be converted to a capability');
+        if ($num === 0) {
+            throw new \coding_exception(get_string('err_enum_capability_none', 'local_lbplanner'));
         }
         return parent::to_capability($num);
     }

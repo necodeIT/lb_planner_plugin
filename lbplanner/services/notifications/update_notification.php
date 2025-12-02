@@ -65,7 +65,7 @@ class notifications_update_notification extends external_api {
         );
 
         if (!$DB->record_exists(notifications_helper::EDUPLANNER_NOTIFICATION_TABLE, ['id' => $notificationid])) {
-            throw new \moodle_exception('Notification does not exist');
+            throw new \moodle_exception(get_string('err_notif_notfound', 'lb_plannerlocal_lbplanner'));
         }
 
         $notification = $DB->get_record(

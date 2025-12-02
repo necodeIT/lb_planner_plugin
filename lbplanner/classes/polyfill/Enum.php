@@ -70,7 +70,9 @@ class Enum {
         if ($try) {
             return null;
         } else {
-            throw new \moodle_exception("name {$name} doesn't exist in " . static::class);
+            throw new \moodle_exception(
+                get_string('err_enum_namemissing', 'local_lbplanner', ['name' => $name, 'classname' => static::class])
+            );
         }
     }
     /**
@@ -163,7 +165,7 @@ class Enum {
             } else if (is_int($case->value)) {
                 $formattedval = $case->value;
             } else {
-                throw new moodle_exception('unimplemented case value type for Enum::format()');
+                throw new moodle_exception(get_string('err_enum_casevaluetype_unimp', 'local_lbplanner'));
             }
             $result .= "{$formattedval}=>{$case->name},";
         }

@@ -64,7 +64,7 @@ class slots_delete_slot_filter extends external_api {
 
         // Check if user is supervisor for this slot, throw error if not.
         if (!slot_helper::check_slot_supervisor($USER->id, $filter->slotid)) {
-            throw new \moodle_exception('Insufficient Permission: you\'re not supervisor of this filter\'s associated slot');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
         // Delete filter.

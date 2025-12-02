@@ -53,14 +53,15 @@ class plan_leave_plan extends external_api {
 
         // TODO: remove useless check.
         if (plan_helper::get_access_type($USER->id, $planid) === PLAN_ACCESS_TYPE::NONE) {
-            throw new \moodle_exception('User is not a member of this plan');
+            throw new \moodle_exception(get_string('err_plan_cantremove_userfromother', 'local_lbplanner'));
         }
 
+        // TODO: factor this out into plan_helper.
         if (plan_helper::get_access_type($USER->id, $planid) === PLAN_ACCESS_TYPE::OWNER) {
             $members = plan_helper::get_plan_members($planid);
 
             if (count($members) == 1) {
-                throw new \moodle_exception('Cannot Leave Plan: Plan must have at least one other member');
+                throw new \moodle_exception(get_string('err_plan_cantleave_empty', 'local_lbplanner'));
             }
 
             $writemembers = [];

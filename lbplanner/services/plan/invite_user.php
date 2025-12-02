@@ -64,15 +64,15 @@ class plan_invite_user extends external_api {
         $planid = plan_helper::get_plan_id($USER->id);
 
         if (plan_helper::get_owner($planid) !== intval($USER->id)) {
-            throw new \moodle_exception('Access denied');
+            throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
-        if ($USER->id === $inviteeid) {
-            throw new \moodle_exception('Cannot invite yourself');
+        if ((int)$USER->id === $inviteeid) {
+            throw new \moodle_exception(get_string('err_invite_yourself', 'local_lbplanner'));
         }
 
         if (plan_helper::get_plan_id($inviteeid) == $planid) {
-            throw new \moodle_exception('Cannot invite user who is already a member');
+            throw new \moodle_exception(get_string('err_invite_alrmember', 'local_lbplanner'));
         }
 
         if (
@@ -81,7 +81,7 @@ class plan_invite_user extends external_api {
                 ['inviteeid' => $inviteeid, 'planid' => $planid, 'status' => PLAN_INVITE_STATE::PENDING]
             )
         ) {
-            throw new \moodle_exception('User is already invited');
+            throw new \moodle_exception(get_string('err_invite_alrinvited', 'local_lbplanner'));
         }
 
         // Save the invite.

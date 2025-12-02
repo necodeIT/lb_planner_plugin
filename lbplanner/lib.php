@@ -36,7 +36,7 @@ function local_lbplanner_override_webservice_execution(stdClass $externalfunctio
     // Only override calling our own functions.
     if ($externalfunctioninfo->component === 'local_lbplanner') {
         if (get_config('local_lbplanner', SETTINGS::PANIC) === '1') {
-            throw new \moodle_exception('PANIC'); // TODO: add to translations.
+            throw new \moodle_exception(get_string('err_panic', 'local_lbplanner'));
         }
         sentry_helper::init();
         // Actually calling the function (since we're overriding this part, duh).
@@ -49,15 +49,8 @@ function local_lbplanner_override_webservice_execution(stdClass $externalfunctio
             // Report if call_user_func_array itself had some kind of issue.
             if ($result === false) {
                 $paramsstring = var_export($params, true);
-                throw new \coding_exception(
-                    "webservice override: call_user_func_array returned with false at "
-                    . $externalfunctioninfo->classname
-                    . "::"
-                    . $externalfunctioninfo->methodname
-                    . "("
-                    . $paramsstring
-                    . ");"
-                );
+                $fullname = "{$externalfunctioninfo->classname}::{$externalfunctioninfo->methodname}({$paramsstring})";
+                throw new \coding_exception(get_string('err_sentry_webservfalse', 'local_lbplanner', $fullname));
             }
 
             return $result;
