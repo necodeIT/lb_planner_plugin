@@ -283,9 +283,11 @@ class slot_helper {
     public static function filter_reservations_for_recency(array $reservations): array {
         $sentryspan = sentry_helper::span_start(__FUNCTION__, ['count_in' => count($reservations)]);
 
+        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
         $goodeggs = [];
         foreach ($reservations as $reservation) {
-            if (!$reservation->is_outdated()) {
+            if (!$reservation->is_endpast($now)) {
                 array_push($goodeggs, $reservation);
             }
         }

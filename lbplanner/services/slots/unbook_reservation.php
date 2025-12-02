@@ -17,6 +17,7 @@
 namespace local_lbplanner_services;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use core_external\{external_api, external_function_parameters, external_value};
 use local_lbplanner\helpers\{slot_helper, notifications_helper};
 use local_lbplanner\enums\NOTIF_TRIGGER;
@@ -71,10 +72,10 @@ class slots_unbook_reservation extends external_api {
         $userid = intval($USER->id);
 
         $reservation = slot_helper::get_reservation($reservationid);
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
 
-        $endpast = $now->diff($reservation->get_datetime_end())->invert === 1;
-        $startpast = $endpast || ($now->diff($reservation->get_datetime())->invert === 1);
+        $endpast = $reservation->is_endpast($now);
+        $startpast = $reservation->is_startpast($now);
 
         if ($userid === $reservation->userid) {
             if ($endpast) {

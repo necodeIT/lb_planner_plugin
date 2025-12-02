@@ -61,6 +61,7 @@ $string['err_plan_changeaccess_inval'] = 'Ungültiger Zugriffstyp';
 $string['err_plan_changeaccess_ofowner'] = 'Kann Berechtigungen ders BesitzerIns nicht ändern';
 $string['err_plan_changeaccess_self'] = 'Kann eigene Berechtigungen nicht ändern';
 $string['err_plan_changeaccess_toowner'] = 'Kann Berechtigungen nicht auf BesitzerIn ändern';
+$string['err_reserv_current'] = 'Schon laufende Slots können nicht reserviert werden';
 $string['err_reserv_past'] = 'Vergangene Termine können nicht reserviert werden';
 $string['err_reserv_slotfull'] = 'Slot ist schon voll';
 $string['err_reserv_studentalrin'] = 'SchülerIn hat bereits eine Reservierung für diesen Slot';
