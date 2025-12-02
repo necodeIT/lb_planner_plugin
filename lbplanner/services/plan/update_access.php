@@ -75,7 +75,7 @@ class plan_update_access extends external_api {
             throw new \moodle_exception(get_string('err_accessdenied', 'local_lbplanner'));
         }
 
-        // TODO: factor out into plan_helper
+        // TODO: factor out into plan_helper.
 
         $accesstypeobj = PLAN_ACCESS_TYPE::try_from($accesstype);
 

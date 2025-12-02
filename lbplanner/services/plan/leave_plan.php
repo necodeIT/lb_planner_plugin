@@ -56,7 +56,7 @@ class plan_leave_plan extends external_api {
             throw new \moodle_exception(get_string('err_plan_cantremove_userfromother', 'local_lbplanner'));
         }
 
-        // TODO: factor this out into plan_helper
+        // TODO: factor this out into plan_helper.
         if (plan_helper::get_access_type($USER->id, $planid) === PLAN_ACCESS_TYPE::OWNER) {
             $members = plan_helper::get_plan_members($planid);
 

@@ -61,7 +61,7 @@ class user_delete_user extends external_api {
             &&
             !(plan_helper::get_access_type($planid, $userid) == PLAN_ACCESS_TYPE::OWNER)
         ) {
-            // TODO: replace with plan_helper function
+            // TODO: replace with plan_helper function.
             self::call_external_function('local_lbplanner_plan_leave_plan', ['userid' => $userid, 'planid' => $planid]);
         }
         $DB->delete_records(plan_helper::DEADLINES_TABLE, ['planid' => $planid]);

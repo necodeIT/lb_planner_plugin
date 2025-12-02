@@ -30,8 +30,8 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_lbplanner', 'EduPlanner');
     $ADMIN->add('localplugins', $settings);
 
-    $day_singular = get_string('unit_day', 'local_lbplanner');
-    $day_plural = get_string('unit_day_pl', 'local_lbplanner');
+    $daysingular = get_string('unit_day', 'local_lbplanner');
+    $dayplural = get_string('unit_day_pl', 'local_lbplanner');
 
     $futuresightsett = new admin_setting_configselect(
         'local_lbplanner/' . SETTINGS::SLOT_FUTURESIGHT,
@@ -39,14 +39,14 @@ if ($hassiteconfig) {
         get_string('sett_futuresight_desc', 'local_lbplanner'),
         3,
         [
-            0 => "0 {$day_plural}",
-            1 => "1 {$day_singular}",
-            2 => "2 {$day_plural}",
-            3 => "3 {$day_plural}",
-            4 => "4 {$day_plural}",
-            5 => "5 {$day_plural}",
-            6 => "6 {$day_plural}",
-            7 => "7 {$day_plural}",
+            0 => "0 {$dayplural}",
+            1 => "1 {$daysingular}",
+            2 => "2 {$dayplural}",
+            3 => "3 {$dayplural}",
+            4 => "4 {$dayplural}",
+            5 => "5 {$dayplural}",
+            6 => "6 {$dayplural}",
+            7 => "7 {$dayplural}",
         ],
     );
     $settings->add($futuresightsett);

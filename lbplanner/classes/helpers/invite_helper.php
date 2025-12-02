@@ -54,7 +54,7 @@ class invite_helper {
     public static function assert_invite_pending(int $status) {
         if ($status !== PLAN_INVITE_STATE::PENDING) {
             $name = PLAN_INVITE_STATE::name_from($status);
-            $translatedname = get_string('invite_state_'.strtolower($name), 'local_lbplanner');
+            $translatedname = get_string('invite_state_' . strtolower($name), 'local_lbplanner');
             throw new \moodle_exception(get_string('err_invite_alr', 'local_lbplanner', $translatedname));
         }
     }
