@@ -36,12 +36,12 @@ $string['err_color_wrongformat'] = 'Incorrect color format - must be either #RGB
 $string['err_color_wronglength'] = 'Incorrect color format - got incorrect length of {$a}';
 $string['err_course_shortnamelength'] = 'Shortname length must be <=5 and >0, but is {$a} instead';
 $string['err_dateformat'] = 'Invalid date formatting: got \'{$a}\', must be YYYY-MM-DD';
-$string['err_doublechacheset'] = 'Tried to set cached {$a} twice'; // $a is an object name.
+$string['err_doublechacheset'] = 'Tried to set cached {$a} twice';
 $string['err_enum_capability_none'] =
     '0 means the absence of capabilities, and thus cannot be converted to a capability';
 $string['err_enum_casevaluetype_unimp'] = 'Unimplemented case value type for Enum::format()';
 $string['err_enum_namemissing'] = 'Name {$a->name} doesn\'t exist in {$a->classname}';
-$string['err_invite_alr'] = 'Invite already {$a}'; // $a is a state the invite is in.
+$string['err_invite_alr'] = 'Invite already {$a}';
 $string['err_invite_alrinvited'] = 'Cannot invite user who is already been invited';
 $string['err_invite_alrmember'] = 'Cannot invite user who is already a member';
 $string['err_invite_notfound'] = 'Invitation does not exist';
@@ -71,7 +71,7 @@ $string['err_reserv_unreserv_alrstarted'] = 'You can\'t unbook this reservation 
 $string['err_reserv_unreserv_alrstartedorforce'] =
     'Students can\'t unbook reservations that have already started. If you want to unbook this reservation regardless, force it.';
 $string['err_sentry_transactcoll'] = 'Tried to start a new sentry transaction when there\'s already a span set';
-$string['err_sentry_webservfalse'] = 'Webservice override: call_user_func_array returned with false at {$a}'; // $a is a function
+$string['err_sentry_webservfalse'] = 'Webservice override: call_user_func_array returned with false at {$a}';
 $string['err_slot_calcdatetime'] = 'Could not calculate slot datetime';
 $string['err_slot_durationtoolarge'] = 'Slot start unit plus duration must be <={$a}';
 $string['err_slot_durationtoosmall'] = 'Slot duration must be >=1';
@@ -94,7 +94,7 @@ $string['lb_planner:manager'] = 'LB Planner Manager';
 $string['lb_planner:slotmaster'] = 'LB Planner Slotmaster';
 $string['lb_planner:student'] = 'LB Planner Student';
 $string['lb_planner:teacher'] = 'LB Planner Teacher';
-$string['plan_defaultname'] = 'Plan for {$a}'; // $a is the user's name.
+$string['plan_defaultname'] = 'Plan for {$a}';
 $string['pluginname'] = 'LB Planner';
 $string['sett_futuresight_desc'] = 'Maximum number of days in advance students can reserve slots. (0 = same day only)';
 $string['sett_futuresight_title'] = 'Students\' reservation range';

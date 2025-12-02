@@ -36,12 +36,12 @@ $string['err_color_wrongformat'] = 'Ungültiges Farbformat - erwartet #RGB oder 
 $string['err_color_wronglength'] = 'Ungültiges Farbformat - falsche Länge von {$a}';
 $string['err_course_shortnamelength'] = 'Länge des Kurznamens muss <=5 und >0 sein (aktuell: {$a})';
 $string['err_dateformat'] = 'Ungültiges Datumsformat: \'{$a}\' erhalten, erwartet YYYY-MM-DD';
-$string['err_doublechacheset'] = 'Versuchte {$a} doppelt im Cache zu speichern'; // $a is an object name.
+$string['err_doublechacheset'] = 'Versuchte {$a} doppelt im Cache zu speichern';
 $string['err_enum_capability_none'] =
     '0 heißt die Abwesenheit von Berechtigungen, und kann daher nicht zur Berechtigung umgewandelt werden';
 $string['err_enum_casevaluetype_unimp'] = 'Nicht implementierter Case Value Typ für Enum::format()';
 $string['err_enum_namemissing'] = 'Name {$a->name} existiert nicht in {$a->classname}';
-$string['err_invite_alr'] = 'Einladung bereits {$a}'; // $a is a state the invite is in.
+$string['err_invite_alr'] = 'Einladung bereits {$a}';
 $string['err_invite_alrinvited'] = 'Kann keineN NutzerIn einladen dier bereits eingeladen wurde';
 $string['err_invite_alrmember'] = 'Kann keineN NutzerIn einladen dier bereits Mitglied ist';
 $string['err_invite_notfound'] = 'Einladung existiert nicht';
@@ -71,7 +71,7 @@ $string['err_reserv_unreserv_alrstarted'] = 'Kann bereits begonnene Reservierung
 $string['err_reserv_unreserv_alrstartedorforce'] =
     'Schüler können bereits begonnene Reservierungen nicht stornieren. Falls du trotzdem stornieren willst, bitte erzwingen.';
 $string['err_sentry_transactcoll'] = 'Versuchte neue Sentry-Transaktion zu starten obwohl ein Span schon existiert';
-$string['err_sentry_webservfalse'] = 'Webservice-Override: call_user_func_array gab bei {$a} false zurück'; // $a is a function
+$string['err_sentry_webservfalse'] = 'Webservice-Override: call_user_func_array gab bei {$a} false zurück';
 $string['err_slot_calcdatetime'] = 'Slot-Zeitpunkt konnte nicht berechnet werden';
 $string['err_slot_durationtoolarge'] = 'Slot-Starteinheit plus Dauer muss <={$a} sein';
 $string['err_slot_durationtoosmall'] = 'Slot-Dauer muss >=1 sein';
@@ -94,7 +94,7 @@ $string['lb_planner:manager'] = 'LB Planner ManagerIn';
 $string['lb_planner:slotmaster'] = 'LB Planner Slotmeister';
 $string['lb_planner:student'] = 'LB Planner SchülerIn';
 $string['lb_planner:teacher'] = 'LB Planner Lehrkraft';
-$string['plan_defaultname'] = 'Plan für {$a}'; // $a is the user's name.
+$string['plan_defaultname'] = 'Plan für {$a}';
 $string['pluginname'] = 'LB Planner';
 $string['sett_futuresight_desc'] = 'Wie viele Tage im Voraus Schüler Termine/Slots buchen dürfen. (0 = nur selber Tag)';
 $string['sett_futuresight_title'] = 'Reservierungszeitraum der Schüler';
