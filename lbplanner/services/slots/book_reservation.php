@@ -85,23 +85,19 @@ class slots_book_reservation extends external_api {
         );
 
         $utctz = new DateTimeZone('UTC');
-        $now = new DateTimeImmutable('today', $utctz);
+        $now = new DateTimeImmutable('now', $utctz);
+
         $dateobj = DateTimeImmutable::createFromFormat("Y-m-d", $date, $utctz);
         if ($dateobj === false) {
             throw new \moodle_exception(get_string('err_dateformat', 'local_lbplanner', $date));
         }
-        $td = $now->diff($dateobj);
-
-        if ($td->invert === 1) {
-            throw new \moodle_exception(get_string('err_reserv_past', 'local_lbplanner'));
-        }
 
         $maxdays = null;
         $student = null;
-
         $curuserid = intval($USER->id);
+        $issupervisor = $userid === $curuserid;
 
-        if ($userid === $curuserid) {
+        if ($issupervisor) {
             // Student reserving slot for themself.
 
             $maxdays = config_helper::get_slot_futuresight();
@@ -114,11 +110,19 @@ class slots_book_reservation extends external_api {
             $student = core_user::get_user($userid, '*', MUST_EXIST);
         }
 
-        if ($td->days > $maxdays) {
+        $slot = slot_helper::get_slot($slotid);
+        $reservation = new reservation(0, $slotid, $dateobj, $userid, $curuserid);
+        $reservation->set_slot($slot);
+
+        // Check if reservation is not too old, nor too far into the future.
+        $td = $now->diff($dateobj);
+        if ($reservation->is_endpast($now)) {
+            throw new \moodle_exception(get_string('err_reserv_past', 'local_lbplanner'));
+        } else if (!$issupervisor && $reservation->is_startpast($now)) {
+            throw new \moodle_exception(get_string('err_reserv_current', 'local_lbplanner'));
+        } else if ($td->days > $maxdays) {
             throw new \moodle_exception(get_string('err_reserv_toofuture', 'local_lbplanner', $maxdays));
         }
-
-        $slot = slot_helper::get_slot($slotid);
 
         // Check if user has access to slot.
         if (count(slot_helper::filter_slots_for_user([$slot], $student)) === 0) {
@@ -136,9 +140,6 @@ class slots_book_reservation extends external_api {
         if ($slot->get_fullness() >= $slot->size) {
             throw new \moodle_exception(get_string('err_reserv_slotfull', 'local_lbplanner'));
         }
-
-        $reservation = new reservation(0, $slotid, $dateobj, $userid, $curuserid);
-        $reservation->set_slot($slot);
 
         // Check if user is already in a different slot at the same time.
         $overlapreservations = [];

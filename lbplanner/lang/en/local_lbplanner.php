@@ -61,6 +61,7 @@ $string['err_plan_changeaccess_inval'] = 'Access type not valid';
 $string['err_plan_changeaccess_ofowner'] = 'Cannot change permissions for the plan owner';
 $string['err_plan_changeaccess_self'] = 'Cannot change own permissions';
 $string['err_plan_changeaccess_toowner'] = 'Cannot change permission to owner';
+$string['err_reserv_current'] = 'Can\'t reserve slot that has already started';
 $string['err_reserv_past'] = 'Can\'t reserve date in the past';
 $string['err_reserv_slotfull'] = 'Slot is already full';
 $string['err_reserv_studentalrin'] = 'Student already has a reservation for this slot';

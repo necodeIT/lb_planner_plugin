@@ -164,14 +164,23 @@ class reservation {
     }
 
     /**
-     * Calculates whether the reservation is outdated
+     * Calculates whether the start of this reservation has passed
+     * @param \DateTimeInterface $now
      *
-     * @return DateTimeImmutable
+     * @return bool
      */
-    public function is_outdated(): bool {
-        $utctz = new DateTimeZone('UTC');
-        $yesterday = new DateTimeImmutable('yesterday', $utctz);
-        return $yesterday->diff($this->date)->invert;
+    public function is_startpast($now): bool {
+        return $this->is_endpast($now) || ($now->diff($this->get_datetime())->invert === 1);
+    }
+
+    /**
+     * Calculates whether the end of this reservation has passed
+     * @param \DateTimeInterface $now
+     *
+     * @return bool
+     */
+    public function is_endpast($now): bool {
+        return $now->diff($this->get_datetime_end())->invert === 1;
     }
 
     /**
