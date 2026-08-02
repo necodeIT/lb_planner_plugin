@@ -16,9 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
 
-      - name: Set environment to prod
-        run: |
-          sed -i "s/set_config(CONFKEY::SENTRY_ENV, ENVIRONMENT::DEV, 'local_lbplanner')/set_config(CONFKEY::SENTRY_ENV, ENVIRONMENT::PROD, 'local_lbplanner')/g" "$TARGET_FOLDER/version.php"
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+
+      - name: Install production dependencies
+        run: composer install --no-dev --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Extract version
         id: version
@@ -26,15 +31,6 @@ jobs:
           version=$(grep -oP '\$plugin->version\s*=\s*\K[0-9]+' "$TARGET_FOLDER/version.php")
           
           echo "version=$version" >> $GITHUB_OUTPUT
-
-      - name: Setup PHP ${{ matrix.php }}
-        uses: shivammathur/setup-php@v2
-        with: # see gha.dist.yml
-          php-version: '8.1'
-          coverage: none
-      - name: Get php libs
-        run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Create ZIP file
         run: |

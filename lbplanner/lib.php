@@ -15,50 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines callbacks for moodle
+ * Runtime hooks for LB Planner observability.
  *
  * @package local_lbplanner
- * @copyright 2025 Pallasys
+ * @copyright 2026 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
-use local_lbplanner\helpers\sentry_helper;
-use local_lbplanner\enums\SETTINGS;
+use local_lbplanner\observability\sentry;
 
 /**
- * Callback for any webservices that get called by external actors.
- * We use this to catch whenever anything from us is being called, and do sentry setup and error reporting.
- * @param stdClass $externalfunctioninfo external function info {@see external_api::external_function_info()}
- * @param array $params the raw(ish) parameters that are going to get passed to the function implementing the API call
- * @return mixed Either whatever the API call returned, or false if we don't wish to override anything.
+ * Instrument every LB Planner external function with Sentry.
+ *
+ * @param stdClass $externalfunctioninfo Moodle external-function metadata.
+ * @param array $params Validated external-function arguments.
+ * @return mixed Function result, or false when this hook does not handle the component.
  */
 function local_lbplanner_override_webservice_execution(stdClass $externalfunctioninfo, array $params): mixed {
-    // Only override calling our own functions.
-    if ($externalfunctioninfo->component === 'local_lbplanner') {
-        if (get_config('local_lbplanner', SETTINGS::PANIC) === '1') {
-            throw new \moodle_exception(get_string('err_panic', 'local_lbplanner'));
-        }
-        sentry_helper::init();
-        // Actually calling the function (since we're overriding this part, duh).
-        try {
-            $callable = [$externalfunctioninfo->classname, $externalfunctioninfo->methodname];
-            $transaction = sentry_helper::transaction_start($callable[0], $callable[1]);
-            $result = call_user_func_array($callable, $params);
-            sentry_helper::transaction_end($transaction);
-
-            // Report if call_user_func_array itself had some kind of issue.
-            if ($result === false) {
-                $paramsstring = var_export($params, true);
-                $fullname = "{$externalfunctioninfo->classname}::{$externalfunctioninfo->methodname}({$paramsstring})";
-                throw new \coding_exception(get_string('err_sentry_webservfalse', 'local_lbplanner', $fullname));
-            }
-
-            return $result;
-        } catch (\Throwable $e) {
-            sentry_helper::report_err($e);
-            throw $e;
-        }
+    if (($externalfunctioninfo->component ?? null) !== 'local_lbplanner') {
+        return false;
     }
 
-    return false;
+    $callable = [$externalfunctioninfo->classname, $externalfunctioninfo->methodname];
+    $transactionname = $externalfunctioninfo->classname . '::' . $externalfunctioninfo->methodname;
+    return sentry::run(
+        $transactionname,
+        'webservice.server',
+        static fn(): mixed => call_user_func_array($callable, $params)
+    );
 }

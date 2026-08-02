@@ -15,27 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines versioning
+ * Plugin version metadata.
  *
  * @package local_lbplanner
- * @copyright 2025 Pallasys
+ * @copyright 2026 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-use local_lbplanner\enums\{ENVIRONMENT, SETTINGS};
-
-$plugin->requires = 2024042200.00; // Require Moodle >=4.4.0.
-$plugin->maturity = MATURITY_BETA;
+$plugin->requires = 2024042200.00;
+$plugin->maturity = MATURITY_STABLE;
 $plugin->component = 'local_lbplanner';
-$plugin->release = '1.1.11';
-$plugin->version = 202511210000;
+$plugin->release = '2.0.0';
+$plugin->version = 202607260000;
 $plugin->dependencies = [
-    // Depend upon version 2023110600 of local_modcustomfields.
     'local_modcustomfields' => 2023110600,
 ];
-
-set_config(SETTINGS::V_RELEASE, $plugin->release, 'local_lbplanner');
-set_config(SETTINGS::V_FULLNUM, $plugin->version, 'local_lbplanner');
-set_config(SETTINGS::SENTRY_ENV, ENVIRONMENT::DEV, 'local_lbplanner'); // NOTE: gets set to 'production' by CI for release.

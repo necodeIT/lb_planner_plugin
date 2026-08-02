@@ -1,9 +1,13 @@
-# LB Planner Data-Provider Migration Plan
+# LB Planner Sync-Only 2.0 Migration
 
-This document defines the versioned Moodle contract required by EduPlanner and
-the later removal of LB Planner's legacy planner backend. It is an
-implementation plan only; the current plugin code and database remain unchanged
-by this commit.
+This document records the contract and destructive migration implemented for
+release `2.0.0` (`202607260000`). The data-provider contract and removal of LB
+Planner's legacy backend ship together in this single major release. The
+repository is release-ready, but this change does not tag, publish, or deploy it.
+
+> **Mandatory backup:** back up the complete Moodle database before upgrading.
+> All legacy LB Planner application data is permanently discarded without
+> migration or a compatibility path.
 
 ## Target architecture
 
@@ -11,6 +15,9 @@ The plugin becomes a token-scoped, read-only Moodle data provider. EduPlanner
 owns planning, calendars, kanban state, preferences, and synchronization
 history. The plugin remains responsible for Moodle-native enrollment, group,
 activity, completion, submission, attempt, and activity-classification queries.
+Sentry remains as the sole runtime integration: it records uncaught errors and
+sampled performance transactions around every sync API call without changing
+the API result. The legacy panic switch is removed.
 
 Contract version `1` exposes exactly these functions:
 
@@ -20,8 +27,8 @@ Contract version `1` exposes exactly these functions:
 - `local_lbplanner_sync_get_quizzes`
 
 Register all four in `db/services.php` as read-only functions. They require the
-token owner to be logged in and use the existing student capability or a
-dedicated least-privilege sync capability. They never accept another user ID.
+token owner to be logged in and hold the dedicated, system-level
+`local/lb_planner:sync` capability. They never accept another user ID.
 
 ## Wire contract
 
@@ -161,7 +168,7 @@ EduPlanner rejects responses that are oversized, unsorted, duplicated,
 cross-origin, incomplete, or incompatible. A rejected response is not
 reconciled and archives nothing.
 
-## Implementation sequence
+## Implemented release sequence
 
 1. Add contract constants and PHPUnit fixtures for identity, courses/groups,
    assignments, quizzes, classifications, ordering, visibility, and failures.
@@ -172,25 +179,27 @@ reconciled and archives nothing.
 4. Implement token-owner course/group snapshots without consulting plugin
    preference tables.
 5. Implement assignment and quiz snapshots and deterministic ordering.
-6. Bump the plugin major release, advertise contract version `1`, run
-   `moodle-plugin-ci`, and publish the data-provider release before enabling
-   EduPlanner Moodle connections.
+6. Bump the plugin to `2.0.0`, advertise contract version `1`, and prepare the
+   repository for `moodle-plugin-ci` without publishing or deploying it.
 
-## Legacy removal release
+## Destructive legacy removal in 2.0.0
 
-After the sync contract is deployed and verified, release a separate
-destructive major version that removes the old planner backend without a data
+The same guarded `2.0.0` upgrade removes the old planner backend without a data
 compatibility path:
 
 - Remove legacy plan, invitation, deadline, kanban, notification, slot,
   reservation, course-preference, and user-preference web services.
 - Remove their service classes, models, helpers, settings, scheduled work, and
   capabilities that are not needed by the sync contract.
+- Retain the focused Sentry error/performance wrapper and its DSN, environment,
+  and trace-sampling settings. Preserve existing DSN and environment values
+  during upgrade; remove the panic switch.
 - Retain the plugin component, classification-field installation/configuration,
   sync capability, four sync functions, and minimal Moodle query helpers.
-- Delete legacy plugin tables through an explicit Moodle upgrade step and
-  replace `install.xml` with only persistence still required by
-  classification configuration. Legacy data is not migrated.
+- Delete all 12 legacy plugin tables child-first through one explicit Moodle
+  upgrade step. Fresh installs own no plugin tables because classification data
+  is stored by Moodle's core custom-field subsystem. Legacy data is not
+  migrated.
 - Document the destructive upgrade prominently and require a database backup
   before installation.
 - Update generated API documentation so only the sync contract remains.
@@ -210,5 +219,5 @@ four sync functions reads a removed table.
 - Duplicate, unknown-classification, partial, or unauthorized snapshots fail as
   a unit.
 - All successful arrays and nested group arrays use deterministic ordering.
-- The later destructive release leaves no legacy planner/write service or
-  legacy application table.
+- The destructive 2.0 release leaves no legacy planner/write service or legacy
+  application table.

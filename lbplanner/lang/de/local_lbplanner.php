@@ -1,5 +1,5 @@
 <?php
-// This file is part of the local_lbplanner.
+// This file is part of local_lbplanner.
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,95 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines some translation strings in german.
+ * German strings for local_lbplanner.
  *
  * @package local_lbplanner
- * @copyright 2025 Pallasys
+ * @copyright 2026 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['capability_deprecated_unnecessary'] = 'Diese Berechtigung wurde entfernt, da sie nicht mehr benötigt wird';
-$string['cf_description'] = 'Gibt an, ob die Aufgabe GK/EK/TEST/M ist';
-$string['cf_name'] = 'LB Planer Aufgabentyp';
-$string['err_accessdenied'] = 'Zugriff verweigert';
-$string['err_cf_multidata'] = 'Mehrere Einträge für Modul-ID {$a->cmid} in Kategorie-ID {$a->catid}';
-$string['err_cf_nocatid'] = 'Kategorie-ID für Custom Fields nicht gefunden';
-$string['err_cf_nodata'] = 'Keine Instanzdaten für Modul-ID {$a->cmid} in Kategorie-ID {$a->catid}';
-$string['err_color_nonhexadecimal'] = 'Ungültiges Farbformat - nicht-hexadezimalziffer in "{$a}"';
-$string['err_color_wrongformat'] = 'Ungültiges Farbformat - erwartet #RGB oder #RRGGBB, nicht "{$a}"';
-$string['err_color_wronglength'] = 'Ungültiges Farbformat - falsche Länge von {$a}';
-$string['err_course_shortnamelength'] = 'Länge des Kurznamens muss <=5 und >0 sein (aktuell: {$a})';
-$string['err_dateformat'] = 'Ungültiges Datumsformat: \'{$a}\' erhalten, erwartet YYYY-MM-DD';
-$string['err_doublechacheset'] = 'Versuchte {$a} doppelt im Cache zu speichern';
-$string['err_enum_capability_none'] =
-    '0 heißt die Abwesenheit von Berechtigungen, und kann daher nicht zur Berechtigung umgewandelt werden';
-$string['err_enum_casevaluetype_unimp'] = 'Nicht implementierter Case Value Typ für Enum::format()';
-$string['err_enum_namemissing'] = 'Name {$a->name} existiert nicht in {$a->classname}';
-$string['err_invite_alr'] = 'Einladung bereits {$a}';
-$string['err_invite_alrinvited'] = 'Kann keineN NutzerIn einladen dier bereits eingeladen wurde';
-$string['err_invite_alrmember'] = 'Kann keineN NutzerIn einladen dier bereits Mitglied ist';
-$string['err_invite_notfound'] = 'Einladung existiert nicht';
-$string['err_invite_yourself'] = 'Kann dich nicht selbst einladen';
-$string['err_mod_assnocm'] = 'Kursmodul mit assignid {$a->assignid} und courseid {$a->courseid} konnte nicht abgerufen werden';
-$string['err_mod_assnocmid'] = 'assignid angefordert, aber keine cmid gesetzt';
-$string['err_mod_cmidnoass'] = 'cmid angefordert, aber keine assignid gesetzt';
-$string['err_mod_cmidnocm'] = 'Kursmodul mit cmid {$a} konnte nicht abgerufen werden';
-$string['err_mod_nocmidnorass'] = 'Ungültiges Modulmodell: weder cmid noch assignid gesetzt';
-$string['err_notif_notfound'] = 'Benachrichtigung nicht gefunden';
-$string['err_panic'] = 'PANIK';
-$string['err_plan_cantleave_empty'] = 'Kann Plan nicht austreten: Plan muss mindestens ein weiteres Mitglied haben';
-$string['err_plan_cantremove_owner'] = 'Kann BesitzerIn nicht entfernen';
-$string['err_plan_cantremove_userfromother'] = 'Kann keineN NutzerIn von einem Plan entfernen in dem sier nicht ist';
-$string['err_plan_cantremove_yourself'] = 'Kann dich nicht selbst entfernen';
-$string['err_plan_changeaccess_inval'] = 'Ungültiger Zugriffstyp';
-$string['err_plan_changeaccess_ofowner'] = 'Kann Berechtigungen ders BesitzerIns nicht ändern';
-$string['err_plan_changeaccess_self'] = 'Kann eigene Berechtigungen nicht ändern';
-$string['err_plan_changeaccess_toowner'] = 'Kann Berechtigungen nicht auf BesitzerIn ändern';
-$string['err_reserv_past'] = 'Vergangene Termine können nicht reserviert werden';
-$string['err_reserv_slotfull'] = 'Slot ist schon voll';
-$string['err_reserv_studentalrin'] = 'SchülerIn hat bereits eine Reservierung für diesen Slot';
-$string['err_reserv_studentnoaccess'] = 'SchülerIn hat keinen Zugriff auf diesen Slot';
-$string['err_reserv_toofuture'] = 'Datum ist nach erlaubten Datum ({$a} Tage in der Zukunft)';
-$string['err_reserv_unreserv_alrended'] = 'Kann bereits vergangene Reservierung nicht stornieren';
-$string['err_reserv_unreserv_alrstarted'] = 'Kann bereits begonnene Reservierung nicht stornieren';
-$string['err_reserv_unreserv_alrstartedorforce'] =
-    'Schüler können bereits begonnene Reservierungen nicht stornieren. Falls du trotzdem stornieren willst, bitte erzwingen.';
-$string['err_sentry_transactcoll'] = 'Versuchte neue Sentry-Transaktion zu starten obwohl ein Span schon existiert';
-$string['err_sentry_webservfalse'] = 'Webservice-Override: call_user_func_array gab bei {$a} false zurück';
-$string['err_slot_calcdatetime'] = 'Slot-Zeitpunkt konnte nicht berechnet werden';
-$string['err_slot_durationtoolarge'] = 'Slot-Starteinheit plus Dauer muss <={$a} sein';
-$string['err_slot_durationtoosmall'] = 'Slot-Dauer muss >=1 sein';
-$string['err_slot_overfull'] = 'Slot ist jetzt überfüllt';
-$string['err_slot_reservnoexist'] = 'Reservierung {$a} existiert nicht';
-$string['err_slot_roomnametoolong'] = 'Raumname darf maximal {$a} Zeichen haben';
-$string['err_slot_roomnametooshort'] = 'Raumname muss mindestens 2 Zeichen haben';
-$string['err_slot_roomsizetoosmall'] = 'Raumgröße muss >=0 sein';
-$string['err_slot_startunittoolarge'] = 'Slot-Starteinheit muss <={$a} sein';
-$string['err_slot_startunittoosmall'] = 'Slot-Starteinheit muss >=1 sein';
-$string['err_slot_urnotsupervisor'] = 'Du bist kein Betreuer dieses Slots';
-$string['err_slotfilter_bothnull'] = 'courseid und vintage können nicht beide null sein';
-$string['err_user_notfound'] = 'NutzerIn nicht in EduPlanner registriert';
-$string['invite_state_accepted'] = 'akzeptiert';
-$string['invite_state_declined'] = 'abgelehnt';
-$string['invite_state_expired'] = 'abgelaufen';
-$string['invite_state_pending'] = 'ausstehend';
-$string['lb_planner:admin'] = 'LB Planner Admin';
-$string['lb_planner:manager'] = 'LB Planner ManagerIn';
-$string['lb_planner:slotmaster'] = 'LB Planner Slotmeister';
-$string['lb_planner:student'] = 'LB Planner SchülerIn';
-$string['lb_planner:teacher'] = 'LB Planner Lehrkraft';
-$string['plan_defaultname'] = 'Plan für {$a}';
+$string['cf_description'] = 'Klassifiziert die Aktivität als GK, EK, TEST oder M für die EduPlanner-Synchronisierung';
+$string['cf_name'] = 'LB Planner Aktivitätstyp';
+$string['err_sentry_internal'] = 'LB Planner konnte keine Beobachtungsdaten an Sentry senden';
+$string['err_sentry_missingvendor'] = 'Sentry ist konfiguriert, aber die gebündelten Composer-Abhängigkeiten fehlen';
+$string['err_sync_classificationconfig'] = 'Das LB Planner Aktivitätsfeld ist nicht korrekt konfiguriert';
+$string['err_sync_duplicateidentity'] = 'Der Moodle-Snapshot enthält eine doppelte externe ID';
+$string['err_sync_invalidreference'] = 'Der Moodle-Snapshot enthält eine ungültige Referenz';
+$string['err_sync_invalidsiteurl'] = 'Die kanonische Moodle-Adresse muss eine gültige HTTPS-Adresse sein';
+$string['err_sync_unauthorized'] = 'Für die Moodle-Synchronisierung ist ein angemeldeter Nicht-Gast erforderlich';
+$string['err_sync_unsupportedclassification'] = 'Eine Aktivität hat eine nicht unterstützte LB Planner Klassifizierung';
+$string['lb_planner:sync'] = 'Meine Moodle-Daten mit EduPlanner synchronisieren';
 $string['pluginname'] = 'LB Planner';
-$string['sett_futuresight_desc'] = 'Wie viele Tage im Voraus Schüler Termine/Slots buchen dürfen. (0 = nur selber Tag)';
-$string['sett_futuresight_title'] = 'Reservierungszeitraum der Schüler';
-$string['sett_outdaterange_desc'] = 'Die maximale Dauer, die ein Kurs nach seinem Ende im EduPlanner sichtbar bleibt.';
-$string['sett_outdaterange_title'] = 'Sichtbarkeitsdauer nach Kursende';
-$string['sett_panic_desc'] =
-    'Schaltet API ab - nur im Notfall. Kein Datenverlust, aber totale Abschaltung der Dienste bis die box enthakt wird.';
-$string['sett_panic_title'] = 'PANIKSCHALTER';
-$string['sett_sentrydsn_desc'] = 'Wo Fehlermeldungen hingeschickt werden. (Bitte frag das Pallasys-Team um einen Code)';
-$string['sett_sentrydsn_title'] = 'Sentry DSN';
-$string['unit_day'] = 'Tag';
-$string['unit_day_pl'] = 'Tage';
+$string['settings_sentry_dsn'] = 'Sentry-DSN';
+$string['settings_sentry_dsn_desc'] = 'Leer lassen, um Sentry-Fehler- und Leistungsberichte zu deaktivieren.';
+$string['settings_sentry_environment'] = 'Sentry-Umgebung';
+$string['settings_sentry_environment_desc'] = 'Umgebung für Sentry-Ereignisse und Transaktionen von LB Planner.';
+$string['settings_sentry_environment_development'] = 'Entwicklung';
+$string['settings_sentry_environment_production'] = 'Produktion';
+$string['settings_sentry_traces_sample_rate'] = 'Sentry-Stichprobenrate';
+$string['settings_sentry_traces_sample_rate_desc'] = 'Anteil der LB Planner Synchronisierungsanfragen als Leistungstraces.';
+$string['settings_title'] = 'LB Planner Sync API';

@@ -15,39 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * contains access levels, i.e. capabilities
+ * Capability definitions for the EduPlanner sync data provider.
  *
  * @package local_lbplanner
- * @subpackage db
- * @copyright 2025 Pallasys
+ * @copyright 2026 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'local/lb_planner:student' => [
-        'riskbitmask' => RISK_SPAM,
-        'captype' => 'write',
+    'local/lb_planner:sync' => [
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-    ],
-    'local/lb_planner:teacher' => [
-        'riskbitmask' => RISK_SPAM || RISK_PERSONAL,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-    ],
-    'local/lb_planner:slotmaster' => [
-        'riskbitmask' => RISK_SPAM || RISK_PERSONAL,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-    ],
-];
-
-$deprecatedcapabilities = [
-    'local/lb_planner:admin' => [
-        'message' => get_string('capability_deprecated_unnecessary', 'local_lbplanner'),
-    ],
-    'local/lb_planner:manager' => [
-        'message' => get_string('capability_deprecated_unnecessary', 'local_lbplanner'),
+        'archetypes' => [
+            'user' => CAP_ALLOW,
+        ],
     ],
 ];

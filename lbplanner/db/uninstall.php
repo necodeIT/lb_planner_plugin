@@ -15,23 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Contains some stuff for when the plugin gets uninstalled.
- * Upgrading the plugin shouldn't trigger this code.
+ * Uninstallation hooks for the sync-only plugin.
  *
  * @package local_lbplanner
- * @subpackage db
- * @copyright 2025 Pallasys
+ * @copyright 2026 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
-use local_lbplanner\helpers\{config_helper, course_helper};
+use local_lbplanner\sync\classification;
 
 /**
- * Runs when plugin is uninstalled
+ * Remove the activity classification configuration.
+ *
+ * @return void
  */
-function xmldb_local_lbplanner_uninstall() {
-    config_helper::remove_customfield();
-
-    $tag = core_tag_tag::get_by_name(core_tag_collection::get_default(), course_helper::EDUPLANNER_TAG, strictness:MUST_EXIST);
-    core_tag_tag::delete_tags($tag->id);
+function xmldb_local_lbplanner_uninstall(): void {
+    classification::remove_configuration();
 }

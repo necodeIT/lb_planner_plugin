@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 2.0.0 (2026-07-26)
+
+### Breaking changes
+
+- Replaced the legacy planner backend with the four-function, read-only LB Planner Sync API using contract version 1.
+- Permanently drops all 12 legacy plugin tables during upgrade. A database backup is mandatory; legacy planner data is not migrated and cannot be recovered by the plugin.
+- Removed all legacy web services, write capabilities, planner callbacks, planner settings, scheduled integrations, and panic-switch behavior.
+
+### Features
+
+- Added token-owner identity, accessible courses and groups, visible assignments, and visible quizzes with deterministic string identities and atomic failure semantics.
+- Added sanitized descriptions, completion and submission/attempt state, teacher deadlines, same-origin HTTPS URLs, and `GK`/`EK`/`TEST`/`M` activity classifications.
+- Preserved the classification category, field, and stored classification data while leaving any existing global `eduplanner` tag untouched.
+- Retained Sentry as a focused sync-API observability layer with uncaught-error capture, configurable performance sampling, minimal user identity, and upgrade-safe DSN/environment settings.
+
 ## [1.1.11](https://github.com/necodeIT/lb_planner_plugin/compare/1.1.10...1.1.11) (2025-10-19)
 
 

@@ -69,6 +69,9 @@ def convert_moodle_type_to_normal_type(param_type: str) -> str:
         "PARAM_TEXT": "String",
         "PARAM_URL": "String",
         "PARAM_BOOL": "bool",
+        "PARAM_RAW": "String",
+        "PARAM_ALPHA": "String",
+        "PARAM_ALPHANUM": "String",
     }
 
     return CONVERSIONS.get(param_type, param_type)
@@ -971,6 +974,8 @@ def find_import(nr: PHPNameResolution, symbol: str) -> str | None:
         "enums": "classes/enums",
         "polyfill": "classes/polyfill",
         "model": "classes/model",
+        "external": "classes/external",
+        "sync": "classes/sync",
     }
     fp_l: list[str] = []
     for use in nr.imports:
@@ -1127,7 +1132,12 @@ def main() -> None:
             warn("missing copyright notice")
         else:
             with Popen(["git", "log", "-1", '--pretty=format:%as', info.path], stdout=PIPE) as p:
-                lastmodificationyear = int(p.communicate()[0].decode('utf-8').split('-')[0])
+                lastmodified = p.communicate()[0].decode('utf-8')
+                lastmodificationyear = (
+                    int(lastmodified.split('-')[0])
+                    if lastmodified
+                    else main_docstring.copyright[0]
+                )
             if main_docstring.copyright[0] != lastmodificationyear:
                 warn(
                     "incorrect copyright year",

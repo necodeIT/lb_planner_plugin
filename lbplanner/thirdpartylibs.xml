@@ -3,7 +3,7 @@
   <library>
     <location>vendor</location>
     <name>Sentry API SDK</name>
-    <description>An error reporting library.</description>
+    <description>An error and performance monitoring library.</description>
     <version>4.16</version>
     <license>MIT</license>
     <licenseversion></licenseversion>

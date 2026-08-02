@@ -15,20 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * contains some stuff for the first install of the module
+ * Installation hooks for the sync-only plugin.
  *
  * @package local_lbplanner
- * @subpackage db
- * @copyright 2025 Pallasys
+ * @copyright 2026 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
-use local_lbplanner\helpers\{config_helper, course_helper};
+use local_lbplanner\sync\classification;
 
 /**
- * Runs when plugin is first installed
+ * Install the activity classification configuration.
+ *
+ * @return void
  */
-function xmldb_local_lbplanner_install() {
-    config_helper::add_customfield();
-    core_tag_tag::create_if_missing(core_tag_collection::get_default(), [course_helper::EDUPLANNER_TAG], true);
+function xmldb_local_lbplanner_install(): void {
+    classification::ensure_configuration();
 }

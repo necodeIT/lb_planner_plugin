@@ -15,101 +15,63 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * for upgrading the db
+ * Upgrade steps for the sync-only plugin.
  *
  * @package local_lbplanner
- * @subpackage db
- * @copyright 2025 Pallasys
+ * @copyright 2026 Pallasys
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0 International or later
  */
 
-use core\context\course as context_course;
-use local_lbplanner\helpers\{config_helper, course_helper};
+use local_lbplanner\sync\classification;
 
 /**
- * Upgrades the DB version
+ * Destructively upgrade LB Planner to the sync-only data provider.
  *
- * @param mixed $oldversion the previous version to upgrade from
- * @return bool true
+ * @param int $oldversion Previously installed plugin version.
+ * @return bool Always true after a successful upgrade.
  */
 function xmldb_local_lbplanner_upgrade($oldversion): bool {
     global $DB;
-    $dbman = $DB->get_manager();
-    if ($oldversion < 202502110011) {
-        config_helper::remove_customfield();
-        config_helper::add_customfield();
-    }
-    if ($oldversion < 202509020000) {
-        $table = new xmldb_table('local_lbplanner_users');
-        $f1 = new xmldb_field('showcolumncolors', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, false, 1, 'ekenabled');
-        $f2 = new xmldb_field('automovecompletedtasks', XMLDB_TYPE_TEXT, null, null, null, null, null, 'showcolumncolors');
-        $f3 = new xmldb_field('automovesubmittedtasks', XMLDB_TYPE_TEXT, null, null, null, null, null, 'automovecompletedtasks');
-        $f4 = new xmldb_field('automoveoverduetasks', XMLDB_TYPE_TEXT, null, null, null, null, null, 'automovesubmittedtasks');
 
-        $dbman->add_field($table, $f1);
-        $dbman->add_field($table, $f2);
-        $dbman->add_field($table, $f3);
-        $dbman->add_field($table, $f4);
-        upgrade_plugin_savepoint(true, 202509020000, 'local', 'lbplanner');
-    }
-    if ($oldversion < 202509020001) {
-        $table = new xmldb_table('local_lbplanner_kanbanentries');
+    if ($oldversion < 202607260000) {
+        // Validate or repair the retained Moodle-native classification field before deleting legacy data.
+        classification::ensure_configuration();
 
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('cmid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('column', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, null);
+        $dbman = $DB->get_manager();
+        $legacytables = [
+            'local_lbplanner_kanbanentries',
+            'local_lbplanner_notification',
+            'local_lbplanner_plan_invites',
+            'local_lbplanner_deadlines',
+            'local_lbplanner_plan_access',
+            'local_lbplanner_courses',
+            'local_lbplanner_reservations',
+            'local_lbplanner_slot_courses',
+            'local_lbplanner_supervisors',
+            'local_lbplanner_slots',
+            'local_lbplanner_plans',
+            'local_lbplanner_users',
+        ];
 
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('userid', XMLDB_KEY_FOREIGN, ['userid'], 'local_lbplanner_users', ['userid']);
-
-        $table->add_index('uniqueentry', XMLDB_INDEX_UNIQUE, ['userid', 'cmid']);
-
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        upgrade_plugin_savepoint(true, 202509020001, 'local', 'lbplanner');
-    }
-    if ($oldversion < 202509060000) {
-        // Adds the eduplanner tag to the default collection.
-        core_tag_tag::create_if_missing(core_tag_collection::get_default(), [course_helper::EDUPLANNER_TAG], true);
-    }
-    if ($oldversion < 202509060001) {
-        // Adds eduplanner tag to all courses that are already in the eduplanner courses table, to make managers' lives easier.
-        $defaulttagcoll = core_tag_collection::get_default();
-        $tag = core_tag_tag::get_by_name($defaulttagcoll, course_helper::EDUPLANNER_TAG, strictness:MUST_EXIST);
-        $courseids = $DB->get_fieldset(course_helper::EDUPLANNER_COURSE_TABLE, 'courseid');
-        $courseids = array_unique($courseids, SORT_REGULAR); // Dedupe.
-        foreach ($courseids as $courseid) {
-            try {
-                get_course($courseid);
-            } catch (dml_exception) {
-                /* This means the course doesn't actually exist - meaning it got deleted and not yet cleaned up in the
-                 * DB. normally I would clean it up here, but this upgrade function has to do as little as possible, so
-                 * we can as ensure it actually works as expected under all circumstances. This part of the code is very
-                 * hard to debug and thus uncomfortably fragile.
-                 */
-                continue;
+        foreach ($legacytables as $tablename) {
+            $table = new xmldb_table($tablename);
+            if ($dbman->table_exists($table)) {
+                $dbman->drop_table($table);
             }
-            core_tag_tag::add_item_tag('core', 'course', $courseid, context_course::instance($courseid), $tag->rawname);
         }
 
-        upgrade_plugin_savepoint(true, 202509060001, 'local', 'lbplanner');
-    }
-    if ($oldversion < 202510090000) {
-        $table = new xmldb_table('local_lbplanner_kanbanentries');
-        $field = new xmldb_field('column', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, null, 'cmid');
-        $dbman->rename_field($table, $field, 'selectedcolumn');
+        foreach ([
+            'release',
+            'release_fullnum',
+            'panic',
+            'slot_futuresight',
+            'course_outdaterange',
+        ] as $configkey) {
+            unset_config($configkey, 'local_lbplanner');
+        }
 
-        upgrade_plugin_savepoint(true, 202510090000, 'local', 'lbplanner');
+        upgrade_plugin_savepoint(true, 202607260000, 'local', 'lbplanner');
     }
-    if ($oldversion < 202511210000) {
-        $table = new xmldb_table('local_lbplanner_users');
-        $f5 = new xmldb_field('defaultcapabilityview', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, false, 0, 'showcolumncolors');
-        $dbman->add_field($table, $f5);
 
-        upgrade_plugin_savepoint(true, 202511210000, 'local', 'lbplanner');
-    }
     return true;
 }
